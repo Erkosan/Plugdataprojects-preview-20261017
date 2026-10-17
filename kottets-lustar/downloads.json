@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "commit": "675f0a30da401862ddced1e5dedcd077d8de7172",
+  "downloads": [
+    {
+      "label": "Hämta VST3 för Linux x86_64",
+      "url": "KOTTDISK_3000_Linux_x86_64.zip"
+    },
+    {
+      "label": "Hämta källkod och byggkit",
+      "url": "KOTTDISK_3000_Source.zip"
+    }
+  ],
+  "source": "KOTTDISK_3000_Source.zip",
+  "license": "LICENSE.txt"
+}

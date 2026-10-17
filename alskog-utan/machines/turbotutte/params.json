@@ -1,0 +1,200 @@
+{
+ "cold": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.0,
+  "type": "bool"
+ },
+ "start": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.0,
+  "type": "bool"
+ },
+ "bpm": {
+  "min": 30.0,
+  "max": 300.0,
+  "default": 128.0,
+  "type": "int"
+ },
+ "length": {
+  "min": 1.0,
+  "max": 16.0,
+  "default": 16.0,
+  "type": "int"
+ },
+ "swing": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.0,
+  "type": "float"
+ },
+ "step0": {
+  "min": 0.0,
+  "max": 511.0,
+  "default": 204.0,
+  "type": "int"
+ },
+ "step1": {
+  "min": 0.0,
+  "max": 511.0,
+  "default": 76.0,
+  "type": "int"
+ },
+ "step2": {
+  "min": 0.0,
+  "max": 511.0,
+  "default": 344.0,
+  "type": "int"
+ },
+ "step3": {
+  "min": 0.0,
+  "max": 511.0,
+  "default": 76.0,
+  "type": "int"
+ },
+ "step4": {
+  "min": 0.0,
+  "max": 511.0,
+  "default": 12.0,
+  "type": "int"
+ },
+ "step5": {
+  "min": 0.0,
+  "max": 511.0,
+  "default": 204.0,
+  "type": "int"
+ },
+ "step6": {
+  "min": 0.0,
+  "max": 511.0,
+  "default": 79.0,
+  "type": "int"
+ },
+ "step7": {
+  "min": 0.0,
+  "max": 511.0,
+  "default": 76.0,
+  "type": "int"
+ },
+ "step8": {
+  "min": 0.0,
+  "max": 511.0,
+  "default": 76.0,
+  "type": "int"
+ },
+ "step9": {
+  "min": 0.0,
+  "max": 511.0,
+  "default": 344.0,
+  "type": "int"
+ },
+ "step10": {
+  "min": 0.0,
+  "max": 511.0,
+  "default": 86.0,
+  "type": "int"
+ },
+ "step11": {
+  "min": 0.0,
+  "max": 511.0,
+  "default": 211.0,
+  "type": "int"
+ },
+ "step12": {
+  "min": 0.0,
+  "max": 511.0,
+  "default": 76.0,
+  "type": "int"
+ },
+ "step13": {
+  "min": 0.0,
+  "max": 511.0,
+  "default": 12.0,
+  "type": "int"
+ },
+ "step14": {
+  "min": 0.0,
+  "max": 511.0,
+  "default": 86.0,
+  "type": "int"
+ },
+ "step15": {
+  "min": 0.0,
+  "max": 511.0,
+  "default": 335.0,
+  "type": "int"
+ },
+ "cutoff": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.35,
+  "type": "float"
+ },
+ "resonance": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.7,
+  "type": "float"
+ },
+ "envmod": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.6,
+  "type": "float"
+ },
+ "decay": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.4,
+  "type": "float"
+ },
+ "accent": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.8,
+  "type": "float"
+ },
+ "drive": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.45,
+  "type": "float"
+ },
+ "wave": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.0,
+  "type": "float"
+ },
+ "tune": {
+  "min": -12.0,
+  "max": 12.0,
+  "default": 0.0,
+  "type": "float"
+ },
+ "volume": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.8,
+  "type": "float"
+ },
+ "room": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.2,
+  "type": "float"
+ },
+ "echo": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.0,
+  "type": "float"
+ },
+ "slide": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.35,
+  "type": "float"
+ }
+}
