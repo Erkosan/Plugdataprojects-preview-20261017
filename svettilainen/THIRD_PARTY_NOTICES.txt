@@ -1,6 +1,9 @@
 Third-party notices for SVETTILAINEN 3000
 
 The SVETTILAINEN patches, bastu and design remain their owner's material.
+The Finnish logos on the web page (Fazer, Fiskars) are trademarks of their owners and are used here as
+decoration only. The files come from Wikimedia Commons, where they are public domain (simple text logos);
+see design-system/finska/KALLOR.md in the source.
 The sound engine is generated from synths/Svettan/*.pd by hvcc (Wasted Audio).
 
 

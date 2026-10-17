@@ -1,7 +1,7 @@
 // Network first, cache as fallback: the bastu works offline after one visit.
-const CACHE = 'svettilainen-web-ed1426b51344';
+const CACHE = 'svettilainen-web-8ad0b71ed92c';
 const SHELL = ['./', 'index.html', 'style.css', 'tokens.css', '3000-series.css', 'app.js', 'worklet.js', 'svettan-engine.js', 'params.json',
-  'manifest.webmanifest', 'icon-512.png', 'apple-touch-icon.png'];
+  'manifest.webmanifest', 'icon-512.png', 'apple-touch-icon.png', 'finska/fazer-vit.svg', 'finska/fiskars.svg', 'finska/suomen-lippu.svg'];
 self.addEventListener('install', (event) => { event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', (event) => {
   event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => (key.startsWith('svettilainen-web-') || key.startsWith('svettan-web-')) && key !== CACHE).map((key) => caches.delete(key)))).then(() => self.clients.claim()));

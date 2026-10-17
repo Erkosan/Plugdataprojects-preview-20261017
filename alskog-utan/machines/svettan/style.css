@@ -1,4 +1,4 @@
-/* SVETTAN 3000 web shell and the bastu. Shared controls (chassis, LCD, knobs, steps, menu) come from
+/* SVETTILAINEN 3000 web shell and the bastu. Shared controls (chassis, LCD, knobs, steps, menu) come from
    3000-series.css; this file draws the sauna around the machine and scales it as one picture. */
 html, body { margin: 0; height: 100%; }
 body {
@@ -186,6 +186,25 @@ body {
 @keyframes sv-throw { 40% { transform: rotate(80deg) translateY(-6px); } }
 .sv-floor { left: 0; top: 364px; width: 1180px; height: 376px; background: repeating-linear-gradient(90deg, #5c3b24 0 38px, #3a2312 38px 42px); }
 
+/* Finskt: a few real things in the bastu. A felt pennant, salmiakki from Fazer and a Koskenkorva on the lower lave,
+   and a Fiskars axe by the woodpile. The logo files and their sources are in design-system/finska/. */
+.fi-pennant { left: 820px; top: 46px; width: 76px; height: 36px; pointer-events: none; filter: drop-shadow(0 3px 0 rgba(0, 0, 0, .3));
+  background: url(finska/suomen-lippu.svg) 0 50% / 59px 36px no-repeat, linear-gradient(#002f6c, #002f6c) 59px 50% / 17px 10px no-repeat, #f6f2e8; clip-path: polygon(0 0, 100% 50%, 0 100%); }
+.fi-salmiakki { left: 494px; top: 272px; width: 44px; height: 26px; z-index: 4; pointer-events: none; background: #141414; box-shadow: inset 0 0 0 1px #3a3a3a, 0 3px 0 rgba(0, 0, 0, .35); }
+.fi-salmiakki img { position: absolute; left: 3px; top: 3px; height: 19px; }
+.fi-salmiakki i { position: absolute; right: 4px; top: 8px; width: 9px; height: 9px; background: #8d8d8d; transform: rotate(45deg); box-shadow: inset 0 0 0 2px #5a5a5a; }
+.fi-kossu { left: 677px; top: 238px; width: 22px; height: 60px; z-index: 4; pointer-events: none; border-radius: 4px 4px 2px 2px;
+  background: linear-gradient(90deg, rgba(210, 232, 240, .55), rgba(250, 252, 255, .8) 35%, rgba(190, 215, 228, .5)); box-shadow: inset 0 0 0 1px rgba(120, 150, 165, .7), 0 3px 0 rgba(0, 0, 0, .35); }
+.fi-kossu::before { content: ''; position: absolute; left: 6px; top: -16px; width: 10px; height: 18px; background: linear-gradient(90deg, rgba(210, 232, 240, .55), rgba(250, 252, 255, .8)); box-shadow: inset 0 0 0 1px rgba(120, 150, 165, .7); }
+.fi-kossu::after { content: ''; position: absolute; left: 5px; top: -22px; width: 12px; height: 7px; background: #1f3f8c; }
+.fi-kossu span { position: absolute; left: 1px; right: 1px; top: 20px; height: 24px; display: grid; place-items: center; background: #fbfaf5; border-top: 2px solid #1f3f8c; border-bottom: 2px solid #d4a92a;
+  color: #1f3f8c; font: 800 5px/6px var(--font-engrave); letter-spacing: -.02em; text-align: center; }
+.fi-ved { left: 1126px; top: 316px; width: 50px; height: 50px; z-index: 3; pointer-events: none; }
+.fi-ved b { position: absolute; width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle, #e6c48c 0 4px, #d2a868 4px 5px, #e6c48c 5px 6px, #c79a5a 6px); box-shadow: 0 0 0 2px #efe9dc, 0 0 0 3px #2d2620; }
+.fi-axe { position: absolute; left: 12px; top: -78px; width: 10px; height: 126px; background: linear-gradient(180deg, #1b1b1b 0 76%, #f99c22 76% 80%, #1b1b1b 80%); transform: rotate(8deg); transform-origin: 50% 100%; box-shadow: inset -3px 0 0 #000000; }
+.fi-axe::before { content: ''; position: absolute; left: -26px; top: -2px; width: 40px; height: 26px; background: linear-gradient(90deg, #c8cfd4 0 5px, #2b2b2b 5px); clip-path: polygon(0 0, 62% 26%, 100% 26%, 100% 74%, 62% 74%, 0 100%); }
+.fi-axe i { position: absolute; left: -21px; top: 60px; width: 52px; height: 11px; background: url(finska/fiskars.svg) 0 0 / 100% 100%; transform: rotate(-90deg); }
+
 /* The machine: the sauna's control panel, dark wood */
 .sv-panel { left: 30px; top: 368px; width: 1120px; height: 246px; box-sizing: border-box; padding: 0; z-index: 5;
   background: repeating-linear-gradient(178deg, rgba(255, 255, 255, .025) 0 3px, transparent 3px 9px), var(--chassis); border-width: 2px; box-shadow: 0 8px 0 var(--chassis-edge); }
@@ -202,7 +221,7 @@ body {
 #isvak { left: 972px; }
 #kasta.flash { animation: sv-flash .5s ease-out; }
 @keyframes sv-flash { 0% { background: #fff4e0; } }
-.sv-knobs { left: 18px; top: 90px; width: 758px; height: 92px; box-sizing: border-box; display: grid; grid-template-columns: repeat(9, 1fr); align-items: center; padding: 8px 6px 6px; }
+.sv-knobs { left: 18px; top: 90px; width: 758px; height: 92px; box-sizing: border-box; display: grid; grid-template-columns: repeat(11, 1fr); align-items: center; padding: 8px 6px 6px; }
 .sv-knob { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .sv-knob .ds-engrave { font-size: 9px; letter-spacing: .14em; }
 .sv-kvast { left: 786px; top: 90px; width: 316px; height: 92px; box-sizing: border-box; display: flex; align-items: center; gap: 10px; padding: 8px 12px; }

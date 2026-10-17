@@ -1,9 +1,9 @@
-// SVETTAN 3000 i bastun. Sex nakna gubbar på laven är kören: varje röst i motorn är en gubbe.
+// SVETTILAINEN 3000 i bastun (förut SVETTAN; motorn, mappen och window.svettan heter som förut). Sex nakna gubbar på laven är kören: varje röst i motorn är en gubbe.
 // The sound is the PlugData engine (svettan.pd -> hvcc -> WebAssembly) running in an AudioWorklet;
 // this page is the bastu around it and only ever talks to the engine through its parameters and MIDI.
 const $ = (id) => document.getElementById(id), bastu = $('bastu');
 const VERSION = 'svettan-web-1';
-const STORAGE = 'svettan-session-v1';
+const STORAGE = 'svettilainen-session-v1', OLD_STORAGE = 'svettan-session-v1';
 const CHANNEL = 15;  // MIDI channel 16, zero-based
 const inAlskog = (() => { try { return window.parent !== window && !!window.parent.alskog; } catch { return false; } })();
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -99,14 +99,37 @@ function sing(voice, note, velocity) {
 
 // ---------- knobs
 const K = [  // name, meaning, param, default, channel colour
-  ['VÄRME', 'TEMPERATUR', 'heat', .45, '--ch-heat'], ['MUN', 'VOKAL', 'vowel', .35, '--ch-choir'], ['FLÅS', 'ANDEDRÄKT', 'breath', .35, '--ch-choir'],
-  ['DALLER', 'VIBRATO', 'tremble', .3, '--ch-choir'], ['ANDETAG', 'ANSATS OCH SLÄPP', 'swell', .35, '--ch-choir'], ['GUBBAR', 'UNISONO', 'crowd', .4, '--ch-choir'],
-  ['DROPPAR', 'SVETTDROPPAR', 'drops', .3, '--ch-water'], ['SVETT', 'DRIVE', 'drive', .2, '--ch-heat'], ['PANEL', 'RUMSKLANG', 'room', .4, '--ch-wood'],
-  ['PUMP', 'BJÖRKRISET DUCKAR KÖREN', 'whip', .35, '--ch-birch'], ['SMISK', 'BJÖRKRISETS NIVÅ', 'smack', .6, '--ch-birch']];
+  ['VÄRMI', 'TEMPERATUR', 'heat', .45, '--ch-heat'], ['MUNNI', 'VOKAL', 'vowel', .35, '--ch-choir'], ['FLÅSAA', 'ANDEDRÄKT', 'breath', .35, '--ch-choir'],
+  ['DALLERI', 'VIBRATO', 'tremble', .3, '--ch-choir'], ['ANDETAKKI', 'ANSATS OCH SLÄPP', 'swell', .35, '--ch-choir'], ['GUBBIT', 'UNISONO', 'crowd', .4, '--ch-choir'],
+  ['TROPPIT', 'SVETTDROPPAR', 'drops', .3, '--ch-water'], ['SVETTI', 'DRIVE', 'drive', .2, '--ch-heat'], ['LÖYLY', 'REVERB', 'room', .4, '--ch-wood'],
+  ['PUMPPI', 'DUCKNING', 'whip', .35, '--ch-birch'], ['SMISKI', 'BJÖRKRISETS NIVÅ', 'smack', .6, '--ch-birch']];
 const KN = '<svg viewBox="0 0 50 50" aria-hidden="true"><path class="ds-knob-arc" d="M 12 38 A 18 18 0 1 1 38 38"/><line class="ds-knob-ptr" x1="25" y1="25" x2="25" y2="9"/></svg>';
 const val = Object.fromEntries(K.map((k) => [k[2], k[3]]));
 const knobHtml = (k, i) => `<div class="sv-knob"><button class="ds-control ds-knob" id="kn${i}" role="slider" aria-valuemin="0" aria-valuemax="100" style="--ds-face:var(${k[4]})" aria-label="${k[0]} (${k[1].toLowerCase()})">${KN}</button><span class="ds-engrave">${k[0]}</span></div>`;
-$('knobs').innerHTML = K.slice(0, 9).map(knobHtml).join('');
+// VOLYM ends the row. The whole series is tuned to C, so tune (STÄMMI · TONART) has no knob on the panel; it stays in
+// the engine and on CC30 for DAWs and hosts. Both live in extras below.
+const XK = [['VRÅLI', 'VOLYM', 'volume', .8, 0, 1, 0]];  // name, meaning, param, default, min, max, step
+$('knobs').innerHTML = K.slice(0, 9).map(knobHtml).join('')
+  + XK.map((k) => `<div class="sv-knob"><button class="ds-control ds-knob" id="kn-${k[2]}" role="slider" aria-valuemin="${k[4]}" aria-valuemax="${k[5] === 1 ? 100 : k[5]}" aria-label="${k[0]} (${k[1].toLowerCase()})">${KN}</button><span class="ds-engrave">${k[0]}</span></div>`).join('');
+function bindKnob(e, {get, set, reset, text, fine = .04}) {
+  e.addEventListener('pointerdown', (ev) => {
+    ensureAudio();
+    try { e.setPointerCapture(ev.pointerId); } catch { /* synthetic pointers */ }
+    let y = ev.clientY, pos = get();
+    const mv = (m) => { if (m.pointerId !== ev.pointerId) return; pos = clamp(pos + (y - m.clientY) / 160); set(pos); y = m.clientY; };
+    const up = (u) => { if (u.pointerId !== ev.pointerId) return; e.removeEventListener('pointermove', mv); e.removeEventListener('pointerup', up); e.removeEventListener('pointercancel', up); };
+    e.addEventListener('pointermove', mv); e.addEventListener('pointerup', up); e.addEventListener('pointercancel', up);
+    say(...text());
+  });
+  e.addEventListener('dblclick', reset);
+  e.addEventListener('pointerenter', (ev) => { if (ev.pointerType === 'mouse') say(...text()); });
+  e.addEventListener('focus', () => say(...text()));
+  e.addEventListener('wheel', (ev) => { ev.preventDefault(); set(get() + (ev.deltaY < 0 ? fine : -fine)); }, {passive: false});
+  e.addEventListener('keydown', (ev) => {
+    const d = {ArrowUp: 1, ArrowRight: 1, ArrowDown: -1, ArrowLeft: -1}[ev.key];
+    if (d) { ev.preventDefault(); ev.stopPropagation(); set(get() + d * fine * 1.25); }
+  });
+}
 $('kvastKnobs').innerHTML = K.slice(9).map((k, j) => knobHtml(k, j + 9)).join('');
 function knobValue(i) {
   const k = K[i], v = val[k[2]];
@@ -130,48 +153,31 @@ function setK(i, v, quiet) {
   store();
 }
 K.forEach((k, i) => {
-  const e = $('kn' + i);
   setK(i, val[k[2]], 1);
-  e.addEventListener('pointerdown', (ev) => {
-    ensureAudio();
-    try { e.setPointerCapture(ev.pointerId); } catch { /* synthetic pointers */ }
-    let y = ev.clientY;
-    const mv = (m) => { if (m.pointerId !== ev.pointerId) return; setK(i, val[k[2]] + (y - m.clientY) / 160); y = m.clientY; };
-    const up = (u) => { if (u.pointerId !== ev.pointerId) return; e.removeEventListener('pointermove', mv); e.removeEventListener('pointerup', up); e.removeEventListener('pointercancel', up); };
-    e.addEventListener('pointermove', mv); e.addEventListener('pointerup', up); e.addEventListener('pointercancel', up);
-    say(...knobText(i));
-  });
-  e.addEventListener('dblclick', () => setK(i, k[3]));
-  e.addEventListener('pointerenter', (ev) => { if (ev.pointerType === 'mouse') say(...knobText(i)); });
-  e.addEventListener('focus', () => say(...knobText(i)));
-  e.addEventListener('wheel', (ev) => { ev.preventDefault(); setK(i, val[k[2]] + (ev.deltaY < 0 ? .04 : -.04)); }, {passive: false});
-  e.addEventListener('keydown', (ev) => {
-    const d = {ArrowUp: .05, ArrowRight: .05, ArrowDown: -.05, ArrowLeft: -.05}[ev.key];
-    if (d) { ev.preventDefault(); ev.stopPropagation(); setK(i, val[k[2]] + d); }
-  });
+  bindKnob($('kn' + i), {get: () => val[k[2]], set: (v) => setK(i, v), reset: () => setK(i, k[3]), text: () => knobText(i)});
 });
 const knobIndex = (name) => K.findIndex((k) => k[2] === name);
 
 // ---------- bastur: six sounds, named after the sauna they come from
-const BASTUR = [
-  ['FINSK', 'FINSK BASTU · TORR OCH HET', {heat: .82, vowel: .5, breath: .2, tremble: .35, swell: .3, crowd: .3, drops: .25, drive: .45, room: .3}],
-  ['RÖK', 'RÖKBASTU · SOT OCH MUMMEL', {heat: .6, vowel: 1 / 6, breath: .6, tremble: .25, swell: .55, crowd: .55, drops: .2, drive: .3, room: .65}],
-  ['SPA', 'HOTELLSPA · LJUMMET OCH RENT', {heat: .25, vowel: 5 / 6, breath: .15, tremble: .15, swell: .45, crowd: .2, drops: .1, drive: 0, room: .55}],
-  ['BADHUS', 'BADHUSET 1962 · EKO OCH DALLER', {heat: .5, vowel: 2 / 6, breath: .35, tremble: .7, swell: .4, crowd: .45, drops: .55, drive: .15, room: .85}],
-  ['MUNKAR', 'MUNKARNA · MUNNEN STÄNGD', {heat: .35, vowel: 0, breath: .3, tremble: .2, swell: .7, crowd: .7, drops: .05, drive: .1, room: .7}],
-  ['GYMMET', 'GYMMETS BASTU · PUMP OCH SMISK', {heat: .7, vowel: 4 / 6, breath: .25, tremble: .3, swell: .15, crowd: .35, drops: .3, drive: .55, room: .25, whip: .7, smack: .7}]];
+const BASTUR = [  // name · what it is, the sound
+  ['SUOMI', 'FINSK BASTU · TORR OCH HET', {heat: .82, vowel: .5, breath: .2, tremble: .35, swell: .3, crowd: .3, drops: .25, drive: .45, room: .3}],
+  ['SAVU', 'RÖKBASTU · SOT OCH MUMMEL', {heat: .6, vowel: 1 / 6, breath: .6, tremble: .25, swell: .55, crowd: .55, drops: .2, drive: .3, room: .65}],
+  ['SPAA', 'HOTELLSPA · LJUMMET OCH RENT', {heat: .25, vowel: 5 / 6, breath: .15, tremble: .15, swell: .45, crowd: .2, drops: .1, drive: 0, room: .55}],
+  ['BADHUSI', 'BADHUSET 1962 · EKO OCH DALLER', {heat: .5, vowel: 2 / 6, breath: .35, tremble: .7, swell: .4, crowd: .45, drops: .55, drive: .15, room: .85}],
+  ['MUNKIT', 'MUNKARNA · MUNNEN STÄNGD', {heat: .35, vowel: 0, breath: .3, tremble: .2, swell: .7, crowd: .7, drops: .05, drive: .1, room: .7}],
+  ['KYMMI', 'GYMMETS BASTU · PUMP OCH SMISK', {heat: .7, vowel: 4 / 6, breath: .25, tremble: .3, swell: .15, crowd: .35, drops: .3, drive: .55, room: .25, whip: .7, smack: .7}]];
 let preset = -1;
 $('presets').innerHTML = BASTUR.map((b, i) => `<button class="ds-control sv-preset" id="ps${i}" role="radio" aria-checked="false" aria-label="${b[1].toLowerCase()}">${b[0]}</button>`).join('');
 function markPreset(i) { preset = i; BASTUR.forEach((_, k) => $('ps' + k).setAttribute('aria-checked', String(k === i))); }
 function choosePreset(i) {
   for (const [name, value] of Object.entries(BASTUR[i][2])) setK(knobIndex(name), value, 1);
   markPreset(i); store();
-  say('BASTU · ' + BASTUR[i][1].split(' · ')[0], BASTUR[i][1].split(' · ')[1]);
+  say(BASTUR[i][0] + ' · ' + BASTUR[i][1].split(' · ')[0], BASTUR[i][1].split(' · ')[1]);
 }
 BASTUR.forEach((b, i) => {
   const e = $('ps' + i);
   e.onclick = () => { ensureAudio(); choosePreset(i); };
-  e.addEventListener('pointerenter', (ev) => { if (ev.pointerType === 'mouse') say('BASTU · ' + b[1].split(' · ')[0], b[1].split(' · ')[1]); });
+  e.addEventListener('pointerenter', (ev) => { if (ev.pointerType === 'mouse') say(b[0] + ' · ' + b[1].split(' · ')[0], b[1].split(' · ')[1]); });
 });
 
 // ---------- fotpallen: two octaves, every finger owns a key
@@ -225,7 +231,7 @@ $('keys').addEventListener('pointerup', lift);
 $('keys').addEventListener('pointercancel', lift);
 $('keys').addEventListener('lostpointercapture', lift);
 $('keys').addEventListener('contextmenu', (e) => e.preventDefault());
-function setOct(d) { oct = Math.max(-2, Math.min(2, oct + d)); say('OKTAV · ' + (oct > 0 ? '+' : '') + oct, 'FOTPALLEN BÖRJAR PÅ ' + nn(48 + oct * 12)); }
+function setOct(d) { oct = Math.max(-2, Math.min(2, oct + d)); say('OKTAAVI · OKTAV ' + (oct > 0 ? '+' : '') + oct, nn(48 + oct * 12)); }
 $('odn').onclick = () => setOct(-1);
 $('oup').onclick = () => setOct(1);
 
@@ -263,29 +269,58 @@ function onKasta() {
   onKasta.timer = setTimeout(() => { bastu.classList.remove('kastat'); drawMouths(); }, 1600);
   clearTimeout(onKasta.steam);
   onKasta.steam = setTimeout(() => $('steam').classList.remove('burst'), 2300);
-  say('KASTA · FSSSSSSH', 'VATTEN PÅ STENARNA · ALLA: AAAAAH');
+  say('KASTAA · FSSSSSSH', 'LÖYLYÄ! · ALLA: AAAAAH');
 }
 for (const id of ['kasta', 'bucket']) $(id).addEventListener('pointerdown', (e) => { e.preventDefault(); ensureAudio(); kasta(); });
 for (const id of ['kasta', 'bucket']) $(id).addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); if (!e.repeat) { ensureAudio(); kasta(); } } });
-$('kasta').addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') say('KASTA · VATTEN PÅ STENARNA', 'KÖREN SVÄLLER OCH BLIR VARMARE (Q)'); });
+$('kasta').addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') say('KASTAA · VATTEN PÅ STENARNA', 'Q'); });
 
 // ---------- ISVAK: everyone out in the lake. The chord freezes (sustain) and the bastu cools down.
 function setHold(v) {
   hold = !!v; param('hold', hold ? 1 : 0);
   $('isvak').setAttribute('aria-pressed', String(hold)); $('window').setAttribute('aria-pressed', String(hold));
   bastu.classList.toggle('frozen', hold);
-  say(hold ? 'ISVAK · ALLA UT I SJÖN' : 'ISVAK · IN I VÄRMEN IGEN', hold ? 'ACKORDET FRYSER FAST · BASTUN SVALNAR' : 'SLÄPPTA TONER SLÄPPS');
+  say(hold ? 'ISVAKKI · ALLA UT I SJÖN' : 'ISVAKKI · IN I VÄRMEN IGEN', hold ? 'ACKORDET FRYSER FAST' : '');
   store();
 }
 $('isvak').onclick = () => { ensureAudio(); setHold(!hold); };
 $('window').onclick = () => { ensureAudio(); setHold(!hold); };
-$('isvak').addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') say('ISVAK · HÅLL ACKORDET', 'SOM EN SUSTAINPEDAL · KYLER BASTUN (I)'); });
+$('isvak').addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') say('ISVAKKI · HÅLL ACKORDET', 'I'); });
 
 // ---------- björkriset: 16 steps of smisk (1) and hård smisk (2)
 const KVAST = [2, 0, 0, 1, 0, 0, 1, 0, 2, 0, 0, 1, 0, 1, 0, 0];
 let kv = KVAST.slice();
-const extras = {bpm: 96, length: 16, swing: 0, tune: 0, volume: .8};
-const stepText = (i) => ['BJÖRKRIS · STEG ' + (i + 1), ['VILA', 'SMISK', 'HÅRD SMISK'][kv[i]]];
+// The page starts at 120 BPM, the same tempo as TURBOTUTTI's exempelslinga (and what most DAWs open at).
+// The engine's own bpm default stays 96, so existing DAW projects and presets keep their tempo.
+const EXAMPLE_BPM = 120;
+const extras = {bpm: EXAMPLE_BPM, length: 16, swing: 0, tune: 0, volume: .8};
+// STÄMMI · TONART shows the key as a note name (the exempel is in C minor); VRÅLI · VOLYM in percent.
+const keyName = (t) => { const s = Math.round(t); return NAMES[((s % 12) + 12) % 12] + (s ? (s > 0 ? ' +' : ' −') + Math.abs(s) : ''); };
+const xknob = (name) => XK.find((k) => k[2] === name);
+const xnorm = (k) => (extras[k[2]] - k[4]) / (k[5] - k[4]);
+const xValue = (k) => k[2] === 'tune' ? keyName(extras.tune) : Math.round(extras[k[2]] * 100) + '%';
+const xText = (k) => [k[0] + ' · ' + k[1], xValue(k)];
+function setExtra(name, value, quiet) {
+  const k = xknob(name);
+  if (name === 'tune') value = Math.min(12, Math.max(-12, Math.round(value)));  // whole semitones, with or without a knob
+  if (k) {
+    value = clamp(value, k[4], k[5]);
+    if (k[6]) value = Math.round(value / k[6]) * k[6];
+  }
+  extras[name] = value; param(name, value); store();
+  if (!k) return;
+  const e = $('kn-' + name);
+  e.style.setProperty('--angle', (xnorm(k) * 270 - 135) + 'deg');
+  e.setAttribute('aria-valuenow', name === 'tune' ? value : Math.round(value * 100));
+  e.setAttribute('aria-valuetext', xValue(k));
+  if (!quiet) say(...xText(k));
+}
+XK.forEach((k) => {
+  setExtra(k[2], extras[k[2]], 1);
+  bindKnob($('kn-' + k[2]), {get: () => xnorm(k), set: (v) => setExtra(k[2], k[4] + v * (k[5] - k[4])), reset: () => setExtra(k[2], k[3]),
+    text: () => xText(k), fine: k[6] ? k[6] / (k[5] - k[4]) : .04});
+});
+const stepText = (i) => ['VIHTA · BJÖRKRIS STEG ' + (i + 1), ['VILA', 'SMISKI', 'HÅRD SMISKI'][kv[i]]];
 function drawStep(i) {
   const b = $('sp' + i);
   b.setAttribute('aria-pressed', String(kv[i] > 0));
@@ -304,24 +339,24 @@ function setPlaying(v) {
   playing = v;
   $('play').setAttribute('aria-pressed', String(v)); $('vihta').setAttribute('aria-pressed', String(v));
   $('pi').setAttribute('d', v ? 'M6 5 H10 V19 H6 Z M14 5 H18 V19 H14 Z' : 'M7 5 L19 12 L7 19 Z');
-  if (v) say('BJÖRKRIS · SMISK SMISK', 'KÖREN PUMPAR MED RISET');
-  else { for (let k = 0; k < 16; k++) $('sp' + k).classList.remove('is-current'); say('BJÖRKRISET HÄNGER PÅ KROKEN', ''); }
+  if (v) say('VIHTA · SMISKI SMISKI', '');
+  else { for (let k = 0; k < 16; k++) $('sp' + k).classList.remove('is-current'); say('VIHTA · PÅ KROKEN', ''); }
 }
 function togglePlay() {
   ensureAudio();
-  if (clocked) { say('SYNKAD · MIDI-KLOCKAN STYR BJÖRKRISET'); return; }
+  if (clocked) { say('SYNKAD · MIDI-KLOCKAN STYR VIHTAN'); return; }
   setPlaying(!playing); param('start', playing ? 1 : 0);
 }
 $('play').onclick = togglePlay;
 $('vihta').onclick = togglePlay;
-$('vihta').addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') say('BJÖRKRISET · STARTA OCH STOPPA', 'MELLANSLAG'); });
-const bpm = () => Math.min(300, Math.max(30, Math.round(+$('bpm').value || 96)));
+$('vihta').addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') say('VIHTA · BJÖRKRISET', 'MELLANSLAG'); });
+const bpm = () => Math.min(300, Math.max(30, Math.round(+$('bpm').value || EXAMPLE_BPM)));
 function setBpm(v, quiet) {
   $('bpm').value = Math.min(300, Math.max(30, Math.round(v)));
   extras.bpm = bpm(); param('bpm', extras.bpm); store();
-  if (!quiet) say('TEMPO · BJÖRKRISET', bpm() + ' BPM');
+  if (!quiet) say('VIHTATAKTI · TEMPO', bpm() + ' BPM');
 }
-$('bpm').addEventListener('input', () => { if ($('bpm').value !== '') { extras.bpm = bpm(); param('bpm', extras.bpm); say('TEMPO · BJÖRKRISET', bpm() + ' BPM'); store(); } });
+$('bpm').addEventListener('input', () => { if ($('bpm').value !== '') { extras.bpm = bpm(); param('bpm', extras.bpm); say('VIHTATAKTI · TEMPO', bpm() + ' BPM'); store(); } });
 $('bpm').addEventListener('change', () => setBpm(bpm()));
 $('bpm').addEventListener('keydown', (e) => { if (e.key === 'Enter') e.target.blur(); });
 
@@ -330,7 +365,7 @@ function setHeat(h) {
   heat = h;
   const t = temp(h);
   $('lval').textContent = t + '°C';
-  $('thermoRead').textContent = t + '°';
+  $('thermoRead').textContent = t + ' °C';
   $('mercury').style.height = (clamp((t - 20) / 100) * 100).toFixed(1) + '%';
   bastu.style.setProperty('--heat', clamp(h).toFixed(3));
   bastu.style.setProperty('--flush', clamp((h - .3) / .7).toFixed(3));
@@ -345,10 +380,10 @@ function onSvimma(on) {
     const pool = singing.length ? singing : [0, 1, 2, 3, 4, 5];
     fainted = pool[Math.floor(Math.random() * pool.length)];
     $('g' + fainted).classList.add('faint');
-    say(GUBBAR[fainted].name + ' SVIMMADE!', 'FÖR VARMT · BÄR UT HONOM');
+    say(GUBBAR[fainted].name + ' SVIMMADE!', 'PERKELE · BÄR UT HONOM');
   } else if (fainted >= 0) {
     $('g' + fainted).classList.remove('faint');
-    say(GUBBAR[fainted].name + ' VAKNADE', '"JAG MÅR BRA. KASTA EN TILL."');
+    say(GUBBAR[fainted].name + ' VAKNADE', '"JAG MÅR BRA. KASTAA EN TILL."');
     fainted = -1;
   }
 }
@@ -388,7 +423,7 @@ function fire(ev) {
 const events = [];
 function fromEngine({data}) {
   if (data.type === 'ev') events.push(data);
-  else if (data.type === 'ready') { ready = true; say('BASTUN ÄR VARM', 'GUBBARNA VÄNTAR · SPELA ETT ACKORD'); }
+  else if (data.type === 'ready') { ready = true; say('BASTUN ÄR VARM', 'GUBBARNA VÄNTAR'); }
   else if (data.type === 'error') say('MOTORFEL', String(data.message).toUpperCase());
 }
 function syncEngine() {
@@ -401,10 +436,11 @@ function syncEngine() {
 
 // ---------- bastuprat: the gubbar talk when nobody plays
 const PRAT = [
-  ['BENGT', 'DET HÄR ÄR INGENTING. I FINLAND KÖR DE 120.'], ['LASSE', 'KASTA EN TILL, DÅ.'], ['KJELL', 'VEM SATT HÄR FÖRE MIG? DET ÄR BLÖTT.'],
+  ['BENGT', 'DET HÄR ÄR INGENTING. I TAMPERE KÖR DE 120.'], ['LASSE', 'KASTAA EN TILL, DÅ.'], ['KJELL', 'VEM SATT HÄR FÖRE MIG? DET ÄR BLÖTT.'],
   ['ROFFE', 'SOLGLASÖGONEN ÄR FÖR ATT JAG ÄR KÄND.'], ['GÖRAN', 'JAG SER INGENTING. GLASÖGONEN IGEN.'], ['STIG-ÅKE', 'KÄNN PÅ DEN HÄR MUSKELN.'],
   ['BENGT', 'HANDDUKEN ÄR VALFRI EFTER 22.'], ['KJELL', 'TITTA INTE NER.'], ['ROFFE', 'DET ÄR VÄRMEN SOM GÖR DEN LITEN.'],
-  ['LASSE', 'SJUNG MED NU, GUBBAR.'], ['GÖRAN', 'NÅGON HAR SLÄPPT EN. DET LUKTAR KORV.'], ['STIG-ÅKE', 'SISTA I ISVAKEN BJUDER PÅ PILSNER.'],
+  ['LASSE', 'SJUNG MED NU, GUBBAR.'], ['GÖRAN', 'NÅGON HAR SLÄPPT EN. DET LUKTAR KORV.'], ['STIG-ÅKE', 'SISTA I ISVAKEN BJUDER PÅ KOSKENKORVA.'],
+  ['KJELL', 'VEM HAR ÄTIT UPP SALMIAKEN?'], ['ROFFE', 'SISU, GUBBAR. SISU.'],
   ['ALLA', 'MMMMMMMMMMMMMM.']];
 let prat = 0;
 setInterval(() => {
@@ -453,19 +489,20 @@ function restore(data) {
   K.forEach((k, i) => { const v = data.knobs && data.knobs[k[2]]; if (Number.isFinite(v)) setK(i, v, 1); });
   if (data.extras) for (const name of Object.keys(extras)) if (Number.isFinite(data.extras[name])) extras[name] = data.extras[name];
   setBpm(extras.bpm, 1);
-  for (const name of ['length', 'swing', 'tune', 'volume']) param(name, extras[name]);
+  for (const name of ['length', 'swing', 'tune', 'volume']) setExtra(name, extras[name], 1);
   kv = data.bjorkris.slice(); kv.forEach((v, i) => { drawStep(i); param('kv' + i, v); });
   markPreset(Number.isInteger(data.preset) ? data.preset : -1);
 }
-try { const saved = localStorage.getItem(STORAGE); if (saved) restore(JSON.parse(saved)); } catch { /* start fresh */ }
+try { const saved = localStorage.getItem(STORAGE) || localStorage.getItem(OLD_STORAGE); if (saved) restore(JSON.parse(saved)); } catch { /* start fresh */ }
 drawMouths();
 
 // ---------- gear menu (shell; never in the bastu)
 const menu = $('menu');
 const closeMenu = () => { menu.open = false; };
 document.addEventListener('pointerdown', (e) => { if (menu.open && !menu.contains(e.target)) closeMenu(); });
-// Spela exempel: a slow I-vi-IV-V with björkriset, so a first visit hears the whole bastu.
-const DEMO = [[48, 55, 60, 64], [45, 52, 57, 60], [41, 48, 57, 60], [43, 50, 55, 59]];
+// Spela exempel: i-VI-iv-v in C minor (Cm, Ab, Fm, Gm), one chord a bar with björkriset at 120 BPM, so a first visit
+// hears the whole bastu. Same key and tempo as TURBOTUTTI's exempelslinga: every chord sits on its C (Gm adds the 9th).
+const DEMO = [[48, 55, 60, 63], [44, 51, 56, 60], [41, 48, 56, 60], [43, 50, 55, 58]];
 let demoTimer = null;
 function stopDemo() { clearInterval(demoTimer); demoTimer = null; for (let n = 36; n < 90; n++) post({type: 'midi', bytes: [0x80 | CHANNEL, n, 0]}); }
 $('demo').onclick = async () => {
@@ -473,6 +510,7 @@ $('demo').onclick = async () => {
   await ensureAudio();
   if (demoTimer) { stopDemo(); $('demo').textContent = 'Spela exempel'; if (playing) togglePlay(); say('EXEMPLET SLUT'); return; }
   $('demo').textContent = 'Stoppa exemplet';
+  if (!inAlskog) setBpm(EXAMPLE_BPM, 1); // i Älskog styr värden tempot
   if (!playing) togglePlay();
   let bar = 0, last = [];
   const step = () => {
@@ -485,10 +523,10 @@ $('demo').onclick = async () => {
   step();
   demoTimer = setInterval(step, 4 * 60000 / bpm());
 };
-$('clear').onclick = () => { kv = Array(16).fill(0); kv.forEach((v, i) => { drawStep(i); param('kv' + i, v); }); store(); closeMenu(); say('BJÖRKRISET RENSAT', 'KLICKA PÅ STEGEN FÖR SMISK'); };
+$('clear').onclick = () => { kv = Array(16).fill(0); kv.forEach((v, i) => { drawStep(i); param('kv' + i, v); }); store(); closeMenu(); say('VIHTA · RENSAD', ''); };
 $('save').onclick = () => {
   const url = URL.createObjectURL(new Blob([JSON.stringify(snapshot(), null, 1)], {type: 'application/json'}));
-  const link = document.createElement('a'); link.href = url; link.download = 'Svettan-session.json';
+  const link = document.createElement('a'); link.href = url; link.download = 'Svettilainen-session.json';
   document.body.append(link); link.click(); link.remove();
   setTimeout(() => URL.revokeObjectURL(url), 2000); closeMenu(); say('SESSIONEN SPARAD', 'RATTAR, BJÖRKRIS OCH BASTU');
 };
@@ -499,10 +537,10 @@ $('load').onchange = async (e) => {
   try { restore(JSON.parse(await file.text())); store(); closeMenu(); say('SESSIONEN ÖPPNAD', file.name.toUpperCase()); }
   catch (error) { alert('Kunde inte öppna sessionen: ' + error.message); }
 };
-// MIDI: SVETTAN listens on channel 16 and the shared channel 1. Alone on the page it takes every channel.
+// MIDI: SVETTILAINEN listens on channel 16 and the shared channel 1. Alone on the page it takes every channel.
 const CCKNOB = {16: 'heat', 17: 'vowel', 18: 'breath', 19: 'tremble', 20: 'swell', 21: 'crowd', 22: 'drops', 23: 'drive', 24: 'room', 25: 'whip', 26: 'smack', 1: 'tremble'};
-const CCEXTRA = {7: ['volume', (v) => v / 127, 'VOLYM'], 28: ['length', (v) => 1 + Math.round(15 * v / 127), 'BJÖRKRIS · LÄNGD'],
-  29: ['swing', (v) => v / 127, 'BJÖRKRIS · SWING'], 30: ['tune', (v) => -12 + 24 * v / 127, 'STÄMNING']};
+const CCEXTRA = {7: ['volume', (v) => v / 127, 'VRÅLI · VOLYM'], 28: ['length', (v) => 1 + Math.round(15 * v / 127), 'VIHTA · LÄNGD'],
+  29: ['swing', (v) => v / 127, 'SVINKI · SWING'], 30: ['tune', (v) => -12 + 24 * v / 127, 'STÄMMI · TONART']};
 const listening = (channel) => !inAlskog || channel === 16 || channel === 1;
 function midiMessage({data}) {
   if (!data || data.length < 1) return;
@@ -532,8 +570,8 @@ function midiMessage({data}) {
     else if (cc === 123 || cc === 120) post({type: 'midi', bytes: [0xb0 | CHANNEL, 123, 0]});
     else if (cc in CCEXTRA) {
       const [name, map, label] = CCEXTRA[cc], value = map(v);
-      extras[name] = value; param(name, value); store();
-      say(label, name === 'tune' ? (value >= 0 ? '+' : '') + value.toFixed(1) + ' HT' : name === 'length' ? value + ' STEG' : Math.round(value * 100) + '%');
+      setExtra(name, value, 1);
+      say(label, name === 'tune' ? keyName(extras.tune) : name === 'length' ? value + ' STEG' : Math.round(value * 100) + '%');
     }
   }
 }
@@ -550,10 +588,10 @@ async function connectMidi() {
   midiAccess.onstatechange = bind; bind();
 }
 $('midi').onclick = async () => { try { await connectMidi(); closeMenu(); } catch (error) { alert(error.message); } };
-const MIDIMAP = [[16, 'VÄRME · temperatur'], [17, 'MUN · vokal M O Å A Ä E I'], [18, 'FLÅS · andedräkt'], [19, 'DALLER · vibrato (även CC1)'],
-  [20, 'ANDETAG · ansats och släpp'], [21, 'GUBBAR · unisono'], [22, 'DROPPAR · svettdroppar'], [23, 'SVETT · drive'], [24, 'PANEL · rumsklang'],
-  [25, 'PUMP · björkriset duckar kören'], [26, 'SMISK · björkrisets nivå'], [27, 'KASTA (64–127 kastar)'], [64, 'ISVAK · sustainpedal'],
-  [14, 'Tempo 30–300 BPM'], [15, 'Björkriset start / stopp'], [7, 'Volym'], [28, 'Björkrisets längd'], [29, 'Swing'], [30, 'Stämning ±12 halvtoner']];
+const MIDIMAP = [[16, 'VÄRMI · temperatur'], [17, 'MUNNI · vokal M O Å A Ä E I'], [18, 'FLÅSAA · andedräkt'], [19, 'DALLERI · vibrato (även CC1)'],
+  [20, 'ANDETAKKI · ansats och släpp'], [21, 'GUBBIT · unisono'], [22, 'TROPPIT · svettdroppar'], [23, 'SVETTI · drive'], [24, 'LÖYLY · reverb'],
+  [25, 'PUMPPI · björkriset duckar kören'], [26, 'SMISKI · björkrisets nivå'], [27, 'KASTAA (64–127 kastar)'], [64, 'ISVAKKI · sustainpedal'],
+  [14, 'VIHTATAKTI · tempo 30–300 BPM'], [15, 'VIHTA · start / stopp'], [7, 'VRÅLI · volym'], [28, 'VIHTA · längd'], [29, 'SVINKI · swing'], [30, 'STÄMMI · tonart ±12 halvtoner']];
 $('midi-map-list').innerHTML = '<li><code>Toner</code> kanal 16 och 1 · sex gubbar, den sjunde tonen tar den äldsta</li><li><code>MIDI-klocka</code> start, stopp och klocka styr björkriset</li>' + MIDIMAP.map(([cc, label]) => `<li><code>CH16/CH1 CC${cc}</code> ${label}</li>`).join('');
 const panel = menu.querySelector('.menu-panel');
 const showMap = (show) => { panel.classList.toggle('show-midi-map', show); $('midi-map-panel').hidden = !show; $('midi-map-toggle').setAttribute('aria-expanded', String(show)); };
@@ -561,7 +599,7 @@ $('midi-map-toggle').onclick = () => showMap(true);
 $('midi-map-back').onclick = () => showMap(false);
 menu.addEventListener('toggle', () => { if (!menu.open) showMap(false); });
 // Installing as an app
-const INSTALLED = 'svettan-installed-v1';
+const INSTALLED = 'svettilainen-installed-v1';
 let installPrompt;
 const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 const installedBefore = () => { try { return localStorage.getItem(INSTALLED) === '1'; } catch { return false; } };
@@ -608,12 +646,12 @@ Object.defineProperties(hook, Object.getOwnPropertyDescriptors({
     else if (name === 'start') { if (!!value !== playing) togglePlay(); }
     else if (name === 'hold') setHold(!!value);
     else if (name === 'kasta') { if (value) kasta(); }
-    else if (name in extras) { extras[name] = value; param(name, value); }
+    else if (name in extras) setExtra(name, value, 1);
   },
   noteOn(note, velocity = 100) { ensureAudio(); post({type: 'midi', bytes: [0x90 | CHANNEL, note, velocity]}); },
   noteOff(note) { post({type: 'midi', bytes: [0x80 | CHANNEL, note, 0]}); },
   kasta, togglePlay, ensureAudio, choosePreset,
-  get heat() { return heat; }, get singing() { return voiceNote.slice(); },
+  get heat() { return heat; }, get singing() { return voiceNote.slice(); }, get exempel() { return DEMO.map((chord) => chord.slice()); },
   get node() { return node; }, get context() { return ac; }, get ready() { return ready; },
 }));
 window.svettan = hook;

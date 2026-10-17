@@ -1,7 +1,7 @@
 // Network first, cache as fallback: the room works offline after one visit.
-const CACHE = 'turbotutti-web-0d8c3320f08d';
+const CACHE = 'turbotutti-web-6049fcb55e14';
 const SHELL = ['./', 'index.html', 'style.css', 'tokens.css', '3000-series.css', 'app.js', 'worklet.js', 'turbotutte-engine.js', 'params.json',
-  'manifest.webmanifest', 'icon-512.png', 'apple-touch-icon.png'];
+  'manifest.webmanifest', 'icon-512.png', 'apple-touch-icon.png', 'finska/fazer-bla.svg', 'finska/nokia.svg', 'finska/marimekko.svg', 'finska/suomen-lippu.svg'];
 self.addEventListener('install', (event) => { event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', (event) => {
   event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => (key.startsWith('turbotutti-web-') || key.startsWith('turbotutte-web-')) && key !== CACHE).map((key) => caches.delete(key)))).then(() => self.clients.claim()));

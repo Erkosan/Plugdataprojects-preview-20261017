@@ -365,7 +365,7 @@ function setHeat(h) {
   heat = h;
   const t = temp(h);
   $('lval').textContent = t + '°C';
-  $('thermoRead').textContent = t + '°';
+  $('thermoRead').textContent = t + ' °C';
   $('mercury').style.height = (clamp((t - 20) / 100) * 100).toFixed(1) + '%';
   bastu.style.setProperty('--heat', clamp(h).toFixed(3));
   bastu.style.setProperty('--flush', clamp((h - .3) / .7).toFixed(3));
@@ -510,7 +510,7 @@ $('demo').onclick = async () => {
   await ensureAudio();
   if (demoTimer) { stopDemo(); $('demo').textContent = 'Spela exempel'; if (playing) togglePlay(); say('EXEMPLET SLUT'); return; }
   $('demo').textContent = 'Stoppa exemplet';
-  setBpm(EXAMPLE_BPM, 1);
+  if (!inAlskog) setBpm(EXAMPLE_BPM, 1); // i Älskog styr värden tempot
   if (!playing) togglePlay();
   let bar = 0, last = [];
   const step = () => {

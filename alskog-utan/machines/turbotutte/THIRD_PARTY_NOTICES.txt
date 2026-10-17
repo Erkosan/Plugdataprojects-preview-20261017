@@ -1,6 +1,9 @@
-Third-party notices for TURBOTUTTE 3000
+Third-party notices for TURBOTUTTI 3000
 
-The TURBOTUTTE patches, room and design remain their owner's material.
+The TURBOTUTTI patches, room and design remain their owner's material.
+The Finnish logos on the web page (Fazer, Nokia, Marimekko) are trademarks of their owners and are used here as
+decoration only. The files come from Wikimedia Commons, where they are public domain (simple text logos);
+see design-system/finska/KALLOR.md in the source.
 The sound engine is generated from synths/Turbotutte/*.pd by hvcc (Wasted Audio).
 
 

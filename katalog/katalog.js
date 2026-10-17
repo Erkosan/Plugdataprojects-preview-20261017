@@ -21,6 +21,10 @@
     return el;
   };
 
+  // Adresserna i registret är absoluta på runken.nu (/turbotutti/). Länkarna görs relativa från katalogens egen
+  // adress, så att katalogen fungerar även under en undermapp (GitHub Pages-previewn).
+  const djup = data.katalog.adress.split('/').filter(Boolean).length;
+  const lank = (adress) => (adress.startsWith('/') ? '../'.repeat(djup) + adress.slice(1) : adress);
   const datum = (iso) => {
     const [, mm, dd] = iso.split('-');
     return `${Number(dd)}/${Number(mm)}`;
@@ -83,7 +87,7 @@
           h('span', { class: 'villkor' }, m.betalning)),
         h('div', { class: 'knappar' },
           kommer ? h('span', { class: 'knapp knapp--av' }, 'KOMMER')
-            : h('a', { class: 'knapp knapp--spela', href: m.adress }, h('span', { class: 'play', 'aria-hidden': 'true' }), 'SPELA NU'),
+            : h('a', { class: 'knapp knapp--spela', href: lank(m.adress) }, h('span', { class: 'play', 'aria-hidden': 'true' }), 'SPELA NU'),
           m.klipp && h('button', { class: 'knapp knapp--lyssna', type: 'button', 'aria-pressed': 'false', onclick: (e) => lyssna(m, e.currentTarget) },
             h('span', { class: 'etikett' }, 'LYSSNA')))));
   };
@@ -110,9 +114,9 @@
           h('span', {}, m.namn),
           h('span', { class: 'meny-filer' },
             [...m.nedladdningar].filter((f) => f.os !== 'kit').sort((a, b) => OS_ORDNING.indexOf(a.os) - OS_ORDNING.indexOf(b.os))
-              .map((f) => h('a', { href: `${m.adress}downloads/${f.fil}`, download: true }, f.etikett)),
+              .map((f) => h('a', { href: lank(`${m.adress}downloads/${f.fil}`), download: true }, f.etikett)),
             snart(m).length ? h('span', { class: 'snart' }, `${snart(m).map((os) => OS_NAMN[os]).join('/')} KOMMER SNART`) : null,
-            (m.fler || []).map((f) => h('a', { href: f.adress }, f.etikett)))))),
+            (m.fler || []).map((f) => h('a', { href: lank(f.adress) }, f.etikett)))))),
         data.nytt.length ? [h('h2', {}, 'NYTT'),
           h('ul', { class: 'meny-nytt' }, data.nytt.slice(0, 5).map((n) => h('li', {}, h('time', { datetime: n.datum }, datum(n.datum)), ' ', n.text)))] : null,
         h('p', { class: 'meny-villkor' }, data.katalog.villkor)));

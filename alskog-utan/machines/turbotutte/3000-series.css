@@ -96,7 +96,7 @@
 .ds-menu-section strong{display:block;margin-bottom:9px;font-size:12px;letter-spacing:.05em;}
 .ds-menu-help{margin:12px 0 0;font-size:11px;line-height:1.65;color:var(--menu-muted);}
 
-/* TURBOTUTTE: hockey locker room. Shower-tile ground, locker vents, towel-stripe band, scoreboard LCD. */
+/* TURBOTUTTI: hockey locker room. Shower-tile ground, locker vents, towel-stripe band, scoreboard LCD. */
 [data-theme="turbotutte"] .ds-ground{background-size:var(--knob) var(--knob);background-image:linear-gradient(rgba(29,42,51,.18) 1px,transparent 1px),linear-gradient(90deg,rgba(29,42,51,.18) 1px,transparent 1px);}
 [data-theme="turbotutte"] .ds-chassis{border-width:2px;}
 [data-theme="turbotutte"] .ds-chassis::before{content:'';position:absolute;right:var(--space-30);width:240px;top:10px;height:22px;background:repeating-linear-gradient(90deg,var(--chassis-edge) 0 22px,transparent 22px 30px) 0 0/100% 4px no-repeat,repeating-linear-gradient(90deg,var(--chassis-edge) 0 22px,transparent 22px 30px) 0 9px/100% 4px no-repeat,repeating-linear-gradient(90deg,var(--chassis-edge) 0 22px,transparent 22px 30px) 0 18px/100% 4px no-repeat;opacity:.8;pointer-events:none;}
@@ -106,7 +106,16 @@
 [data-theme="turbotutte"] .ds-gear{border:0;background:var(--tre-kronor-blue);}
 [data-theme="turbotutte"] .ds-menu{border-width:2px;border-top-width:8px;}
 
-/* Duschen: the TURBOTUTTE shower crew. Blocky figures in the Balkangucci style (40px head, 6px eyes, stubble), towel round the waist. */
+/* SVETTILAINEN: a dark wooden sauna control panel. Ember LCD in a thick bezel, an ember gear and a menu with a wood-brown top edge.
+   The bastu itself (lave, gubbar, aggregat, isvak) is drawn by the SVETTILAINEN page. */
+[data-theme="svettan"] .ds-chassis{border-width:2px;}
+[data-theme="svettan"] .ds-lcd{border-width:3px;border-radius:var(--radius-2);box-shadow:inset 0 0 0 1px #000000,0 0 18px rgba(255,106,42,.25);}
+[data-theme="svettan"] .ds-lcd-name,[data-theme="svettan"] .ds-lcd-line{text-shadow:0 0 6px var(--lcd-glow);}
+[data-theme="svettan"] .ds-gear{border:0;background:#8a4b26;}
+[data-theme="svettan"] .ds-menu{border-width:2px;border-top-width:8px;}
+[data-theme="svettan"] .ds-knob .ds-knob-arc{stroke:var(--chassis-edge);}
+
+/* Duschen: the TURBOTUTTI shower crew. Blocky figures in the Balkangucci style (40px head, 6px eyes, stubble), towel round the waist. */
 .ds-shower{position:relative;display:flex;justify-content:space-around;align-items:flex-end;gap:var(--space-8);height:230px;padding:0 var(--space-30) 18px;overflow:hidden;background:var(--ground);background-image:linear-gradient(rgba(29,42,51,.18) 1px,transparent 1px),linear-gradient(90deg,rgba(29,42,51,.18) 1px,transparent 1px);background-size:var(--knob) var(--knob);}
 .ds-shower[hidden]{display:none;}
 .ds-shower::after{content:'';position:absolute;left:0;right:0;bottom:0;height:18px;background:var(--chassis);box-shadow:inset 0 2px 0 var(--chassis-edge);}
@@ -184,7 +193,7 @@
 
 @media (prefers-reduced-motion:reduce){.ds-shower *,.ds-shower *::before,.ds-shower *::after{animation:none!important;}}
 
-/* Omklädningsrummet: TURBOTUTTE built into the locker room. The machine is the locker wall; its notes drive the showers. */
+/* Omklädningsrummet: TURBOTUTTI built into the locker room. The machine is the locker wall; its notes drive the showers. */
 .ds-room{position:relative;width:1180px;height:740px;overflow:hidden;font-family:var(--font-panel);color:var(--control-ink);--rain:.6s;--beat:.47s;--steam:.5;background:var(--ground);background-image:linear-gradient(rgba(29,42,51,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(29,42,51,.16) 1px,transparent 1px);background-size:var(--knob) var(--knob);}
 .ds-room>*{position:absolute;}
 .ds-room-floor{left:0;right:0;top:648px;bottom:0;background:#c3d1ce;background-image:linear-gradient(rgba(29,42,51,.22) 1px,transparent 1px),linear-gradient(90deg,rgba(29,42,51,.22) 1px,transparent 1px);background-size:var(--cell) var(--cell);box-shadow:inset 0 3px 0 var(--chassis-edge);}
@@ -264,7 +273,7 @@
 .ds-key.b{top:-14px;width:32px;height:20px;margin-left:-16px;border-radius:var(--radius-disc);background:#111111;box-shadow:0 3px 0 #000000,inset 0 2px 0 #3a3a3a;z-index:2;}
 .ds-key.b.down{background:var(--playhead);box-shadow:0 1px 0 #000000;transform:translateY(2px);}
 .ds-key:focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
-.ds-tt-bottom .ds-control.small{width:44px;height:46px;font:700 10px var(--font-engrave);letter-spacing:.08em;}
+.ds-tt-bottom .ds-control.small{width:44px;height:46px;font:700 8px var(--font-engrave);letter-spacing:.02em;}
 .ds-tt-steps .ds-step.is-write{box-shadow:inset 0 0 0 2px var(--playhead);}
 .ds-chain{left:706px;top:36px;width:28px;height:62px;padding:0;border:0;background:transparent;cursor:grab;z-index:4;touch-action:none;}
 .ds-chain::before{content:'';position:absolute;left:12px;top:0;width:4px;height:var(--chain,36px);background:repeating-linear-gradient(180deg,#7d8b94 0 4px,#c8cfd4 4px 6px);transition:height 90ms;}

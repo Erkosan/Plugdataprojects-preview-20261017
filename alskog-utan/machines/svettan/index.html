@@ -8,8 +8,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="description" content="SVETTAN 3000. Gubbkören i bastun: sex nakna gubbar på laven sjunger ackorden du spelar. Kasta vatten på stenarna, hoppa i isvaken, smiska med björkriset.">
-<title>SVETTAN 3000 — Pastor Gregorius</title>
+<meta name="description" content="SVETTILAINEN 3000. Gubbkören i bastun: sex nakna gubbar på laven sjunger ackorden du spelar. Kasta vatten på stenarna, hoppa i isvaken, smiska med björkriset.">
+<title>SVETTILAINEN 3000 — Pastor Gregorius</title>
 <link rel="icon" href="icon-512.png" sizes="512x512" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -35,17 +35,21 @@
  <div class="sv-lamp" aria-hidden="true"><i></i></div>
  <div class="sv-haze" aria-hidden="true"></div>
 
- <button class="sv-window" id="window" aria-pressed="false" aria-label="Fönstret mot isvaken: ISVAK, håll ackordet (I)">
+ <button class="sv-window" id="window" aria-pressed="false" aria-label="Fönstret mot isvaken: ISVAKKI, håll ackordet (I)">
   <span class="sv-sky"></span><span class="sv-moon"></span><span class="sv-lake"></span><span class="sv-hole"></span><span class="sv-frost"></span>
  </button>
  <span class="sv-sign ds-engrave" style="left:58px;top:212px">ISVAKEN</span>
 
- <div class="sv-thermo" aria-hidden="true"><span class="sv-thermo-tube"><i id="mercury"></i></span><span class="sv-thermo-bulb"></span><span class="sv-thermo-read" id="thermoRead">85°</span></div>
+ <div class="sv-thermo" aria-hidden="true"><span class="sv-thermo-tube"><i id="mercury"></i></span><span class="sv-thermo-bulb"></span><span class="sv-thermo-read" id="thermoRead">85 °C</span></div>
 
- <button class="sv-vihta" id="vihta" aria-pressed="false" aria-label="Björkriset på kroken: starta och stoppa björkriset (mellanslag)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-vihta"/></svg></button>
+ <button class="sv-vihta" id="vihta" aria-pressed="false" aria-label="Vihtan, björkriset på kroken: starta och stoppa (mellanslag)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-vihta"/></svg></button>
 
  <div class="sv-lave sv-lave-upper"></div>
  <div class="sv-lave sv-lave-lower"></div>
+ <div class="fi-pennant" aria-hidden="true"></div>
+ <div class="fi-salmiakki" aria-hidden="true"><img src="finska/fazer-vit.svg" alt=""><i></i></div>
+ <div class="fi-kossu" aria-hidden="true"><span>KOSKEN<br>KORVA</span></div>
+ <div class="fi-ved" aria-hidden="true"><span class="fi-axe"><i></i></span><b style="left:4px;top:30px"></b><b style="left:26px;top:30px"></b><b style="left:15px;top:11px"></b></div>
  <div id="gubbar"></div>
  <div id="drops" aria-hidden="true"></div>
 
@@ -55,21 +59,21 @@
   <div class="sv-stove-steam" id="steam"></div>
  </div>
  <div class="sv-rail" aria-hidden="true"></div>
- <button class="sv-bucket" id="bucket" aria-label="Bastuspannen: KASTA vatten på stenarna (Q)"><span class="sv-ladle"></span></button>
+ <button class="sv-bucket" id="bucket" aria-label="Bastuspannen: KASTAA vatten på stenarna (Q)"><span class="sv-ladle"></span></button>
  <div class="sv-floor"></div>
 
  <div class="ds-chassis sv-panel">
-  <div class="sv-brand"><span class="ds-logo">SVETTAN 3000</span><span class="ds-engrave sv-maker">PASTOR GREGORIUS · GUBBKÖR</span></div>
-  <div class="ds-lcd sv-lcd" aria-live="polite"><div class="ds-lcd-glow"></div><div class="ds-lcd-top"><span class="ds-lcd-name" id="lname">BASTUN · ELDA FÖRST</span><span class="ds-lcd-value" id="lval">20°C</span></div><div class="ds-lcd-line" id="lline">TRYCK PÅ EN PLANKA SÅ BÖRJAR GUBBARNA SJUNGA</div></div>
-  <button class="ds-control sv-big" id="kasta" style="--ds-face:var(--ch-heat)" aria-label="KASTA: vatten på stenarna (Q)"><svg aria-hidden="true"><use href="#i-ladle"/></svg><span>KASTA</span></button>
-  <button class="ds-control sv-big" id="isvak" aria-pressed="false" style="--ds-face-on:var(--ch-ice)" aria-label="ISVAK: håll ackordet och kyl bastun (I)"><svg aria-hidden="true"><use href="#i-flake"/></svg><span>ISVAK</span></button>
+  <div class="sv-brand"><span class="ds-logo">SVETTILAINEN 3000</span><span class="ds-engrave sv-maker">PASTOR GREGORIUS · GUBBIKÖÖRI</span></div>
+  <div class="ds-lcd sv-lcd" aria-live="polite"><div class="ds-lcd-glow"></div><div class="ds-lcd-top"><span class="ds-lcd-name" id="lname">TERVETULOA · BASTUN</span><span class="ds-lcd-value" id="lval">20°C</span></div><div class="ds-lcd-line" id="lline">ELDA FÖRST</div></div>
+  <button class="ds-control sv-big" id="kasta" style="--ds-face:var(--ch-heat)" aria-label="KASTAA: vatten på stenarna (Q)"><svg aria-hidden="true"><use href="#i-ladle"/></svg><span>KASTAA</span></button>
+  <button class="ds-control sv-big" id="isvak" aria-pressed="false" style="--ds-face-on:var(--ch-ice)" aria-label="ISVAKKI: håll ackordet och kyl bastun (I)"><svg aria-hidden="true"><use href="#i-flake"/></svg><span>ISVAKKI</span></button>
   <div class="ds-plate sv-knobs" id="knobs"></div>
   <div class="ds-plate sv-kvast">
    <div id="kvastKnobs" class="sv-kvast-knobs"></div>
-   <button class="ds-control ds-play" id="play" aria-pressed="false" aria-label="Starta björkriset (mellanslag)"><svg viewBox="0 0 24 24" style="width:40%;height:40%"><path id="pi" d="M7 5 L19 12 L7 19 Z" fill="currentColor"/></svg></button>
-   <input class="ds-bpm" id="bpm" type="number" inputmode="numeric" min="30" max="300" value="96" aria-label="Tempo, BPM">
+   <button class="ds-control ds-play" id="play" aria-pressed="false" aria-label="Starta vihtan (mellanslag)"><svg viewBox="0 0 24 24" style="width:40%;height:40%"><path id="pi" d="M7 5 L19 12 L7 19 Z" fill="currentColor"/></svg></button>
+   <input class="ds-bpm" id="bpm" type="number" inputmode="numeric" min="30" max="300" value="120" aria-label="Tempo, BPM">
   </div>
-  <div class="ds-plate ds-plate--band sv-steps"><span class="ds-engrave sv-steps-name">BJÖRKRIS</span><div id="steps" class="sv-step-row"></div></div>
+  <div class="ds-plate ds-plate--band sv-steps"><span class="ds-engrave sv-steps-name">VIHTA</span><div id="steps" class="sv-step-row"></div></div>
   <div class="sv-presets" id="presets" role="radiogroup" aria-label="Bastur"></div>
  </div>
 
@@ -96,7 +100,7 @@
     <input id="load" type="file" accept="application/json,.json" aria-label="Öppna session" hidden>
    </div>
    <div class="ds-menu-section" id="downloads" hidden>
-    <strong>SVETTAN 3000 VST3</strong>
+    <strong>SVETTILAINEN 3000 VST3</strong>
     <div class="download-grid" id="download-grid"></div>
     <div class="download-kit" id="download-kit" hidden></div>
     <p class="download-note">Byggkitet innehåller PlugData-patcharna och bygger VST3 på din egen Mac (Intel och Apple Silicon), Windows-dator eller Linux. Läs BUILD-VST3.md i kitet.</p>

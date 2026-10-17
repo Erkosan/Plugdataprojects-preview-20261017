@@ -488,7 +488,7 @@ try { const saved = localStorage.getItem(STORAGE) || localStorage.getItem(OLD_ST
 const menu = $('menu');
 const closeMenu = () => { menu.open = false; };
 document.addEventListener('pointerdown', (e) => { if (menu.open && !menu.contains(e.target)) closeMenu(); });
-$('demo').onclick = () => { banks[bank][slot] = DEMO.map((x) => x && {...x}); showSlinga(); setBpm(EXAMPLE_BPM, 1); store(); closeMenu(); say('EXEMPELSLINGA', '· SKÅP ' + LOCKERS[bank].num + ' SLINGA ' + (slot + 1)); };
+$('demo').onclick = () => { banks[bank][slot] = DEMO.map((x) => x && {...x}); showSlinga(); if (!inAlskog) setBpm(EXAMPLE_BPM, 1); store(); closeMenu(); say('EXEMPELSLINGA', '· SKÅP ' + LOCKERS[bank].num + ' SLINGA ' + (slot + 1)); };
 $('clear').onclick = () => { banks[bank][slot] = emptySlinga(); showSlinga(); wpos = 0; store(); closeMenu(); say('SLINGAN RENSAD', '· SKRIV IN NYA TONER'); };
 $('save').onclick = () => {
   const url = URL.createObjectURL(new Blob([JSON.stringify(snapshot(), null, 1)], {type: 'application/json'}));

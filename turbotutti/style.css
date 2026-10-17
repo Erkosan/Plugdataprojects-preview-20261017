@@ -25,9 +25,23 @@ body {
 .ds-room .ds-key.w.slot { box-shadow: inset 0 -4px 0 #9c6a3b, inset -2px 0 0 #9c6a3b, inset 0 3px 0 var(--chassis-edge); }
 .ds-room .ds-key.w.pick { background: #e0b47f; }
 .ds-room .ds-bpm { -moz-appearance: textfield; }
-/* Eight knobs: the six of the 303 voice, then TUUTTI (tonart) and PUBLIKKI (volym) like TUNING and VOLUME on a 303. */
-.ds-room .ds-tt-knobs { grid-template-columns: repeat(8, 1fr); gap: 2px; padding-left: 4px; padding-right: 4px; }
+/* Seven knobs: the six of the 303 voice, then PUBLIKKI (volym) like VOLUME on a 303. Tonart has no knob; the series is in C. */
+.ds-room .ds-tt-knobs { grid-template-columns: repeat(7, 1fr); gap: 2px; padding-left: 4px; padding-right: 4px; }
 .ds-room .ds-tt-knob .ds-engrave { letter-spacing: .08em; white-space: nowrap; }
+/* Finskt: a few real things from across the Gulf of Bothnia. Sponsor boards on the tile, a Marimekko towel on the pipe
+   and a felt pennant. The logo files and their sources are in design-system/finska/. */
+.ds-room .fi-board { box-sizing: border-box; display: grid; place-items: center; background: #ffffff; border: 2px solid #c8cfd4; box-shadow: 0 3px 0 rgba(29, 42, 51, .25); pointer-events: none; }
+.ds-room .fi-board::before, .ds-room .fi-board::after { content: ''; position: absolute; top: 3px; width: 3px; height: 3px; border-radius: 50%; background: #9aa7af; }
+.ds-room .fi-board::before { left: 3px; } .ds-room .fi-board::after { right: 3px; }
+.ds-room .fi-board img { display: block; }
+.ds-room .fi-towel { left: 196px; top: 31px; width: 66px; height: 126px; box-sizing: border-box; padding-top: 74px; pointer-events: none; background: #f6f4ee;
+  background-image: linear-gradient(180deg, #d9d5ca 0 9px, transparent 9px 16px, #211e1e 16px 20px, transparent 20px 25px, #211e1e 25px 27px, transparent 27px 103px, #211e1e 103px 105px, transparent 105px 110px, #211e1e 110px 114px, transparent 114px);
+  box-shadow: inset -6px 0 0 rgba(0, 0, 0, .06), 0 3px 0 rgba(29, 42, 51, .2); clip-path: polygon(0 0, 100% 0, 100% 100%, 82% 97%, 64% 100%, 46% 97%, 28% 100%, 12% 97%, 0 100%); }
+.ds-room #manifold { z-index: 1; }  /* the towel hangs over the pipe */
+.ds-room .fi-towel img { display: block; width: 56px; margin: 0 auto; }
+.ds-room .fi-pennant { left: 396px; top: 48px; width: 84px; height: 40px; pointer-events: none; filter: drop-shadow(0 3px 0 rgba(29, 42, 51, .2));
+  background: url(finska/suomen-lippu.svg) 0 50% / 66px 40px no-repeat, linear-gradient(#002f6c, #002f6c) 66px 50% / 18px 11px no-repeat, #ffffff; clip-path: polygon(0 0, 100% 50%, 0 100%); }
+.ds-room .fi-pennant::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: #002f6c; }
 @media (prefers-reduced-motion: reduce) { .ds-room .ds-door[role="button"] { transition: none; } .ds-room .ds-door.queued { animation: none; box-shadow: inset 0 0 0 2px var(--control-on); } }
 
 /* Gear menu: app things live here, never in the room. */
