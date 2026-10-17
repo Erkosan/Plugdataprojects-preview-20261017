@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<script src="../../shim.js?v=20261017-1" data-machine="vulva"></script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#d9b5d2"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="description" content="VULVA 3000. Spela en smutsig acid/electro-synth direkt i webbläsaren. Piano, sequencer, delay, reverb och egna presets.">
+<title>VULVA 3000 — Pastor Gregorius</title>
+<link rel="icon" href="icon-512.png?v=20261013-1" sizes="512x512" type="image/png"><link rel="icon" href="icon.png?v=20261013-1" sizes="180x180" type="image/png"><link rel="apple-touch-icon" href="icon-512.png?v=20261013-1" sizes="512x512"><link rel="manifest" href="manifest.webmanifest?v=20261013-1"><link rel="stylesheet" href="style.css?v=20261013-8">
+</head>
+<body>
+<main>
+<header class="topbar"><a class="brand" href="./">VULVA 3000<span>.</span></a><div class="tools">
+<button id="audio" type="button" disabled>Starta ljud</button>
+</div></header>
+<div class="stage"><div class="patch-scroll"><div id="patch-viewport"><section id="patch" aria-label="VULVA 3000: instrument"></section></div></div></div>
+<section class="utility-panel" aria-label="Inställningar"><details id="menu"><summary aria-label="Inställningar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></summary><div class="menu-panel">
+<button id="demo" type="button">Exempelsekvens</button><button id="clear-menu" type="button">Rensa sekvens</button><hr>
+<button id="save-project" type="button">Spara session</button><button id="open-project" type="button">Öppna session</button>
+<input id="project-file" type="file" accept=".json,application/json" hidden><hr>
+<button id="midi" type="button">Anslut MIDI</button><button id="fullscreen" type="button">Helskärm</button><button id="install-app" type="button">Installera app</button>
+<div class="download-section"><strong>VULVA 3000 VST3</strong><div class="download-grid"><a href="/vulva/downloads/VULVA_3000_macOS_Intel_VST3.zip?v=20261013-11" download>macOS Intel</a><a href="/vulva/downloads/VULVA_3000_Windows_x64_VST3.zip?v=20261013-11" download>Windows x64</a><a href="/vulva/downloads/VULVA_3000_Linux_x64_VST3.zip?v=20261013-9" download>Linux x64</a></div></div>
+<div class="credits"><span>Pastor Gregorius</span><a href="THIRD_PARTY_NOTICES.txt">Licenser</a></div>
+</div></details></section>
+<footer><span id="status" role="status" aria-live="polite">Laddar instrumentet…</span><span class="meter" aria-label="Signalnivå"><i id="meter"></i></span></footer>
+</main>
+<dialog id="save-dialog"><form id="preset-form"><label for="preset-title">Spara ljud + mönster</label><input id="preset-title" maxlength="64" placeholder="Namn på ditt ljud" required autocomplete="off"><label class="share-row"><input id="preset-share" type="checkbox">Dela med alla</label><p id="save-error" role="alert"></p><div><button id="cancel-save" type="button">Avbryt</button><button type="submit">Spara</button></div></form></dialog>
+<script type="module" src="app.js?v=20261013-8"></script>
+</body></html>

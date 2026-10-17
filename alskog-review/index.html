@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2a0c16">
+<title>Älskog 3000</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Älskog">
+<link rel="stylesheet" href="style.css?v=20261017-1">
+</head>
+<body data-view="1" data-variant="utan">
+<main id="stage">
+  <section id="alskog-view" aria-label="Älskog 3000">
+    <div id="ak-scale"><div id="ak-body"></div></div>
+  </section>
+</main>
+<nav id="strip" aria-label="Älskog"></nav>
+<section id="porrfilm" aria-label="Porrfilm 3000"><div id="pf-scale"><div id="pf-body"></div></div><button id="pf-tab" type="button" aria-expanded="false" aria-controls="pf-body"><span>▼</span> PORRFILM</button></section>
+<button id="nav-prev" class="nav" type="button"><span class="nav-disc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></span><span class="nav-name"></span></button>
+<button id="nav-next" class="nav" type="button"><span class="nav-disc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></span><span class="nav-name"></span></button>
+<div id="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+<button id="gear" type="button" aria-label="Inställningar" aria-expanded="false" aria-controls="ak-menu"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></button>
+<div id="ak-menu" hidden>
+  <div class="menu-head"><strong>ÄLSKOG 3000</strong><button id="menu-close" type="button" aria-label="Stäng">✕</button></div>
+  <div class="menu-actions">
+    <button id="m-install" type="button">Ladda ned App</button>
+    <button id="m-midi" type="button">Anslut MIDI</button>
+    <button id="m-save" type="button">Spara session</button>
+    <button id="m-open" type="button">Öppna session</button>
+    <button id="m-reset" type="button">Gör slut</button>
+    <input id="m-file" type="file" accept="application/json,.json" hidden>
+  </div>
+  <div id="m-slots" class="menu-slots" hidden></div>
+  <p id="m-install-help" class="menu-note" hidden></p>
+  <section class="guide" aria-label="Så funkar Älskog">
+    <h2>Så funkar Älskog</h2>
+    <p>Älskog är navet mellan Vulva och RUNKINATOR: allt ljud från båda går genom Älskogs mixer och effekter. Byt maskin med pilarna, svep eller [ och ]. Space startar och stoppar båda. Anslut MIDI här kopplar båda maskinerna på en gång: RUNKINATOR på kanal 1 och 10–13, Vulva på kanal 1 och 14. Peka på ett reglage så står det i displayen vad det gör.</p>
+    <h3>Mixern</h3>
+    <p>En kanal per ljud: KICK, SNARE, HAT, SAMPLE, RUNK FX (RUNKINATORs egna effekter) och VULVA. Mittenstapeln är Lust (nivå), orange är Svett (drive), grön är Sovrum (reverb), den liggande är Sängsida (pan). BAS/MITT/TOPP avvisar ett frekvensband. S = Singel (solo), B = Blyg (mute), ♥ = kanalen duckas av Puls. Dra, scrolla eller klicka.</p>
+    <h3>Master</h3>
+    <p>Täcke är ett DJ-filter (vänster mörkare, höger tunnare). Andning gungar Täcket i takt. Kropp är huvudvolymen och Stryp trycker ihop och maxar den. Tvåsamhet blandar Vulva mot RUNKINATOR. Vibrator får hela mixen att dallra som ett slitet kassettband. Isär/Sked växlar stereo och mono.</p>
+    <h3>Juck (sidechain)</h3>
+    <p>Juck får kanalerna att pumpa i takt. Välj vad som juckar: Stöt (kicken), Spökstöt (kickmönstret, även när kicken är Blyg) eller Smisk (snaren). Djup är hur mycket, Släpp hur fort det kommer tillbaka; ♥ på en kanal gör att den juckar med.</p>
+    <h3>Hångel</h3>
+    <p>Hångel: kicken öppnar Vulvas filter. Tonart: kicken stäms efter Vulvas grundton. Duett: Vulvas steg spelar RUNKINATORs sample. Flört: Vulva tystnar när trummorna slår. Otrohet: effekterna byter maskin varje takt. Svartsjuka: den som låter mest trycker ned den andra. Skilsmässa: maskinerna glider isär i stereo.</p>
+    <h3>Punch-in och Kamasutra</h3>
+    <p>De rosa knapparna är effekter som gäller medan du håller in (dubbelklick låser): Hacka, Bromsa, Baklänges, Frys, Krossa, Hjärtslag, Kyss och Kall dusch. Kamasutra är 16 steg där du programmerar när effekterna ska slå till av sig själva; högerklicka för att tömma ett steg.</p>
+    <h3>Ställningar och Sängen</h3>
+    <p>Ställningar är hur det låter: mixer, effekter och Kamasutra. Välj 1–8, Minns sparar. Sängen är en yta där varje hörn är en ställning (tryck på hörnets siffra för att byta); dra fingret så glider allt mellan dem.</p>
+    <h3>Eko</h3>
+    <p>Den lila stapeln i varje kanal skickar till Eko, en takt-synkad pingpong-delay. EKO är mängd och återkoppling, EKOTID väljer 1/16, 1/8, punkterad 1/8, 1/4 eller 3/8.</p>
+    <div class="pf-guide">
+    <h3>Porrfilm (fäll ned med ▼ PORRFILM överst)</h3>
+    <p>Porrfilm bestämmer i vilken ordning musiken spelas. Musiken (noter och trummor) spelar du in i maskinerna som vanligt; varje maskin har åtta mönster, roller A–H, som du byter mellan i listen längst ned på deras sidor.</p>
+    <p>En scen är ett recept: "spela RUNK B och VULVA A, med ställning 3, i 4 takter". Tryck på en tom ruta så blir det som låter just nu en scen. Tryck på brickorna i rutan för att ändra roll, ställning eller längd. ACTION! spelar scenerna i ordning från nästa etta och börjar om. ● på en scen spelar in dina reglagerörelser nästa gång den scenen spelar; håll ● för att sudda. Enligt manus: scenerna byter även ställning. Improvisera: bara roller. ? i Porrfilm förklarar samma sak.</p>
+    <p>Överallt (scener, roller och ställningar): håll inne = kopiera, tryck sedan där kopian ska ligga. Dubbeltryck = ett litet ✕ som tar bort.</p>
+    </div>
+    <h3>Kurvan</h3>
+    <p>Förspel, Vuxenmys, KNULLKNULLKNULL och Cigg på sängkanten ligger kvar tills du byter. Klimax och Runda två håller andan ett slag, släpper på ettan och glöder i åtta takter. IDKA SAMLAG kör hela kurvan själv. Efterspel fryser, tonar ut och bromsar. Låt det hända släpper Klimax av sig själv när det varit hett en stund. Flaskan slumpar, Gräl bråkar en takt, Förlåt ångrar. Sextejp spelar in allt som låter som WAV.</p>
+  </section>
+</div>
+<script type="module" src="app.js?v=20261017-1"></script>
+</body>
+</html>
