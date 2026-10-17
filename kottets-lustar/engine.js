@@ -2,13 +2,28 @@
 export class KottdiskEngine {
   constructor() { this.context = null; this.node = null; this.pending = null; }
   async start() {
+    if (this.pending) {
+      // A second real gesture can also unlock a context interrupted during load.
+      if (this.context?.state !== 'running') this.context?.resume().catch(() => {});
+      return this.pending;
+    }
     if (this.node) { await this.context.resume(); return this; }
-    if (this.pending) return this.pending;
     this.pending = (async () => {
-      if (navigator.audioSession) navigator.audioSession.type = 'playback';
+      try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; }
+      catch { /* Optional Safari routing support must not prevent audio startup. */ }
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       const context = this.context = new AudioContext({ latencyHint: 'interactive' });
-      await context.audioWorklet.addModule(new URL('./worklet.js', import.meta.url));
+      // Safari requires resume() within the original pointer/key event, before
+      // awaiting downloads or compilation. Do not move this below an await.
+      const resumed = context.resume();
+      resumed.catch(() => {});
+      // Fetch in the page's authenticated context. A self-contained worklet has
+      // no additional protected module requests from the audio thread.
+      const response = await fetch(new URL('./worklet.js?v=audio-2', import.meta.url), { credentials: 'same-origin' });
+      if (!response.ok) throw new Error(`Ljudmotorn kunde inte hämtas (${response.status}).`);
+      const moduleUrl = URL.createObjectURL(new Blob([await response.text()], { type: 'text/javascript' }));
+      try { await context.audioWorklet.addModule(moduleUrl); }
+      finally { URL.revokeObjectURL(moduleUrl); }
       const node = this.node = new AudioWorkletNode(context, 'kottdisk', {
         numberOfInputs: 0, numberOfOutputs: 1, outputChannelCount: [2],
       });
@@ -21,8 +36,7 @@ export class KottdiskEngine {
         node.onprocessorerror = () => { clearTimeout(timeout); reject(new Error('Ljudmotorn stannade.')); };
       });
       node.connect(context.destination);
-      await context.resume();
-      await ready;
+      await Promise.all([resumed, ready]);
       return this;
     })().catch(async error => {
       this.node?.disconnect(); this.node = null;

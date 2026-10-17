@@ -1,4 +1,4 @@
-import { KottdiskEngine } from './engine.js';
+import { KottdiskEngine } from './engine.js?v=audio-2';
 
 const $ = (selector) => document.querySelector(selector);
 const clamp = (value, min = 0, max = 1) => Math.max(min, Math.min(max, value));
@@ -114,7 +114,7 @@ function update(name, value, options = {}) {
 
 async function start() {
   if (ready) {
-    if (engine.context?.state === 'suspended') await engine.context.resume();
+    await engine.start();
     return engine;
   }
   if (starting) return starting;
@@ -155,7 +155,7 @@ function playNote(note, velocity = 100, channel = 1, source = `host:${channel}:$
   sounding.set(key, { note, velocity, channel });
   heldVoices.delete(key);
   if (ready && !wasOn) engine.noteOn(note, velocity, channel);
-  if (!ready) gestureStart();
+  if (!ready || engine.context?.state !== 'running') gestureStart();
   renderVoices();
 }
 function releaseSource(source) {
