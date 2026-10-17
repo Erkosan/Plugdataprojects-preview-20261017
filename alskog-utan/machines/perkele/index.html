@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="sv" data-theme="perkele">
+<head>
+<script src="../../shim.js?v=20261017-1" data-machine="perkele"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2e4637">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="PERKELE 3000. Trummaskinen i verkstaden: plåt, däck och oljefat som ringer i c-moll. Pertti ligger under Ladan.">
+<title>PERKELE 3000 — Pastor Gregorius</title>
+<link rel="icon" href="icon-512.png" sizes="512x512" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="modulepreload" href="perkele-engine.js">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="3000-series.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="stage">
+<div id="fit">
+<div class="pk-verkstad" id="verkstad" data-theme="perkele">
+ <div class="pk-wall"></div>
+ <div class="pk-tube" id="tube" aria-hidden="true"><i></i></div>
+ <div class="pk-window" aria-hidden="true"><span class="pk-snow"></span><span class="pk-frost"></span></div>
+ <div class="pk-board" id="board" role="group" aria-label="Verktygstavlan"></div>
+ <div class="pk-shelf" aria-hidden="true"></div>
+ <div class="pk-radio" id="radio" aria-hidden="true"><span class="pk-dial"><i id="needle"></i></span><span class="pk-grille"></span><span class="pk-antenna"></span></div>
+ <div class="pk-tapes" id="tapes" role="radiogroup" aria-label="Kassetterna"></div>
+ <div class="pk-calendar" aria-hidden="true"><b>1987</b><span></span></div>
+ <div class="pk-floor"></div>
+ <div class="pk-stain" aria-hidden="true"></div>
+ <button class="pk-lada" id="lada" aria-label="Ladan: STARTTI (T)"><svg viewBox="0 0 440 210" aria-hidden="true">
+  <g class="pk-car" id="car">
+   <path class="pk-body" d="M18 120 L30 92 L118 88 L160 40 L292 38 L338 86 L420 92 L428 124 L424 150 L18 150 Z"/>
+   <path class="pk-glass" d="M128 88 L166 48 L222 46 L222 88 Z M232 46 L286 46 L326 88 L232 88 Z"/>
+   <path class="pk-trim" d="M20 112 H426 M226 46 V146"/>
+   <rect class="pk-chrome" x="8" y="136" width="40" height="10"/><rect class="pk-chrome" x="394" y="136" width="40" height="10"/>
+   <circle class="pk-rust" cx="64" cy="132" r="9"/><circle class="pk-rust" cx="300" cy="140" r="6"/><circle class="pk-rust" cx="372" cy="104" r="5"/>
+   <rect class="pk-lamp-r" x="12" y="100" width="12" height="12"/>
+   <circle class="pk-head" id="headlight" cx="414" cy="106" r="9"/>
+   <path class="pk-arch" d="M60 150 A42 42 0 0 1 144 150 Z M300 150 A42 42 0 0 1 384 150 Z"/>
+   <g class="pk-wheel"><circle cx="102" cy="152" r="36"/><circle class="pk-hub" cx="102" cy="152" r="14"/></g>
+   <path class="pk-drum" d="M330 140 H354 V164 H330 Z"/>
+  </g>
+  <path class="pk-pipe" d="M0 156 H40"/>
+  <path class="pk-stand" d="M322 196 L342 160 L362 196 Z M70 196 L92 168 L114 196 Z"/>
+  <g class="pk-pertti" id="pertti">
+   <rect class="pk-creeper" x="236" y="186" width="96" height="8"/>
+   <path class="pk-leg" d="M240 182 H190 M240 192 H192"/>
+   <path class="pk-boot" d="M178 176 L192 176 L192 186 L172 186 Z M180 188 L194 188 L194 198 L174 198 Z"/>
+  </g>
+ </svg></button>
+ <div class="pk-smoke" id="smoke" aria-hidden="true"></div>
+ <button class="pk-legs-hit" id="legs" aria-label="Pertti: PERKELE! (P)"></button>
+ <div class="pk-bubble" id="bubble" aria-hidden="true">PERKELE!</div>
+
+ <div class="ds-chassis pk-panel">
+  <div class="pk-brand"><span class="ds-logo">PERKELE 3000</span><span class="ds-engrave pk-maker">PASTOR GREGORIUS · KORJAAMO</span></div>
+  <div class="ds-lcd pk-lcd" aria-live="polite"><div class="ds-lcd-glow"></div><div class="ds-lcd-top"><span class="ds-lcd-name" id="lname">KORJAAMO</span><span class="ds-lcd-value" id="lval">−23°C</span></div><div class="ds-lcd-line" id="lline"></div></div>
+  <div class="pk-big">
+   <button class="ds-control pk-perkele" id="perkele" aria-label="PERKELE! (P)">PERKELE!</button>
+   <button class="ds-control pk-startti" id="startti" aria-label="STARTTI (T)"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="7" cy="12" r="4"/><path d="M11 12 H21 M17 12 V15 M20 12 V14"/></svg><span>STARTTI</span></button>
+   <button class="ds-control pk-humppa" id="humppa" aria-pressed="false" aria-label="HUMPPA (U)">HUMPPA</button>
+  </div>
+  <div class="pk-transport">
+   <button class="ds-control ds-play" id="play" aria-pressed="false" aria-label="Spela (mellanslag)"><svg viewBox="0 0 24 24" style="width:40%;height:40%"><path id="pi" d="M7 5 L19 12 L7 19 Z" fill="currentColor"/></svg></button>
+   <input class="ds-bpm" id="bpm" type="number" inputmode="numeric" min="30" max="300" value="128" aria-label="Tempo, BPM">
+  </div>
+  <div class="ds-plate pk-knobs" id="knobs"></div>
+  <div class="ds-plate ds-plate--band pk-seq">
+   <span class="ds-engrave pk-track" id="track">DÄCK</span>
+   <div id="steps" class="pk-steps"></div>
+   <button class="ds-control pk-len" id="len" aria-pressed="false" aria-label="LEN: spårets längd">LEN</button>
+  </div>
+ </div>
+</div>
+</div>
+</main>
+<section class="utility" aria-label="Inställningar">
+ <details id="menu">
+  <summary class="ds-gear" aria-label="Inställningar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></summary>
+  <div class="ds-menu menu-panel">
+   <div class="ds-menu-actions" id="menu-actions">
+    <button id="demo" type="button">Spela exempel</button>
+    <button id="clear" type="button">Rensa slingan</button>
+    <button id="save" type="button">Spara session</button>
+    <button id="open" type="button">Öppna session</button>
+    <button id="midi" type="button">Anslut MIDI</button>
+    <button id="install-app" type="button">Installera app</button>
+    <button id="fullscreen" type="button">Helskärm</button>
+    <button id="midi-map-toggle" type="button" aria-controls="midi-map-panel" aria-expanded="false">MIDI-mappning</button>
+    <input id="load" type="file" accept="application/json,.json" aria-label="Öppna session" hidden>
+   </div>
+   <div class="ds-menu-section" id="downloads" hidden>
+    <strong>PERKELE 3000 VST3</strong>
+    <div class="download-grid" id="download-grid"></div>
+    <div class="download-kit" id="download-kit" hidden></div>
+    <p class="download-note">Byggkitet innehåller PlugData-patcharna och bygger VST3 på din egen Mac (Intel och Apple Silicon), Windows-dator eller Linux. Läs BUILD-VST3.md i kitet.</p>
+   </div>
+   <div class="ds-menu-section" id="midi-map-panel" hidden>
+    <div class="midi-map-heading"><strong>MIDI-mappning</strong><button id="midi-map-back" type="button">Tillbaka</button></div>
+    <ul id="midi-map-list" class="midi-map-list"></ul>
+   </div>
+   <p class="ds-menu-help" id="menu-help">Verktygen på tavlan spelar och väljer spår: A S D F G H J. Klicka på stegen för slag och accent (TRYCKLUFT: stängd och öppen). LEN och sedan ett steg sätter spårets längd, så att spåren går isär. Kassetterna vid radion är färdiga slingor (1–4). Mellanslag spelar, P eller Pertti är PERKELE!, T eller Ladan är STARTTI, U är HUMPPA. Dubbelklicka på en ratt för att återställa den.</p>
+   <div class="credits"><span>Pastor Gregorius</span><a href="THIRD_PARTY_NOTICES.txt">Licenser</a></div>
+  </div>
+ </details>
+</section>
+<script type="module" src="app.js"></script>
+</body>
+</html>

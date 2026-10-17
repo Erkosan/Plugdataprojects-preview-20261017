@@ -230,6 +230,7 @@ const GENERIC = {
 };
 const ADAPT = {
   runkinator: { key: null, root: null }, // no key of its own; the kick follows with Hångel TONART
+  perkele: { key: null, root: null }, // tuned in C, no key of its own
   vulva: {
     ensure: (h) => h.startAudio(),
     start: (h, on) => h.set(h.ids.seq_run, on ? 1 : 0),

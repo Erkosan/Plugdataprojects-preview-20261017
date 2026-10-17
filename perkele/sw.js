@@ -1,5 +1,5 @@
 // Network first, cache as fallback: the room works offline after one visit.
-const CACHE = 'perkele-web-3d960ceca8a7';
+const CACHE = 'perkele-web-fda8f8fff01a';
 const SHELL = ['./', 'index.html', 'style.css', 'tokens.css', '3000-series.css', 'app.js', 'worklet.js', 'perkele-engine.js', 'params.json',
   'manifest.webmanifest', 'icon-512.png', 'apple-touch-icon.png'];
 self.addEventListener('install', (event) => { event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting())); });

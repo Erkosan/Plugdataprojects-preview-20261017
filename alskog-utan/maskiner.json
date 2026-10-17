@@ -10,6 +10,17 @@
    "midi": "1, 10–13",
    "farg": "#c94b5b",
    "dim": "#5c2a33"
+  },
+  {
+   "id": "perkele",
+   "namn": "PERKELE",
+   "kort": "PERKELE",
+   "dist": "synths/Perkele/web/dist",
+   "live": "perkele",
+   "ljud": "stereo",
+   "midi": "1, 2",
+   "farg": "#f2b705",
+   "dim": "#5e4700"
   }
  ],
  "synth": [

@@ -78,6 +78,22 @@
   --wood-groove: #7e5029;
   --stone: #6d6862;
   --ember: #ff6a2a;
+  --ch-tire: #9aa09a;
+  --ch-tire-dim: #3b403c;
+  --ch-hood: #d9a441;
+  --ch-hood-dim: #5a4520;
+  --ch-air: #7fc4d8;
+  --ch-air-dim: #2c4a52;
+  --ch-wrench: #c9ced3;
+  --ch-wrench-dim: #474b4f;
+  --ch-barrel: #d2452c;
+  --ch-barrel-dim: #55241b;
+  --ch-disc: #e07b2e;
+  --ch-disc-dim: #5a3418;
+  --pegboard: #9c7448;
+  --concrete: #5f625d;
+  --lada: #c98a35;
+  --hazard: #f2b705;
   --shadow-menu: 0 4px 0 #25292426;
   --shadow-patch: 0 3px 8px #38253240;
   --shadow-chassis: 0 12px 0 rgba(27,10,16,0.35), inset 0 0 0 2px #4a1726, inset 0 0 60px rgba(0,0,0,0.45);
@@ -236,6 +252,45 @@
   --key-white-on: #ffb35c;
   --key-black-on: #ff6a2a;
   --field: #f6eadb;
+}
+[data-theme="perkele"] {
+  --ground: #16191a;
+  --chassis: #2e4637;
+  --chassis-edge: #121c16;
+  --plate: #38543f;
+  --plate-band: #1d2420;
+  --velvet: #0b0f0d;
+  --control: #e6dfc9;
+  --control-on: #f2b705;
+  --control-border: #121c16;
+  --control-border-hover: #000000;
+  --control-ink: #141712;
+  --knob-arc: #121c16;
+  --knob-pointer: #141712;
+  --engrave: #efe6c8;
+  --playhead: #ff5b1f;
+  --menu-surface: #efeadb;
+  --menu-border: #2e4637;
+  --menu-ink: #141712;
+  --menu-muted: #5b6156;
+  --menu-tint: #e1dccb;
+  --menu-button: #fffdf6;
+  --menu-button-hover: #ece6d4;
+  --menu-button-border: #6e7a68;
+  --menu-button-ink: #141712;
+  --lcd-top: #0d1512;
+  --lcd-mid: #040907;
+  --lcd-bezel: #4a4f4a;
+  --lcd-ink: #7dfcd0;
+  --lcd-value: #f2b705;
+  --lcd-glow: #3fe0a8;
+  --focus: #f2b705;
+  --run: #4caf50;
+  --run-idle: #24552c;
+  --rec: #e53b1f;
+  --mute: #e53b1f;
+  --solo: #f2b705;
+  --field: #efe6c8;
 }
 :root {
   --space-hairline: 1px;
