@@ -1,0 +1,537 @@
+/* GRANNEN 3000 web shell and Lägenheten 1971 (FOLKHEMMETS SKUGGOR).
+   Shared controls (chassis, LCD, knobs, steps, menu) come from 3000-series.css;
+   this file draws the 1971 apartment block around the machine and scales it as one 1180x740 picture. */
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--ground);
+  background-image:
+    radial-gradient(ellipse at 50% 15%, rgba(217, 107, 39, .08), transparent 65%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .015) 0 1px, transparent 1px 25px);
+  overflow: hidden; overscroll-behavior: none; touch-action: manipulation;
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
+  font-family: var(--font-panel);
+}
+#stage {
+  position: fixed; inset: 0; box-sizing: border-box; display: grid; place-items: center;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+#fit { position: relative; width: calc(1180px * var(--zoom, 1)); height: calc(740px * var(--zoom, 1)); }
+.gr-room {
+  position: absolute; left: 0; top: 0; width: 1180px; height: 740px; overflow: hidden;
+  transform: scale(var(--zoom, 1)); transform-origin: 0 0;
+  --sub: .75; --hum: .25; --tilt: 0deg; --shake: 0px;
+  background: var(--ground);
+  box-shadow: inset 0 0 110px rgba(0, 0, 0, .75);
+}
+.gr-room > * { position: absolute; }
+.gr-room button { -webkit-user-select: none; user-select: none; font: inherit; }
+.gr-room button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* ---------- UPSTAIRS: LÄGENHET 1102 — GÖSTA, 68 ---------- */
+.gr-upstairs {
+  left: 0; top: 0; width: 1180px; height: 108px; overflow: hidden; z-index: 2;
+  background: linear-gradient(180deg, #171a1c 0%, #23282b 78%, #2e251d 78%, #241c15 100%);
+  transition: transform 180ms cubic-bezier(.2, .8, .2, 1);
+}
+.gr-up-wallpaper {
+  position: absolute; left: 0; right: 0; top: 0; height: 84px; opacity: .28;
+  background-image:
+    repeating-linear-gradient(90deg, #3c4347 0 28px, #2b3033 28px 30px),
+    repeating-linear-gradient(0deg, transparent 0 18px, rgba(230, 222, 200, .08) 18px 20px);
+}
+.gr-up-label {
+  position: absolute; left: 118px; top: 10px; padding: 2px 8px;
+  background: #141719; border: 1px solid #363b3e; color: var(--engrave); font-size: 9px; letter-spacing: .2em;
+}
+.gr-up-clock {
+  position: absolute; left: 348px; top: 8px; padding: 2px 8px;
+  background: #0c0e10; border: 1px solid #363b3e; font: 700 10px/14px var(--font-lcd); color: var(--control-on); letter-spacing: .12em;
+}
+.gr-up-chair {
+  position: absolute; left: 460px; bottom: 22px; width: 68px; height: 54px;
+  background: #5c3b28; border: 2px solid #2b1a10; border-radius: 6px 6px 0 0;
+  box-shadow: inset 0 -14px 0 #42291b;
+}
+.gr-up-radiator {
+  position: absolute; left: 86px; bottom: 22px; width: 88px; height: 42px;
+  background: repeating-linear-gradient(90deg, #d8d0bc 0 8px, #2b3033 8px 12px);
+  border: 2px solid #181b1d;
+}
+.gr-gosta {
+  position: absolute; left: 544px; bottom: 20px; width: 96px; height: 82px;
+}
+.gr-gosta-legs {
+  position: absolute; left: 18px; bottom: 8px; display: flex; gap: 10px;
+}
+.gr-gosta-legs i {
+  width: 14px; height: 42px; background: #4a5863; border: 1px solid #181b1d;
+}
+.gr-gosta-slippers {
+  position: absolute; left: 14px; bottom: 2px; display: flex; gap: 6px;
+}
+.gr-gosta-slippers i {
+  width: 22px; height: 8px; background: #78482a; border-radius: 4px 4px 0 0; border: 1px solid #181b1d;
+}
+/* Gösta's broomstick (KVASTEN) */
+.gr-kvast {
+  position: absolute; left: 58px; bottom: 4px; width: 32px; height: 78px;
+  transform: translateY(-8px) rotate(-6deg); transform-origin: 50% 20%;
+  transition: transform 70ms ease-out;
+}
+.gr-kvast-shaft {
+  position: absolute; left: 13px; top: 0; width: 6px; height: 64px;
+  background: #c87a28; border: 1px solid #181b1d;
+}
+.gr-kvast-head {
+  position: absolute; left: 0; bottom: 0; width: 32px; height: 14px;
+  background: repeating-linear-gradient(90deg, #d93829 0 4px, #8c2218 4px 6px);
+  border: 2px solid #181b1d;
+}
+.gr-room.klagar .gr-kvast, .gr-kvast.bang {
+  animation: gr-broom-pound .26s ease-in-out infinite;
+}
+@keyframes gr-broom-pound {
+  0%, 100% { transform: translateY(-10px) rotate(-6deg); }
+  55% { transform: translateY(6px) rotate(2deg) scaleY(.96); }
+}
+.gr-shock {
+  position: absolute; left: 572px; bottom: 0; width: 64px; height: 26px; pointer-events: none; opacity: 0;
+}
+.gr-shock i {
+  position: absolute; inset: 2px; border: 2px solid var(--ch-klagar); border-radius: 50%;
+}
+.gr-room.klagar .gr-shock, .gr-shock.burst {
+  opacity: 1; animation: gr-shock-ring .35s ease-out infinite;
+}
+@keyframes gr-shock-ring {
+  0% { transform: scale(.4); opacity: 1; }
+  100% { transform: scale(1.65); opacity: 0; }
+}
+
+/* ---------- BÄRVÄGG / BJÄLKLAG 200 MM BETONG ---------- */
+.gr-slab {
+  left: 0; top: 108px; width: 1180px; height: 28px; z-index: 4;
+  background:
+    repeating-linear-gradient(90deg, #363b3e 0 140px, #24282a 140px 142px),
+    linear-gradient(180deg, #42484c, #2d3235);
+  border-top: 2px solid #141719; border-bottom: 3px solid #141719;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 180ms cubic-bezier(.2, .8, .2, 1), box-shadow 180ms;
+}
+.gr-slab-label {
+  padding: 2px 12px; background: #1e2225; border: 1px solid #141719; font-size: 9px; letter-spacing: .26em;
+}
+.gr-dust {
+  position: absolute; left: 520px; top: 26px; width: 160px; height: 54px; pointer-events: none; opacity: 0;
+}
+.gr-dust i {
+  position: absolute; top: 0; width: 4px; height: 4px; background: #ece5d3; opacity: .85;
+}
+.gr-dust i:nth-child(1) { left: 10px; }
+.gr-dust i:nth-child(2) { left: 38px; }
+.gr-dust i:nth-child(3) { left: 68px; }
+.gr-dust i:nth-child(4) { left: 96px; }
+.gr-dust i:nth-child(5) { left: 124px; }
+.gr-dust i:nth-child(6) { left: 148px; }
+.gr-room.klagar .gr-dust, .gr-dust.fall {
+  opacity: 1; animation: gr-dust-fall .45s linear infinite;
+}
+@keyframes gr-dust-fall {
+  0% { transform: translateY(0); opacity: .95; }
+  100% { transform: translateY(42px); opacity: 0; }
+}
+
+/* VRÄKNING: whole ceiling slab and upstairs sag downward with deep sub-pressure */
+.gr-room.vrakning .gr-upstairs {
+  transform: translateY(8px);
+}
+.gr-room.vrakning .gr-slab {
+  transform: translateY(8px) scaleY(1.12);
+  box-shadow: 0 12px 28px rgba(224, 70, 46, .45);
+  border-bottom-color: var(--playhead);
+}
+
+/* ---------- LÄGENHET 1002: WALL, PIPE, VENTILATION, PICTURE FRAME, ANGRY NOTE ---------- */
+.gr-wall {
+  left: 0; top: 136px; width: 1180px; height: 486px; z-index: 1;
+  background:
+    repeating-linear-gradient(90deg, #23282b 0 58px, #1d2124 58px 60px),
+    radial-gradient(circle at 29px 29px, rgba(230, 222, 200, .04) 8px, transparent 9px);
+  background-size: 60px 60px;
+}
+/* Copper pipe rising from the radiator through the concrete ceiling */
+.gr-pipe-riser {
+  left: 64px; top: 0; width: 16px; height: 650px; z-index: 5;
+  background: linear-gradient(90deg, #7d4914, var(--ch-concrete) 45%, #e59c46 65%, #6e3f10);
+  border-left: 1px solid #181b1d; border-right: 1px solid #181b1d;
+}
+.gr-pipe-joint {
+  position: absolute; left: -4px; top: 102px; width: 24px; height: 38px;
+  background: var(--ch-filter); border: 2px solid #181b1d; box-sizing: border-box;
+}
+.gr-pipe-pulse {
+  position: absolute; left: 2px; right: 2px; bottom: 60px; height: 90px; opacity: 0;
+  background: linear-gradient(180deg, transparent, #ffb35c, var(--playhead), transparent);
+}
+.gr-pipe-riser.clang .gr-pipe-pulse, .gr-room.klagar .gr-pipe-pulse {
+  opacity: .9; animation: gr-pipe-wave .3s linear infinite;
+}
+@keyframes gr-pipe-wave {
+  0% { transform: translateY(-480px); }
+  100% { transform: translateY(60px); }
+}
+.gr-valve {
+  left: 52px; top: 162px; width: 40px; height: 40px; padding: 0; z-index: 6; cursor: pointer;
+  border-radius: 50%; border: 4px solid var(--ch-klagar); background: #282c2f;
+  box-shadow: 0 2px 0 #111416;
+}
+.gr-valve::after {
+  content: ''; position: absolute; inset: 6px; border-radius: 50%;
+  background: conic-gradient(var(--ch-klagar) 0 45deg, transparent 45deg 135deg, var(--ch-klagar) 135deg 180deg, transparent 180deg 270deg, var(--ch-klagar) 270deg 315deg, transparent 315deg);
+}
+.gr-room.klagar .gr-valve {
+  transform: rotate(90deg); box-shadow: 0 0 14px var(--ch-klagar);
+}
+
+/* Ventilation grate (FRÅNLUFT) */
+.gr-vent {
+  left: 136px; top: 146px; width: 156px; height: 68px; z-index: 2;
+  background: var(--plate-band); border: 2px solid #181b1d; box-sizing: border-box;
+  padding: 6px 10px; display: flex; flex-direction: column; justify-content: space-between;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, .55), 0 0 calc(var(--hum, .25) * 22px) rgba(155, 123, 184, .55);
+}
+.gr-vent-slots {
+  height: 36px;
+  background: repeating-linear-gradient(180deg, #14181b 0 4px, var(--plate-band) 4px 8px);
+  border: 1px solid #181b1d;
+}
+.gr-vent-label { font-size: 8px; letter-spacing: .22em; }
+.gr-room.playing .gr-vent {
+  animation: gr-vent-hum .12s linear infinite;
+}
+@keyframes gr-vent-hum {
+  50% { transform: translateX(calc(var(--hum, .25) * 1.5px)); }
+}
+
+/* Vibrating picture frame (#tavla) */
+.gr-frame {
+  left: 344px; top: 142px; width: 152px; height: 76px; z-index: 2; box-sizing: border-box;
+  padding: 6px; background: #6b4b2a; border: 2px solid #181b1d;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, .45);
+  transform: rotate(var(--tilt, -1.5deg)); transform-origin: 50% 0;
+  transition: transform 60ms ease-out;
+}
+.gr-frame::before {
+  content: ''; position: absolute; left: 50%; top: -8px; width: 8px; height: 8px; margin-left: -4px;
+  border-top: 2px solid #9aa2a6; border-left: 2px solid #9aa2a6; transform: rotate(45deg);
+}
+.gr-frame-art {
+  position: relative; width: 100%; height: 100%; overflow: hidden;
+  background: linear-gradient(180deg, #273d47 0%, #3d5a58 65%, #233024 65%, #1a241b 100%);
+  border: 1px solid #181b1d;
+}
+.gr-art-moon {
+  position: absolute; right: 16px; top: 8px; width: 12px; height: 12px; border-radius: 50%; background: #e6dec8;
+}
+.gr-art-trees {
+  position: absolute; left: 8px; bottom: 14px; width: 90px; height: 26px;
+  background: repeating-linear-gradient(90deg, #162219 0 10px, transparent 10px 18px);
+}
+.gr-art-moose {
+  position: absolute; right: 32px; bottom: 12px; width: 20px; height: 14px; background: #3b2416;
+}
+
+/* Angry note on the wall (#lapp) */
+.gr-note {
+  left: 800px; top: 142px; width: 340px; height: 76px; z-index: 3; box-sizing: border-box;
+  padding: 8px 12px; background: #e8dec3; color: #181b1d; border: 2px solid #181b1d;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, .45);
+  font-family: var(--font-lcd); display: flex; flex-direction: column; justify-content: space-between;
+  transform: rotate(.8deg);
+}
+.gr-note::before {
+  content: ''; position: absolute; left: 50%; top: -6px; width: 54px; height: 12px; margin-left: -27px;
+  background: rgba(217, 107, 39, .55); border: 1px solid rgba(24, 27, 29, .35);
+}
+.gr-note strong {
+  font-size: 11px; letter-spacing: .08em; color: var(--ch-klagar);
+}
+.gr-note span {
+  font-size: 9px; line-height: 1.25; letter-spacing: .04em;
+}
+.gr-note em {
+  font-style: normal; font-size: 9px; font-weight: 700; text-align: right; letter-spacing: .08em;
+}
+.gr-room.klagar .gr-note {
+  background: #ffd8cc; border-color: var(--ch-klagar);
+  animation: gr-note-shake .18s linear infinite;
+}
+@keyframes gr-note-shake {
+  25% { transform: rotate(2deg) translateY(-1px); }
+  75% { transform: rotate(-1.5deg) translateY(1px); }
+}
+
+/* ---------- CENTER HARDWARE CHASSIS: GRANNEN 3000 ---------- */
+.gr-panel {
+  left: 98px; top: 228px; width: 1044px; height: 368px; box-sizing: border-box; padding: 0; z-index: 5;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .018) 0 2px, transparent 2px 50px),
+    var(--chassis);
+  transform: translateY(var(--shake, 0px));
+}
+.gr-panel > * { position: absolute; }
+.gr-brand {
+  left: 16px; top: 14px; width: 220px; display: flex; flex-direction: column; gap: 5px;
+}
+.gr-brand .ds-logo {
+  font-size: 19px; line-height: 22px; letter-spacing: .24em; font-weight: 700; text-align: left;
+}
+.gr-maker {
+  text-align: left; font-size: 8px; letter-spacing: .16em; opacity: .82;
+}
+
+/* Trapphus-namntavla LCD */
+.gr-lcd {
+  left: 242px; top: 10px; width: 472px; height: 64px;
+}
+.gr-lcd .ds-lcd-name { font-size: 14px; font-weight: 700; }
+.gr-lcd .ds-lcd-value { font-size: 13px; font-weight: 700; }
+.gr-lcd .ds-lcd-line { font-size: 11px; }
+
+/* 2 Signature Gestures: GRANNEN KLAGAR & VRÄKNING */
+.gr-big {
+  top: 10px; height: 64px; padding: 0 10px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  font: 700 11px/1.15 var(--font-engrave); letter-spacing: .14em; color: #ffffff;
+}
+.gr-big svg {
+  width: 24px; height: 24px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.9;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+#klagar { left: 724px; width: 164px; }
+#vrakning { left: 896px; width: 132px; color: var(--control-ink); }
+#vrakning[aria-pressed="true"] { color: #ffffff; }
+
+/* 9 Knobs row */
+.gr-knobs {
+  left: 16px; top: 82px; width: 1012px; height: 88px; box-sizing: border-box;
+  display: grid; grid-template-columns: repeat(9, 1fr); align-items: center; padding: 6px 8px 4px;
+}
+.gr-knob {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+}
+.gr-knob .ds-engrave {
+  font-size: 9px; letter-spacing: .14em;
+}
+
+/* Transport & Mode row */
+.gr-transport {
+  left: 16px; top: 178px; width: 1012px; height: 52px; box-sizing: border-box;
+  display: flex; align-items: center; gap: 8px; padding: 4px 10px;
+}
+.gr-transport .ds-play {
+  width: 56px; height: 40px; flex-shrink: 0;
+}
+.gr-small {
+  height: 40px; min-width: 68px; padding: 0 10px;
+  font: 700 10px var(--font-engrave); letter-spacing: .12em;
+}
+.gr-sync {
+  padding: 6px 10px; background: var(--velvet); border: 1px solid var(--chassis-edge);
+  font-family: var(--font-lcd); font-size: 10px; letter-spacing: .14em; color: var(--lcd-ink);
+}
+.gr-sync.clocked {
+  color: var(--control-on); border-color: var(--control-on);
+}
+#odn, #oup, #bacc, #bsl, #bwr {
+  margin-left: auto;
+}
+#oup, #bacc, #bsl, #bwr {
+  margin-left: 0;
+}
+
+/* 16-Step C-minor Sequencer */
+.gr-seq-band {
+  left: 16px; top: 238px; width: 1012px; height: 118px; box-sizing: border-box;
+  padding: 6px 10px 8px; display: flex; flex-direction: column; justify-content: space-between;
+  background:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, .14) 0 2px, transparent 2px 12px),
+    var(--plate-band);
+}
+.gr-seq-title {
+  text-align: left; font-size: 9px; letter-spacing: .2em; color: var(--engrave);
+}
+.gr-steps {
+  display: grid; grid-template-columns: repeat(16, 1fr); gap: 4px; align-items: stretch;
+}
+.gr-step-col {
+  display: flex; flex-direction: column; gap: 3px;
+}
+.gr-step-col.is-outside {
+  opacity: .32;
+}
+.gr-step {
+  width: 100%; height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font: 700 12px/1 var(--font-lcd); letter-spacing: .04em; position: relative;
+  background: var(--ch-concrete-dim); color: var(--engrave);
+}
+.gr-step[aria-pressed="true"] {
+  background: var(--ch-concrete); color: var(--control-ink);
+}
+.gr-step[aria-pressed="true"]::after {
+  display: none;
+}
+.gr-step.is-current {
+  box-shadow: inset 0 0 0 3px var(--playhead);
+}
+.gr-step.is-write {
+  box-shadow: inset 0 0 0 2px var(--lcd-ink);
+}
+.gr-step-num {
+  position: absolute; top: 3px; left: 4px; font-size: 8px; opacity: .65; font-weight: 400;
+}
+.gr-step-note {
+  margin-top: 6px; font-size: 13px; font-weight: 700;
+}
+.gr-step-flags {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2px; height: 22px;
+}
+.gr-flag {
+  height: 22px; padding: 0; font: 700 9px/1 var(--font-lcd);
+  background: var(--plate); color: var(--engrave); border: 1px solid var(--control-border);
+}
+.gr-flag[aria-pressed="true"] {
+  background: var(--control-on); color: var(--control-ink);
+}
+.gr-flag.slide[aria-pressed="true"] {
+  background: var(--ch-filter); color: var(--control-ink);
+}
+
+/* ---------- BOTTOM: ELEMENTET (2-Octave Water Radiator Keyboard C2–C4) ---------- */
+.gr-floor {
+  left: 0; top: 618px; width: 1180px; height: 122px; z-index: 1;
+  background:
+    linear-gradient(180deg, #141719 0 8px, #211d1a 8px 100%);
+}
+.gr-radiator-shell {
+  left: 116px; top: 604px; width: 968px; height: 128px; z-index: 4; pointer-events: none;
+  background: #1d2124; border: 2px solid #111416;
+  box-shadow: inset 0 6px 12px rgba(0, 0, 0, .65), 0 6px 0 #0c0e10;
+}
+.gr-rad-bracket {
+  position: absolute; top: -8px; width: 18px; height: 14px; background: #484e52; border: 2px solid #111416;
+}
+.gr-rad-bracket.l { left: 48px; }
+.gr-rad-bracket.r { right: 48px; }
+.gr-rad-thermostat {
+  position: absolute; left: -34px; top: 18px; width: 32px; height: 52px;
+  background: linear-gradient(180deg, #e6dec8 0 26px, #c87a28 26px 52px);
+  border: 2px solid #111416;
+}
+.gr-rad-label {
+  position: absolute; right: 14px; top: -14px; padding: 1px 8px;
+  background: #181b1d; border: 1px solid #363b3e; font-size: 8px; letter-spacing: .2em;
+}
+.gr-keys {
+  left: 150px; top: 614px; width: 900px; height: 110px; z-index: 6; touch-action: none;
+}
+.gr-key {
+  position: absolute; top: 0; box-sizing: border-box; padding: 0; cursor: pointer;
+  touch-action: none; -webkit-tap-highlight-color: transparent;
+}
+/* White keys: vertical steel water-radiator ribs */
+.gr-key.w {
+  width: 56px; height: 108px;
+  background:
+    linear-gradient(90deg, #cfc6b0 0 6px, var(--key-white) 6px 46px, #b8af9a 46px 56px);
+  border: 2px solid #181b1d; border-radius: 5px;
+  box-shadow: inset 0 -8px 0 #aba28c, 0 4px 0 #0c0e10;
+}
+.gr-key.w::before {
+  content: ''; position: absolute; left: 16px; right: 16px; top: 10px; bottom: 16px;
+  border-radius: 3px; background: rgba(0, 0, 0, .08);
+  box-shadow: inset 2px 0 0 rgba(0, 0, 0, .14), inset -1px 0 0 rgba(255, 255, 255, .35);
+}
+.gr-key.w.c-min::after {
+  content: attr(data-note); position: absolute; left: 0; right: 0; bottom: 4px;
+  text-align: center; font: 700 9px/1 var(--font-lcd); color: #2b3033;
+}
+.gr-key.w:hover { filter: brightness(1.05); }
+.gr-key.w.down {
+  background: linear-gradient(90deg, #b85418 0 6px, var(--key-white-on) 6px 46px, #9e4612 46px 56px);
+  box-shadow: inset 0 -3px 0 #7a340b, 0 1px 0 #0c0e10, 0 0 14px rgba(217, 107, 39, .55);
+  transform: translateY(3px);
+}
+/* Black keys: dark brass radiator bleed-valves / pipe fittings */
+.gr-key.b {
+  top: -6px; width: 36px; height: 58px; margin-left: -19px; z-index: 2;
+  border-radius: 3px 3px 8px 8px;
+  background:
+    radial-gradient(circle at 50% 18px, #c87a28 0 6px, #523418 7px 10px, transparent 11px),
+    linear-gradient(90deg, #1f1b18, var(--key-black) 50%, #171412);
+  border: 2px solid #0c0e10;
+  box-shadow: 0 5px 0 #090a0b;
+}
+.gr-key.b.c-min::after {
+  content: attr(data-note); position: absolute; left: 0; right: 0; bottom: 4px;
+  text-align: center; font: 700 8px/1 var(--font-lcd); color: #ece5d3;
+}
+.gr-key.b.down {
+  background: linear-gradient(90deg, #b82c1e, var(--key-black-on) 50%, #8f1f14);
+  box-shadow: 0 1px 0 #090a0b, 0 0 14px rgba(224, 70, 46, .75);
+  transform: translateY(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gr-room *, .gr-room *::before, .gr-room *::after { animation: none !important; transition: none !important; }
+}
+
+/* ---------- GEAR MENU (shell outside the room) ---------- */
+.utility { position: fixed; z-index: 20; right: max(12px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); }
+#menu > summary { list-style: none; cursor: pointer; }
+#menu > summary::-webkit-details-marker { display: none; }
+.menu-panel {
+  position: fixed; z-index: 21; right: max(12px, env(safe-area-inset-right)); bottom: calc(max(12px, env(safe-area-inset-bottom)) + 54px);
+  width: min(440px, calc(100vw - 24px)); max-height: calc(100dvh - 90px); overflow: auto;
+  -webkit-user-select: text; user-select: text;
+}
+.menu-panel.show-midi-map .ds-menu-actions,
+.menu-panel.show-midi-map #preset-panel,
+.menu-panel.show-midi-map #downloads,
+.menu-panel.show-midi-map #about-panel { display: none; }
+.ds-menu-actions button:disabled { opacity: .55; cursor: default; }
+.preset-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.preset-grid button {
+  min-height: 36px; padding: 6px 8px; border: 1px solid var(--menu-button-border);
+  background: var(--menu-button); color: var(--menu-button-ink); font: 600 11px/1.25 var(--font-panel);
+  text-align: left; cursor: pointer;
+}
+.preset-grid button:hover { background: var(--menu-button-hover); }
+.preset-grid button[aria-checked="true"] {
+  border-color: var(--control-on); box-shadow: inset 3px 0 0 var(--control-on); font-weight: 700;
+}
+.download-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-8); }
+.download-grid a {
+  display: block; padding: 10px 6px; border: 1px solid var(--menu-button-border);
+  background: var(--menu-button); color: var(--menu-button-ink); text-align: center; text-decoration: none; font-size: 12px; font-weight: 650;
+}
+.download-grid a:hover, .download-kit a:hover { background: var(--menu-button-hover); }
+.download-kit { margin-top: var(--space-8); }
+.download-kit a {
+  display: block; padding: 12px 8px; border: 1px solid var(--menu-button-border); border-top-width: 3px; border-top-color: var(--menu-border);
+  background: var(--menu-button); color: var(--menu-button-ink); text-align: center; text-decoration: none; font-size: 12px; font-weight: 650;
+}
+.download-note { margin: 8px 0 0; font-size: 11px; line-height: 1.5; color: var(--menu-muted); }
+.midi-map-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.midi-map-heading strong { margin: 0; }
+.midi-map-heading button {
+  min-height: 32px; border: 1px solid var(--menu-button-border); background: var(--menu-button);
+  color: var(--menu-button-ink); font: 12px var(--font-panel); padding: 0 12px; cursor: pointer;
+}
+.midi-map-list { list-style: none; margin: 0; padding: 0; font-size: 12px; line-height: 1.85; }
+.midi-map-list code { display: inline-block; min-width: 9.5em; font-family: var(--font-lcd); font-variant-numeric: tabular-nums; }
+.credits {
+  display: flex; justify-content: space-between; margin-top: var(--space-8); padding-top: var(--space-8);
+  border-top: 1px solid var(--menu-button-border); font-size: 10px; color: var(--menu-muted);
+}
+.credits a { color: var(--menu-muted); }

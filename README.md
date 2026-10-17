@@ -12,6 +12,7 @@ Dessa kommer från git commits i Plugdataprojects-repot:
 | SVETTILAINEN 3000 | `saunasarja/finska-namn` | `dd34b43` |
 | PERKELE 3000 | `perkele-3000` | `7d35f5b` |
 | ÄLSKOG 3000 | `alskog/utbytbar` | `568cf0d` |
+| GRANNEN 3000 (FOLKHEMMETS SKUGGOR) | `antigravity/folkhemmets-skuggor-grannen` | `070aa6e` |
 
 ## Ocommittade WIP-snapshots (Claude worktrees)
 
