@@ -1,0 +1,16 @@
+{
+  "name": "Älskog 3000",
+  "short_name": "Älskog",
+  "description": "Vulva och RUNKINATOR 3000 i samma säng.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#d8c3cd",
+  "theme_color": "#2a0c16",
+  "icons": [
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

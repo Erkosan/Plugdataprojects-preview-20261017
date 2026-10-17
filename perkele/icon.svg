@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+ <rect width="512" height="512" fill="#2e4637"/>
+ <path d="M0 0 H512 V44 H0 Z" fill="#f2b705"/>
+ <path d="M0 44 L44 0 H88 L44 44 Z M88 44 L132 0 H176 L132 44 Z M176 44 L220 0 H264 L220 44 Z M264 44 L308 0 H352 L308 44 Z M352 44 L396 0 H440 L396 44 Z M440 44 L484 0 H512 V16 L484 44 Z" fill="#0b0f0d"/>
+ <g fill="none" stroke="#efe6c8" stroke-width="22" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M150 400 L320 230"/>
+  <path d="M320 230 C300 190 320 140 362 128 L346 168 L372 194 L412 178 C400 220 352 240 320 230 Z"/>
+ </g>
+ <circle cx="150" cy="400" r="16" fill="#f2b705"/>
+ <text x="256" y="486" font-family="Helvetica, Arial, sans-serif" font-size="58" font-weight="700" letter-spacing="10" fill="#efe6c8" text-anchor="middle">PERKELE</text>
+</svg>

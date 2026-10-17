@@ -1,0 +1,369 @@
+/* Pastor Gregorius postorderkatalog, hösten 1987. Billigt papper i fyrfärg med två dekorfärger:
+   raster, kondenserade rubriker, gula prislappar, sidhuvuden, tryckmärken och registerflikar i kanten.
+   Maskinernas egna färger (data-theme, tokens.css) syns bara i fotots bakgrund och i rutan vid artikelnumret. */
+:root {
+  color-scheme: light;
+  --papper: #f0e7d0;
+  --papper-ljus: #f9f3e3;
+  --bord: #cdbf9f;
+  --trycksvart: #1b1712;
+  --gra: #6a604f;
+  --rod: #d41f26;
+  --bla: #16479b;
+  --gul: #ffd400;
+  --rubrik: "Helvetica Neue", "HelveticaNeue-CondensedBlack", Helvetica, "Arial Narrow", Arial, sans-serif;
+  --serif: Georgia, "Times New Roman", serif;
+  --mono: "Courier New", Courier, ui-monospace, monospace;
+  --raster: radial-gradient(circle, rgb(27 23 18 / .1) .9px, transparent 1.3px) 0 0 / 5px 5px;
+  --fiber: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .18 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
+  --sidbredd: 1120px;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--bord); }
+body {
+  margin: 0;
+  background: var(--fiber), var(--bord);
+  color: var(--trycksvart);
+  font: 16px/1.4 var(--rubrik);
+  -webkit-text-size-adjust: 100%;
+}
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--bla); outline-offset: 2px; }
+
+.sida { max-width: calc(var(--sidbredd) + 64px); margin: 0 auto; padding: 24px 32px 40px; }
+
+/* Varje uppslag är ett ark med fler ark under sig och tryckmärken i hörnen */
+.omslag, .avdelning {
+  position: relative;
+  background: var(--fiber), linear-gradient(90deg, rgb(0 0 0 / .07), transparent 2.5%, transparent 97.5%, rgb(0 0 0 / .05)), var(--papper);
+  box-shadow: 0 1px 0 rgb(0 0 0 / .12), 4px 5px 0 -1px var(--papper-ljus), 4px 5px 0 0 rgb(0 0 0 / .14), 0 22px 36px -22px rgb(0 0 0 / .6);
+}
+.omslag::after, .avdelning::after {
+  content: ""; position: absolute; inset: 8px; pointer-events: none;
+  --m: rgb(27 23 18 / .45);
+  background:
+    linear-gradient(var(--m), var(--m)) 0 0 / 14px 1px, linear-gradient(var(--m), var(--m)) 0 0 / 1px 14px,
+    linear-gradient(var(--m), var(--m)) 100% 0 / 14px 1px, linear-gradient(var(--m), var(--m)) 100% 0 / 1px 14px,
+    linear-gradient(var(--m), var(--m)) 0 100% / 14px 1px, linear-gradient(var(--m), var(--m)) 0 100% / 1px 14px,
+    linear-gradient(var(--m), var(--m)) 100% 100% / 14px 1px, linear-gradient(var(--m), var(--m)) 100% 100% / 1px 14px;
+  background-repeat: no-repeat;
+}
+
+/* Omslaget */
+.omslag {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  grid-template-areas: "topp topp" "titel kollage" "ingress kollage" "flikar kollage";
+  grid-template-rows: auto auto 1fr auto;
+  column-gap: 24px;
+  padding: 22px 28px 0;
+  border-bottom: 12px solid var(--rod);
+  overflow-x: clip;
+}
+.omslag::before { content: ""; position: absolute; inset: 0; background: var(--raster); pointer-events: none; }
+.omslag-topp {
+  grid-area: topp; position: relative; z-index: 7;
+  display: flex; align-items: center; gap: 12px;
+  font: 800 13px/1 var(--rubrik); letter-spacing: .22em;
+  border-bottom: 3px solid var(--trycksvart); padding-bottom: 10px;
+}
+.omslag-topp > span:nth-child(2) { flex: 1; }
+.logga {
+  display: inline-grid; place-items: center; width: 44px; height: 44px; flex: none;
+  background: var(--rod); color: var(--papper-ljus);
+  font: 900 20px/1 var(--rubrik); letter-spacing: -.04em;
+  box-shadow: inset 0 0 0 3px var(--rod), inset 0 0 0 5px var(--papper-ljus);
+}
+
+.titel {
+  grid-area: titel; position: relative; z-index: 2;
+  margin: 26px 0 0;
+  display: flex; flex-direction: column;
+  font: 900 clamp(46px, 7.4vw, 88px)/.84 var(--rubrik);
+  letter-spacing: -.035em;
+  text-transform: uppercase;
+}
+.titel span { width: max-content; max-width: 100%; }
+.titel span:nth-child(1) { color: var(--trycksvart); font-size: .5em; letter-spacing: .03em; }
+.titel span:nth-child(2) { color: var(--rod); text-shadow: 3px 3px 0 var(--gul); }
+.titel span:nth-child(3) {
+  margin-top: 10px; padding: 7px 14px 3px;
+  background: var(--bla); color: var(--papper-ljus);
+  font-size: .6em; letter-spacing: .06em;
+  transform: rotate(-1.5deg); transform-origin: left;
+  box-shadow: 4px 4px 0 var(--trycksvart);
+}
+.ingress {
+  grid-area: ingress; position: relative; z-index: 2; max-width: 22em; margin: 22px 0 24px;
+  font: italic 20px/1.35 var(--serif);
+}
+.ingress::before { content: ""; display: block; width: 56px; height: 4px; margin-bottom: 12px; background: var(--rod); }
+
+/* Fotokollaget: maskinerna som uppklistrade produktbilder */
+.kollage { grid-area: kollage; position: relative; z-index: 1; min-height: 470px; margin: 18px 0 24px; }
+.kort {
+  position: absolute; width: 62%; aspect-ratio: 8 / 5; object-fit: cover; object-position: top;
+  border: 8px solid #fffdf6; box-shadow: 2px 3px 0 rgb(0 0 0 / .18), 0 12px 20px -8px rgb(0 0 0 / .5);
+  filter: saturate(.85) contrast(1.06) sepia(.12);
+}
+.kort-0 { left: 0; top: 4%; transform: rotate(-5deg); z-index: 1; }
+.kort-1 { right: 0; top: 0; transform: rotate(4deg); z-index: 2; }
+.kort-2 { left: 18%; top: 34%; transform: rotate(-1.5deg); z-index: 4; }
+.kort-3 { left: -2%; top: 62%; transform: rotate(3deg); z-index: 3; }
+.kort-4 { right: -3%; top: 58%; transform: rotate(-4deg); z-index: 3; }
+
+.stjarna {
+  position: absolute; z-index: 6; right: 2%; top: 64px;
+  width: clamp(110px, 14vw, 156px); aspect-ratio: 1;
+  display: grid; place-content: center; text-align: center;
+  background: var(--gul); color: var(--rod);
+  clip-path: polygon(50% 0, 61% 14%, 79% 7%, 80% 26%, 98% 31%, 88% 47%, 100% 62%, 82% 70%, 84% 89%, 65% 86%, 54% 100%, 42% 87%, 23% 95%, 19% 76%, 1% 70%, 11% 53%, 0 37%, 18% 30%, 17% 11%, 36% 13%);
+  transform: rotate(-11deg);
+  filter: drop-shadow(3px 3px 0 var(--trycksvart));
+}
+.stjarna span { font: 900 clamp(13px, 1.6vw, 17px)/1 var(--rubrik); letter-spacing: .14em; }
+.stjarna strong { font: 900 clamp(40px, 5.2vw, 58px)/.95 var(--rubrik); letter-spacing: -.04em; }
+
+/* Registerflikar längst ned på omslaget */
+.flikar {
+  grid-area: flikar; align-self: end; position: relative; z-index: 6;
+  display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none;
+}
+.flikar a {
+  display: flex; align-items: center; min-height: 50px; padding: 0 20px;
+  background: var(--trycksvart); color: var(--gul);
+  font: 900 15px/1 var(--rubrik); letter-spacing: .16em; text-decoration: none;
+  transition: transform 80ms;
+}
+.flikar li:nth-child(2n) a { background: var(--bla); }
+.flikar a:hover { background: var(--rod); color: var(--papper-ljus); transform: translateY(-4px); }
+
+/* Uppslag: en serie per sida */
+.avdelning { margin-top: 40px; padding: 18px 28px 30px; }
+.sidhuvud {
+  display: flex; justify-content: space-between; align-items: end;
+  border-bottom: 1px solid var(--trycksvart); padding-bottom: 6px;
+  font: 700 11px/1 var(--rubrik); letter-spacing: .24em;
+}
+.avdelning-rubrik {
+  margin: 16px 0 0; padding-bottom: 14px;
+  display: flex; flex-wrap: wrap; align-items: end; gap: 8px 20px;
+  border-bottom: 3px double var(--trycksvart);
+}
+.avdelning-rubrik h2 {
+  margin: 0; padding: 11px 18px 5px;
+  background: var(--trycksvart); color: var(--gul);
+  font: 900 clamp(34px, 6vw, 62px)/.9 var(--rubrik);
+  letter-spacing: .01em;
+  box-shadow: 5px 5px 0 var(--rod);
+}
+.avdelning-1 .avdelning-rubrik h2 { background: var(--bla); box-shadow: 5px 5px 0 var(--gul); }
+.avdelning-2 .avdelning-rubrik h2 { background: var(--rod); color: var(--papper-ljus); box-shadow: 5px 5px 0 var(--trycksvart); }
+.avdelning-rubrik p { margin: 0 0 4px; font: italic 19px/1.3 var(--serif); }
+
+/* Registerfliken som sticker ut i högerkanten */
+.flik {
+  position: absolute; right: -16px; top: 70px;
+  writing-mode: vertical-rl;
+  padding: 18px 7px;
+  background: var(--trycksvart); color: var(--gul);
+  font: 900 12px/1 var(--rubrik); letter-spacing: .24em;
+  box-shadow: 3px 3px 0 rgb(0 0 0 / .2);
+}
+.avdelning-1 .flik { background: var(--bla); top: 150px; }
+.avdelning-2 .flik { background: var(--rod); color: var(--papper-ljus); top: 230px; }
+
+/* Artiklarna sitter i spalter med tunna linjer emellan, som i tryck */
+.artiklar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+}
+.artikel {
+  position: relative; display: flex; flex-direction: column;
+  padding: 18px 18px 22px;
+  border-bottom: 1px solid var(--trycksvart);
+}
+.artikel + .artikel { border-left: 1px dashed rgb(27 23 18 / .45); }
+.artikel-band { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.artnr { font: 700 13px/1 var(--mono); letter-spacing: .02em; }
+.artnr::before {
+  content: ""; display: inline-block; width: 14px; height: 14px; margin-right: 8px; vertical-align: -2px;
+  background: var(--chassis); box-shadow: inset 0 0 0 3px var(--ground), 0 0 0 1px var(--trycksvart);
+}
+
+.foto {
+  position: relative; aspect-ratio: 8 / 5; overflow: hidden;
+  background: var(--ground);
+  outline: 1px solid var(--trycksvart); outline-offset: 3px;
+  margin: 4px;
+}
+.foto img {
+  display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center;
+  filter: saturate(.86) contrast(1.06) sepia(.14);
+  transition: transform 300ms ease;
+}
+.artikel:hover .foto img { transform: scale(1.03); }
+.foto::after { content: ""; position: absolute; inset: 0; background: var(--raster); mix-blend-mode: multiply; pointer-events: none; }
+.foto--skylt { display: grid; place-items: center; background: var(--chassis); }
+.skylt {
+  padding: 14px 22px; background: var(--lcd-mid); color: var(--lcd-ink);
+  border: 6px solid var(--lcd-bezel);
+  font: 900 clamp(22px, 4vw, 34px)/1 var(--rubrik); letter-spacing: .14em;
+}
+
+/* Stämplar */
+.stamplar { position: absolute; right: 10px; top: 10px; z-index: 2; display: flex; gap: 6px; }
+.stampel {
+  padding: 5px 9px 3px;
+  font: 900 15px/1 var(--rubrik); letter-spacing: .1em;
+  color: var(--papper-ljus); background: var(--rod);
+  transform: rotate(6deg);
+  box-shadow: 2px 2px 0 rgb(0 0 0 / .3);
+}
+.stampel--ny {
+  display: grid; place-items: center; width: 62px; height: 62px; padding: 0;
+  border-radius: 50%; font-size: 20px; letter-spacing: .02em;
+  background: var(--rod); box-shadow: 0 0 0 3px var(--papper-ljus), 0 0 0 5px var(--rod), 3px 4px 0 5px rgb(0 0 0 / .25);
+  transform: rotate(-14deg);
+}
+.stampel--beta, .stampel--kommer { background: var(--bla); }
+.stampel--utgående { background: var(--trycksvart); color: var(--gul); transform: rotate(-4deg); }
+
+.artikel-text {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "namn pris" "pitch pris" "knappar knappar";
+  align-items: start; gap: 10px 16px; padding-top: 16px; flex: 1;
+}
+.namnrad { grid-area: namn; }
+.roll { margin: 0 0 4px; font: 800 11px/1.25 var(--rubrik); letter-spacing: .18em; text-transform: uppercase; color: var(--bla); }
+.namn { margin: 0; font: 900 30px/.92 var(--rubrik); letter-spacing: -.01em; text-transform: uppercase; }
+.pitch { grid-area: pitch; margin: 0; max-width: 24em; font: italic 16px/1.4 var(--serif); }
+
+/* Prislappen: gul lapp, röd siffra, liten kursiv rad; varje lapp sitter lite snett på sitt eget sätt */
+.pris {
+  grid-area: pris; justify-self: end;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  width: 112px; padding: 9px 8px 8px;
+  background: var(--gul); color: var(--rod);
+  transform: rotate(3deg);
+  box-shadow: 3px 3px 0 var(--trycksvart);
+}
+.artikel:nth-child(3n + 2) .pris { transform: rotate(-2.5deg); }
+.artikel:nth-child(3n + 3) .pris { transform: rotate(1.5deg); }
+.belopp { font: 900 46px/.88 var(--rubrik); letter-spacing: -.05em; }
+.villkor { text-align: center; font: italic 700 11px/1.15 var(--serif); color: var(--trycksvart); }
+
+.knappar { grid-area: knappar; display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; padding-top: 6px; align-self: end; }
+.knapp {
+  position: relative; overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  min-height: 46px; padding: 0 18px;
+  border: 2px solid var(--trycksvart); border-radius: 0;
+  font: 900 15px/1 var(--rubrik); letter-spacing: .12em;
+  text-decoration: none; cursor: pointer;
+  box-shadow: 3px 3px 0 var(--trycksvart);
+  transition: transform 60ms, box-shadow 60ms;
+}
+.knapp:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--trycksvart); }
+.knapp--spela { background: var(--rod); color: var(--papper-ljus); }
+.knapp--spela:hover { background: var(--trycksvart); }
+.play { width: 0; height: 0; border-left: 11px solid currentColor; border-top: 7px solid transparent; border-bottom: 7px solid transparent; }
+.knapp--lyssna {
+  --klar: 0;
+  background: linear-gradient(90deg, var(--gul) calc(var(--klar) * 100%), var(--papper-ljus) 0);
+  color: var(--trycksvart);
+}
+.knapp--lyssna:hover { background: linear-gradient(90deg, var(--gul) calc(var(--klar) * 100%), #fff 0); }
+.knapp--lyssna .etikett { position: relative; }
+.knapp--lyssna::before { content: ""; position: relative; width: 12px; height: 12px; border: 2px solid currentColor; border-radius: 50%; }
+.knapp--lyssna.spelar::before { border-radius: 0; background: currentColor; width: 10px; height: 10px; }
+.knapp--av, .knapp:disabled { background: transparent; color: var(--gra); border-style: dashed; box-shadow: none; cursor: default; }
+
+/* Kugghjulet: allt som inte är sortimentet */
+.meny { position: relative; }
+.meny summary {
+  list-style: none; display: grid; place-items: center;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--trycksvart); color: var(--papper-ljus); cursor: pointer;
+}
+.meny summary::-webkit-details-marker { display: none; }
+.meny summary svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.meny[open] summary { background: var(--rod); }
+.meny-panel {
+  position: absolute; right: 0; top: 52px; z-index: 20;
+  width: min(380px, calc(100vw - 32px));
+  padding: 14px 16px;
+  background: var(--fiber), var(--papper-ljus);
+  border: 2px solid var(--trycksvart); box-shadow: 6px 6px 0 var(--trycksvart);
+  letter-spacing: 0; font-weight: 400;
+}
+.meny-panel h2 { margin: 6px 0 8px; font: 900 13px/1 var(--rubrik); letter-spacing: .2em; }
+.meny-panel h2 + ul { margin-bottom: 14px; }
+.meny-panel ul { list-style: none; margin: 0; padding: 0; }
+.meny-vst3 li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; padding: 6px 0; border-top: 1px dotted var(--gra); font: 800 13px/1.4 var(--rubrik); }
+.meny-filer { display: flex; flex-wrap: wrap; gap: 4px; }
+.meny-filer a {
+  display: inline-flex; align-items: center; min-height: 32px; padding: 0 8px;
+  border: 1px solid var(--trycksvart); background: var(--papper);
+  font: 700 11px/1 var(--rubrik); letter-spacing: .1em; text-decoration: none;
+}
+.snart {
+  display: inline-flex; align-items: center; min-height: 32px; padding: 0 8px;
+  border: 1px dashed var(--gra); color: var(--gra);
+  font: 700 11px/1 var(--rubrik); letter-spacing: .1em;
+}
+.meny-filer a:hover { background: var(--trycksvart); color: var(--papper-ljus); }
+.meny-nytt li { padding: 4px 0; font: 14px/1.35 var(--serif); }
+.meny-nytt time { font: 700 12px/1 var(--mono); color: var(--bla); }
+.meny-villkor { margin: 8px 0 0; font: italic 12px/1.3 var(--serif); color: var(--gra); }
+
+/* Kolofonen längst ned */
+.kolofon {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  margin-top: 36px;
+  font: 700 11px/1 var(--rubrik); letter-spacing: .24em; text-transform: uppercase; color: rgb(27 23 18 / .7);
+}
+.kolofon .logga { width: 30px; height: 30px; font-size: 13px; }
+
+.noscript { font: 700 18px/2 var(--rubrik); }
+
+@media (max-width: 860px) {
+  .omslag { grid-template-columns: minmax(0, 1fr); grid-template-areas: "topp" "titel" "ingress" "kollage" "flikar"; grid-template-rows: none; }
+  .kollage { min-height: 0; height: 62vw; max-height: 380px; margin: 0 0 18px; }
+  .kort { width: 54%; }
+  .kort-3, .kort-4 { display: none; }
+  .kort-2 { left: 24%; top: 34%; }
+  .stjarna { top: auto; right: 4%; bottom: 80px; }
+  .titel { font-size: clamp(46px, 11vw, 96px); }
+  .ingress { margin-bottom: 12px; }
+}
+
+@media (max-width: 640px) {
+  .sida { padding: 0 0 32px; }
+  .omslag { padding: 14px 16px 0; }
+  .omslag::after, .avdelning::after { display: none; }
+  .omslag-topp { letter-spacing: .14em; font-size: 11px; }
+  .titel { margin-top: 18px; }
+  .ingress { font-size: 17px; }
+  .kollage { height: 66vw; }
+  .kort { width: 62%; border-width: 5px; }
+  .kort-2 { left: 30%; top: 40%; }
+  .stjarna { width: 96px; bottom: 76px; right: 2%; }
+  .flikar a { padding: 0 14px; font-size: 13px; letter-spacing: .1em; }
+  .avdelning { margin-top: 24px; padding: 14px 16px 22px; }
+  .avdelning-rubrik p { font-size: 17px; }
+  .flik { display: none; }
+  .sidhuvud span:last-child { display: none; }
+  .artikel { padding-left: 0; padding-right: 0; }
+  .artikel + .artikel { border-left: 0; }
+  .namn { font-size: 27px; }
+  .pris { width: 100px; }
+  .belopp { font-size: 40px; }
+  .knappar .knapp { flex: 1 1 auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .foto img, .flikar a, .knapp { transition: none; }
+  .artikel:hover .foto img { transform: none; }
+}

@@ -1,0 +1,53 @@
+/* TURBOTUTTI 3000 web shell. The room itself is styled by 3000-series.css; this file only
+   scales it as one picture and places the gear menu outside it. */
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--ground);
+  background-image: linear-gradient(rgba(29,42,51,.16) 1px, transparent 1px), linear-gradient(90deg, rgba(29,42,51,.16) 1px, transparent 1px);
+  background-size: var(--knob) var(--knob);
+  overflow: hidden; overscroll-behavior: none; touch-action: manipulation;
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
+  font-family: var(--font-panel);
+}
+#stage {
+  position: fixed; inset: 0; box-sizing: border-box; display: grid; place-items: center;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+#fit { position: relative; width: calc(1180px * var(--zoom, 1)); height: calc(740px * var(--zoom, 1)); }
+#room { position: absolute; left: 0; top: 0; transform: scale(var(--zoom, 1)); transform-origin: 0 0; }
+#room button, #room input, #room [role="button"] { -webkit-user-select: none; user-select: none; }
+.ds-room .ds-door[role="button"] { cursor: pointer; transition: transform 120ms; }
+.ds-room .ds-door[role="button"]:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.ds-room .ds-door .ds-jersey { display: none; }
+.ds-room .ds-door.open .ds-jersey { display: block; }
+.ds-room .ds-door.queued { animation: tt-queued .5s step-end infinite; }
+@keyframes tt-queued { 50% { box-shadow: inset 0 0 0 2px var(--control-on); } }
+.ds-room .ds-key.w.slot { box-shadow: inset 0 -4px 0 #9c6a3b, inset -2px 0 0 #9c6a3b, inset 0 3px 0 var(--chassis-edge); }
+.ds-room .ds-key.w.pick { background: #e0b47f; }
+.ds-room .ds-bpm { -moz-appearance: textfield; }
+/* Eight knobs: the six of the 303 voice, then TUUTTI (tonart) and PUBLIKKI (volym) like TUNING and VOLUME on a 303. */
+.ds-room .ds-tt-knobs { grid-template-columns: repeat(8, 1fr); gap: 2px; padding-left: 4px; padding-right: 4px; }
+.ds-room .ds-tt-knob .ds-engrave { letter-spacing: .08em; white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .ds-room .ds-door[role="button"] { transition: none; } .ds-room .ds-door.queued { animation: none; box-shadow: inset 0 0 0 2px var(--control-on); } }
+
+/* Gear menu: app things live here, never in the room. */
+.utility { position: fixed; z-index: 20; right: max(12px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); }
+#menu > summary { list-style: none; cursor: pointer; }
+#menu > summary::-webkit-details-marker { display: none; }
+.menu-panel { position: fixed; z-index: 21; right: max(12px, env(safe-area-inset-right)); bottom: calc(max(12px, env(safe-area-inset-bottom)) + 54px);
+  width: min(430px, calc(100vw - 24px)); max-height: calc(100dvh - 90px); overflow: auto; -webkit-user-select: text; user-select: text; }
+.menu-panel.show-midi-map .ds-menu-actions, .menu-panel.show-midi-map #downloads, .menu-panel.show-midi-map #menu-help { display: none; }
+.ds-menu-actions button:disabled { opacity: .55; cursor: default; }
+.download-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-8); }
+.download-grid a { display: block; padding: 10px 6px; border: 1px solid var(--menu-button-border); background: var(--menu-button); color: var(--menu-button-ink); text-align: center; text-decoration: none; font-size: 12px; font-weight: 650; }
+.download-grid a:hover, .download-kit a:hover { background: var(--menu-button-hover); }
+.download-kit { margin-top: var(--space-8); }
+.download-kit a { display: block; padding: 12px 8px; border: 1px solid var(--menu-button-border); border-top-width: 3px; border-top-color: var(--menu-border); background: var(--menu-button); color: var(--menu-button-ink); text-align: center; text-decoration: none; font-size: 12px; font-weight: 650; }
+.download-note { margin: 8px 0 0; font-size: 11px; line-height: 1.5; color: var(--menu-muted); }
+.midi-map-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.midi-map-heading strong { margin: 0; }
+.midi-map-heading button { min-height: 32px; border: 1px solid var(--menu-button-border); background: var(--menu-button); color: var(--menu-button-ink); font: 12px var(--font-panel); padding: 0 12px; cursor: pointer; }
+.midi-map-list { list-style: none; margin: 0; padding: 0; font-size: 12px; line-height: 1.9; }
+.midi-map-list code { display: inline-block; min-width: 9.5em; font-family: var(--font-lcd); font-variant-numeric: tabular-nums; }
+.credits { display: flex; justify-content: space-between; margin-top: var(--space-8); padding-top: var(--space-8); border-top: 1px solid var(--menu-button-border); font-size: 10px; color: var(--menu-muted); }
+.credits a { color: var(--menu-muted); }

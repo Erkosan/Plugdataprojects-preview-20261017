@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="sv" data-theme="turbotutte">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#3f5d73">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="TURBOTUTTI 3000. Blöt, smutsig 303-acidbas i ett hockeyomklädningsrum. Spela på bänken, dra i kedjan.">
+<title>TURBOTUTTI 3000 — Pastor Gregorius</title>
+<link rel="icon" href="icon-512.png" sizes="512x512" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="modulepreload" href="turbotutte-engine.js">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="3000-series.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="stage">
+<div id="fit">
+<div class="ds-room" id="room" data-theme="turbotutte">
+ <div class="ds-room-floor"></div><div class="ds-room-puddle" id="puddle"></div><div class="ds-room-drain"></div>
+ <div class="ds-pipe ds-pipe-h" id="manifold" style="left:40px;right:40px"></div>
+ <div class="ds-pipe ds-feed"></div>
+ <div class="ds-valve" aria-hidden="true"></div>
+ <button class="ds-chain" id="chain" aria-label="Iskall duschi: håll för att strypa filtret (C)"></button>
+ <div class="ds-frost"></div>
+ <div id="stalls"></div>
+ <div class="ds-bench"></div><div class="ds-bench-helmet"></div><div class="ds-bench-stick"></div>
+ <div class="ds-keys" id="keys" role="group" aria-label="Bänken: klaviatur, en oktav"></div>
+ <div class="ds-chassis ds-tt">
+  <div class="ds-beacon" style="position:absolute" aria-hidden="true"></div>
+  <div class="ds-engrave ds-tt-name">TURBOTUTTI 3000</div>
+  <div class="ds-lcd" aria-live="polite"><div class="ds-lcd-glow"></div><div class="ds-lcd-top"><span class="ds-lcd-name" id="lname">OMKLÄDNING 2</span><span class="ds-lcd-value" id="lval">HEMMA 0 – 0</span></div><div class="ds-lcd-line" id="lline"></div></div>
+  <div class="ds-plate ds-tt-knobs" id="knobs"></div>
+  <div class="ds-plate ds-plate--band ds-tt-steps"><div style="display:flex" id="steps"></div></div>
+  <div class="ds-tt-bottom">
+   <button class="ds-control ds-play" id="play" aria-pressed="false" aria-label="Spela slingan"><svg viewBox="0 0 24 24" style="width:40%;height:40%"><path id="pi" d="M7 5 L19 12 L7 19 Z" fill="currentColor"/></svg></button>
+   <input class="ds-bpm" id="bpm" type="number" inputmode="numeric" min="30" max="300" value="120" aria-label="Tempo, BPM">
+   <button class="ds-control small" id="odn" aria-label="Oktav ner (Z)">OKT −</button>
+   <button class="ds-control small" id="oup" aria-label="Oktav upp (X)">OKT +</button>
+   <button class="ds-control small" id="bacc" aria-pressed="false" aria-label="Snärtti, accent (Shift)">SNÄRTTI</button>
+   <button class="ds-control small" id="bsl" aria-pressed="false" aria-label="Gliidi, slide">GLIIDI</button>
+   <button class="ds-control small" id="bwr" aria-pressed="false" aria-label="Skrivaa, programmera steg (Enter)">SKRIVAA</button>
+  </div>
+  <div class="ds-tt-doors" id="doors">
+   <div class="ds-door" id="door0" role="button" tabindex="0" aria-label="Skåp 7, Snärtarn: slingor"><span class="ds-jersey"></span><span class="ds-door-tag">SNÄRTARN</span><span class="ds-door-num">7</span></div>
+   <div class="ds-door" id="door1" role="button" tabindex="0" style="padding-top:22px" aria-label="Basskåpet: byt vågform (V)"><div class="ds-speaker" id="spk"></div></div>
+   <div class="ds-door" id="door2" role="button" tabindex="0" aria-label="Skåp 21, Ånginen: slingor"><span class="ds-jersey"></span><span class="ds-door-tag">ÅNGINEN</span><span class="ds-door-num">21</span></div>
+   <div class="ds-door" id="door3" role="button" tabindex="0" aria-label="Skåp 13, Tuttinen: slingor"><span class="ds-jersey"></span><span class="ds-door-tag">TUTTINEN</span><span class="ds-door-num">13</span></div>
+  </div>
+  <div class="ds-tt-lockers"></div>
+ </div>
+</div>
+</div>
+</main>
+<section class="utility" aria-label="Inställningar">
+ <details id="menu">
+  <summary class="ds-gear" aria-label="Inställningar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></summary>
+  <div class="ds-menu menu-panel">
+   <div class="ds-menu-actions" id="menu-actions">
+    <button id="demo" type="button">Exempelslinga</button>
+    <button id="clear" type="button">Rensa slinga</button>
+    <button id="save" type="button">Spara session</button>
+    <button id="open" type="button">Öppna session</button>
+    <button id="midi" type="button">Anslut MIDI</button>
+    <button id="install-app" type="button">Installera app</button>
+    <button id="fullscreen" type="button">Helskärm</button>
+    <button id="midi-map-toggle" type="button" aria-controls="midi-map-panel" aria-expanded="false">MIDI-mappning</button>
+    <input id="load" type="file" accept="application/json,.json" aria-label="Öppna session" hidden>
+   </div>
+   <div class="ds-menu-section" id="downloads" hidden>
+    <strong>TURBOTUTTI 3000 VST3</strong>
+    <div class="download-grid" id="download-grid"></div>
+    <div class="download-kit" id="download-kit" hidden></div>
+    <p class="download-note">Byggkitet innehåller PlugData-patcharna och bygger VST3 på din egen Mac (Intel och Apple Silicon), Windows-dator eller Linux. Läs BUILD-VST3.md i kitet.</p>
+   </div>
+   <div class="ds-menu-section" id="midi-map-panel" hidden>
+    <div class="midi-map-heading"><strong>MIDI-mappning</strong><button id="midi-map-back" type="button">Tillbaka</button></div>
+    <ul id="midi-map-list" class="midi-map-list"></ul>
+   </div>
+   <p class="ds-menu-help" id="menu-help">Spela på bänken med musen, fingrarna eller A W S E D F T G Y H U J K. Z och X byter oktav, Shift ger snärtti, Enter skriver steg, mellanslag spelar slingan och C drar i kedjan. Skåpen sparar slingor: öppna en dörr och välj slinga på bänken, eller tryck 1–8. Basskåpet och V byter vågform. Dubbelklicka på en ratt för att återställa den.</p>
+   <div class="credits"><span>Pastor Gregorius</span><a href="THIRD_PARTY_NOTICES.txt">Licenser</a></div>
+  </div>
+ </details>
+</section>
+<script type="module" src="app.js"></script>
+</body>
+</html>

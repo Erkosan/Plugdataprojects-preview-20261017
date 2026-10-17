@@ -1,0 +1,254 @@
+{
+ "tire": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.5,
+  "type": "float"
+ },
+ "hood": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.45,
+  "type": "float"
+ },
+ "air": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.4,
+  "type": "float"
+ },
+ "wrench": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.45,
+  "type": "float"
+ },
+ "barrel": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.45,
+  "type": "float"
+ },
+ "disc": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.4,
+  "type": "float"
+ },
+ "accent": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.5,
+  "type": "float"
+ },
+ "misfire": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.1,
+  "type": "float"
+ },
+ "rpm": {
+  "min": 0.0,
+  "max": 2.0,
+  "default": 1.0,
+  "type": "int"
+ },
+ "swing": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.0,
+  "type": "float"
+ },
+ "rust": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.3,
+  "type": "float"
+ },
+ "pump": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.3,
+  "type": "float"
+ },
+ "radio": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.0,
+  "type": "float"
+ },
+ "room": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.3,
+  "type": "float"
+ },
+ "volume": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.8,
+  "type": "float"
+ },
+ "bpm": {
+  "min": 30.0,
+  "max": 300.0,
+  "default": 128.0,
+  "type": "int"
+ },
+ "start": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.0,
+  "type": "bool"
+ },
+ "humppa": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.0,
+  "type": "bool"
+ },
+ "perkele": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.0,
+  "type": "bool"
+ },
+ "startti": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.0,
+  "type": "bool"
+ },
+ "len0": {
+  "min": 1.0,
+  "max": 16.0,
+  "default": 16.0,
+  "type": "int"
+ },
+ "len1": {
+  "min": 1.0,
+  "max": 16.0,
+  "default": 16.0,
+  "type": "int"
+ },
+ "len2": {
+  "min": 1.0,
+  "max": 16.0,
+  "default": 16.0,
+  "type": "int"
+ },
+ "len3": {
+  "min": 1.0,
+  "max": 16.0,
+  "default": 16.0,
+  "type": "int"
+ },
+ "len4": {
+  "min": 1.0,
+  "max": 16.0,
+  "default": 12.0,
+  "type": "int"
+ },
+ "len5": {
+  "min": 1.0,
+  "max": 16.0,
+  "default": 16.0,
+  "type": "int"
+ },
+ "step0": {
+  "min": 0.0,
+  "max": 728.0,
+  "default": 11.0,
+  "type": "int"
+ },
+ "step1": {
+  "min": 0.0,
+  "max": 728.0,
+  "default": 9.0,
+  "type": "int"
+ },
+ "step2": {
+  "min": 0.0,
+  "max": 728.0,
+  "default": 99.0,
+  "type": "int"
+ },
+ "step3": {
+  "min": 0.0,
+  "max": 728.0,
+  "default": 252.0,
+  "type": "int"
+ },
+ "step4": {
+  "min": 0.0,
+  "max": 728.0,
+  "default": 43.0,
+  "type": "int"
+ },
+ "step5": {
+  "min": 0.0,
+  "max": 728.0,
+  "default": 9.0,
+  "type": "int"
+ },
+ "step6": {
+  "min": 0.0,
+  "max": 728.0,
+  "default": 261.0,
+  "type": "int"
+ },
+ "step7": {
+  "min": 0.0,
+  "max": 728.0,
+  "default": 10.0,
+  "type": "int"
+ },
+ "step8": {
+  "min": 0.0,
+  "max": 728.0,
+  "default": 11.0,
+  "type": "int"
+ },
+ "step9": {
+  "min": 0.0,
+  "max": 728.0,
+  "default": 171.0,
+  "type": "int"
+ },
+ "step10": {
+  "min": 0.0,
+  "max": 728.0,
+  "default": 18.0,
+  "type": "int"
+ },
+ "step11": {
+  "min": 0.0,
+  "max": 728.0,
+  "default": 252.0,
+  "type": "int"
+ },
+ "step12": {
+  "min": 0.0,
+  "max": 728.0,
+  "default": 43.0,
+  "type": "int"
+ },
+ "step13": {
+  "min": 0.0,
+  "max": 728.0,
+  "default": 9.0,
+  "type": "int"
+ },
+ "step14": {
+  "min": 0.0,
+  "max": 728.0,
+  "default": 45.0,
+  "type": "int"
+ },
+ "step15": {
+  "min": 0.0,
+  "max": 728.0,
+  "default": 12.0,
+  "type": "int"
+ }
+}

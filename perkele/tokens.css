@@ -1,0 +1,334 @@
+/* 3000 Series — generated from tokens.json */
+:root, [data-theme="runkinator"] {
+  --ground: #9dd17f;
+  --chassis: #000000;
+  --chassis-edge: #373737;
+  --plate: #252525;
+  --plate-band: #252525;
+  --velvet: #000000;
+  --control: #e4e4e4;
+  --control-on: #c8d6bb;
+  --control-border: #555b4f;
+  --control-border-hover: #161c12;
+  --control-ink: #080a07;
+  --knob-arc: #ffffff;
+  --knob-pointer: #080a07;
+  --engrave: #45513c;
+  --playhead: #ffffff;
+  --menu-surface: #f7f7f1;
+  --menu-border: #4e5948;
+  --menu-ink: #252924;
+  --menu-muted: #646a61;
+  --menu-tint: #e8ecdf;
+  --menu-button: #ffffff;
+  --menu-button-hover: #e9eee3;
+  --menu-button-border: #70796b;
+  --menu-button-ink: #252924;
+  --lcd-top: #e4e4e4;
+  --lcd-mid: #e4e4e4;
+  --lcd-bezel: #373737;
+  --lcd-ink: #373737;
+  --lcd-value: #373737;
+  --lcd-glow: #373737;
+  --focus: #ffffff;
+  --run: #65b86c;
+  --run-idle: #65b86c;
+  --rec: #ef3340;
+  --mute: #ec7967;
+  --solo: #c8d6bb;
+  --ch-kick: #c94b5b;
+  --ch-kick-dim: #5c2a33;
+  --ch-snare: #dfc23a;
+  --ch-snare-dim: #5e5326;
+  --ch-hat: #9aaee6;
+  --ch-hat-dim: #3d4763;
+  --ch-sample: #a37bcf;
+  --ch-sample-dim: #4a3a5e;
+  --ch-fx: #7fc8b0;
+  --ch-fx-dim: #33544a;
+  --ch-synth: #e396c0;
+  --ch-synth-dim: #6a3c55;
+  --ch-bass: #fecb00;
+  --ch-bass-dim: #5e4b00;
+  --tre-kronor-blue: #005293;
+  --towel: #f7f5ef;
+  --macro-filter: #45ad4c;
+  --macro-drive: #e07a3a;
+  --macro-space: #c3b0e0;
+  --macro-chance: #b08d57;
+  --macro-accent: #c49a72;
+  --bank-on: #f5ead0;
+  --heart: #e0436e;
+  --heart-flash: #ff2d5f;
+  --heart-off: #3b1220;
+  --heart-rim: #6b2a3d;
+  --key-black: #080508;
+  --key-white: #f1eff0;
+  --key-white-on: #f1a5ce;
+  --key-black-on: #995274;
+  --field: #f6f6f2;
+  --ch-choir: #e9a58c;
+  --ch-heat: #f08a3c;
+  --ch-water: #8fc9e6;
+  --ch-wood: #d6b07e;
+  --ch-birch: #8fbf5a;
+  --ch-birch-dim: #34502a;
+  --ch-ice: #bfe6ff;
+  --wood-wall: #c08a55;
+  --wood-groove: #7e5029;
+  --stone: #6d6862;
+  --ember: #ff6a2a;
+  --ch-tire: #9aa09a;
+  --ch-tire-dim: #3b403c;
+  --ch-hood: #d9a441;
+  --ch-hood-dim: #5a4520;
+  --ch-air: #7fc4d8;
+  --ch-air-dim: #2c4a52;
+  --ch-wrench: #c9ced3;
+  --ch-wrench-dim: #474b4f;
+  --ch-barrel: #d2452c;
+  --ch-barrel-dim: #55241b;
+  --ch-disc: #e07b2e;
+  --ch-disc-dim: #5a3418;
+  --pegboard: #9c7448;
+  --concrete: #5f625d;
+  --lada: #c98a35;
+  --hazard: #f2b705;
+  --shadow-menu: 0 4px 0 #25292426;
+  --shadow-patch: 0 3px 8px #38253240;
+  --shadow-chassis: 0 12px 0 rgba(27,10,16,0.35), inset 0 0 0 2px #4a1726, inset 0 0 60px rgba(0,0,0,0.45);
+  --shadow-plate: inset 0 0 0 1px rgba(240,108,153,0.2), inset 0 2px 8px rgba(0,0,0,0.35);
+  --shadow-lcd: inset 0 0 0 1px #170f18, inset 0 0 16px #f06c9930, 0 2px 0 #754d68;
+  --shadow-glow: 0 0 12px #f06c99;
+}
+[data-theme="vulva"] {
+  --ground: #e7e3e4;
+  --chassis: #d2b4c6;
+  --chassis-edge: #664a5b;
+  --plate: #e7d2df;
+  --plate-band: #d2b4c6;
+  --velvet: #382b35;
+  --control: #d2b4c6;
+  --control-on: #e49fc6;
+  --control-border: #91617a;
+  --control-border-hover: #382b35;
+  --control-ink: #382b35;
+  --knob-arc: #e9c3d0;
+  --knob-pointer: #1a1318;
+  --engrave: #382b35;
+  --playhead: #fff0f7;
+  --menu-surface: #faf3f7;
+  --menu-border: #60394f;
+  --menu-ink: #382b35;
+  --menu-muted: #70636b;
+  --menu-tint: #ead7e2;
+  --menu-button-hover: #ead7e2;
+  --menu-button-border: #91617a;
+  --menu-button-ink: #382b35;
+  --lcd-top: #3d2338;
+  --lcd-mid: #1b1721;
+  --lcd-bezel: #735069;
+  --lcd-ink: #fff3b6;
+  --lcd-value: #edff79;
+  --lcd-glow: #f06c99;
+  --focus: #382b35;
+  --run: #28c76f;
+  --run-idle: #28c76f;
+  --solo: #e49fc6;
+}
+[data-theme="alskog"] {
+  --ground: #d8c3cd;
+  --chassis: #2a0c16;
+  --chassis-edge: #4a1726;
+  --plate: #36111f;
+  --plate-band: #2f0e1a;
+  --velvet: #1a0610;
+  --control: #f2bcd9;
+  --control-on: #fff3b6;
+  --control-border: #0d0307;
+  --control-border-hover: #0d0307;
+  --control-ink: #141414;
+  --knob-pointer: #141414;
+  --engrave: #c98aa0;
+  --playhead: #fff3b6;
+  --menu-surface: #2a0c16;
+  --menu-border: #4a1726;
+  --menu-ink: #f4e4ea;
+  --menu-muted: #f2bcd9;
+  --menu-tint: #36111f;
+  --menu-button: #f2bcd9;
+  --menu-button-hover: #f2bcd9;
+  --menu-button-border: #0d0307;
+  --menu-button-ink: #141414;
+  --lcd-top: #3d2338;
+  --lcd-mid: #1b1721;
+  --lcd-bezel: #735069;
+  --lcd-ink: #fff3b6;
+  --lcd-value: #f2a9c4;
+  --lcd-glow: #f06c99;
+  --focus: #fff3b6;
+  --run: #45ad4c;
+  --run-idle: #2f6b33;
+  --rec: #c0283f;
+  --mute: #e0436e;
+  --solo: #f4ecd8;
+}
+[data-theme="turbotutte"] {
+  --ground: #dfe8e6;
+  --chassis: #3f5d73;
+  --chassis-edge: #1d2a33;
+  --plate: #36526a;
+  --plate-band: #2f495e;
+  --velvet: #14191d;
+  --control: #eef3f5;
+  --control-on: #fecb00;
+  --control-border: #1d2a33;
+  --control-border-hover: #0f1820;
+  --control-ink: #0f1820;
+  --knob-arc: #005293;
+  --knob-pointer: #0f1820;
+  --engrave: #f4f7f9;
+  --playhead: #e4002b;
+  --menu-surface: #f4f7f7;
+  --menu-border: #005293;
+  --menu-ink: #0f1820;
+  --menu-muted: #4a5a66;
+  --menu-tint: #dbe6ea;
+  --menu-button-hover: #e6eef1;
+  --menu-button-border: #4f6f86;
+  --menu-button-ink: #0f1820;
+  --lcd-top: #141414;
+  --lcd-mid: #050505;
+  --lcd-bezel: #2a2f33;
+  --lcd-ink: #ff3b2f;
+  --lcd-value: #fecb00;
+  --lcd-glow: #ff3b2f;
+  --focus: #fecb00;
+  --run: #2e9e4f;
+  --run-idle: #1f6b37;
+  --rec: #e4002b;
+  --mute: #e4002b;
+  --solo: #fecb00;
+}
+[data-theme="svettan"] {
+  --ground: #1e140e;
+  --chassis: #4b2f1c;
+  --chassis-edge: #24150c;
+  --plate: #5c3b24;
+  --plate-band: #34502a;
+  --velvet: #140c07;
+  --control: #f1e3cc;
+  --control-on: #ffb35c;
+  --control-border: #24150c;
+  --control-border-hover: #000000;
+  --control-ink: #1c100a;
+  --knob-arc: #24150c;
+  --knob-pointer: #1c100a;
+  --engrave: #f3dcc0;
+  --playhead: #ff5a36;
+  --menu-surface: #f6eadb;
+  --menu-border: #8a4b26;
+  --menu-ink: #1c100a;
+  --menu-muted: #6b4a33;
+  --menu-tint: #ecdcc6;
+  --menu-button: #fffaf2;
+  --menu-button-hover: #f3e6d3;
+  --menu-button-border: #8a6a50;
+  --menu-button-ink: #1c100a;
+  --lcd-top: #2a1408;
+  --lcd-mid: #120904;
+  --lcd-bezel: #7a4a2a;
+  --lcd-ink: #ffd9a8;
+  --lcd-value: #ffb35c;
+  --lcd-glow: #ff6a2a;
+  --focus: #ffe2b8;
+  --run: #8fbf5a;
+  --run-idle: #34502a;
+  --rec: #ff5a36;
+  --mute: #9fd8ff;
+  --solo: #ffb35c;
+  --key-black: #3a3633;
+  --key-white: #ead2ad;
+  --key-white-on: #ffb35c;
+  --key-black-on: #ff6a2a;
+  --field: #f6eadb;
+}
+[data-theme="perkele"] {
+  --ground: #16191a;
+  --chassis: #2e4637;
+  --chassis-edge: #121c16;
+  --plate: #38543f;
+  --plate-band: #1d2420;
+  --velvet: #0b0f0d;
+  --control: #e6dfc9;
+  --control-on: #f2b705;
+  --control-border: #121c16;
+  --control-border-hover: #000000;
+  --control-ink: #141712;
+  --knob-arc: #121c16;
+  --knob-pointer: #141712;
+  --engrave: #efe6c8;
+  --playhead: #ff5b1f;
+  --menu-surface: #efeadb;
+  --menu-border: #2e4637;
+  --menu-ink: #141712;
+  --menu-muted: #5b6156;
+  --menu-tint: #e1dccb;
+  --menu-button: #fffdf6;
+  --menu-button-hover: #ece6d4;
+  --menu-button-border: #6e7a68;
+  --menu-button-ink: #141712;
+  --lcd-top: #0d1512;
+  --lcd-mid: #040907;
+  --lcd-bezel: #4a4f4a;
+  --lcd-ink: #7dfcd0;
+  --lcd-value: #f2b705;
+  --lcd-glow: #3fe0a8;
+  --focus: #f2b705;
+  --run: #4caf50;
+  --run-idle: #24552c;
+  --rec: #e53b1f;
+  --mute: #e53b1f;
+  --solo: #f2b705;
+  --field: #efe6c8;
+}
+:root {
+  --space-hairline: 1px;
+  --space-3: 3px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-14: 14px;
+  --cell: 25px;
+  --space-30: 30px;
+  --touch: 44px;
+  --knob: 50px;
+  --radius-0: 0px;
+  --radius-2: 2px;
+  --radius-6: 6px;
+  --radius-plate: 9px;
+  --radius-14: 14px;
+  --radius-chassis: 22px;
+  --radius-disc: 50%;
+  --font-panel: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-engrave: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-lcd: ui-monospace, "SF Mono", Menlo, monospace;
+}
+.logo { font-family: var(--font-engrave); font-size: 11px; line-height: 16px; font-weight: 400; letter-spacing: 0.32em; }
+.engrave { font-family: var(--font-engrave); font-size: 10px; line-height: 12px; font-weight: 400; letter-spacing: 0.22em; }
+.strip-name { font-family: var(--font-engrave); font-size: 11px; line-height: 14px; font-weight: 400; letter-spacing: 0.26em; }
+.tile-name { font-family: var(--font-engrave); font-size: 10px; line-height: 12px; font-weight: 400; letter-spacing: 0.2em; }
+.panel-caption { font-family: var(--font-panel); font-size: 16px; line-height: 20px; font-weight: 400; letter-spacing: 1px; }
+.control-label { font-family: var(--font-panel); font-size: 12px; line-height: 14px; font-weight: 600; }
+.step-label { font-family: var(--font-lcd); font-size: 9px; line-height: 11px; font-weight: 400; }
+.bank-label { font-family: var(--font-lcd); font-size: 11px; line-height: 13px; font-weight: 400; }
+.bpm { font-family: var(--font-panel); font-size: 24px; line-height: 28px; font-weight: 400; }
+.lcd-name { font-family: var(--font-lcd); font-size: 15px; line-height: 18px; font-weight: 400; letter-spacing: 0.14em; }
+.lcd-line { font-family: var(--font-lcd); font-size: 12px; line-height: 14px; font-weight: 400; letter-spacing: 0.1em; }
+.lcd-value { font-family: var(--font-lcd); font-size: 11px; line-height: 10px; font-weight: 400; }
+.lcd-micro { font-family: var(--font-lcd); font-size: 7px; line-height: 9px; font-weight: 400; letter-spacing: 0.05em; }
+.readout { font-family: var(--font-lcd); font-size: 11px; line-height: 14px; font-weight: 400; }
+.menu-title { font-family: var(--font-panel); font-size: 26px; line-height: 26px; font-weight: 650; letter-spacing: -1px; }
+.menu-heading { font-family: var(--font-panel); font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: 0.05em; }
+.menu-button { font-family: var(--font-panel); font-size: 12px; line-height: 16px; font-weight: 400; }
+.menu-body { font-family: var(--font-panel); font-size: 13px; line-height: 19px; font-weight: 400; }
+.menu-help { font-family: var(--font-panel); font-size: 11px; line-height: 18px; font-weight: 400; }
