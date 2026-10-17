@@ -290,7 +290,7 @@ class Alskog extends AudioWorkletProcessor {
         const lvl = this.riserLvl * this.riserLvl * 0.6; xl += this.riserF[0].ic1 * lvl; xr += this.riserF[1].ic1 * lvl;
       }
       if (this.impT >= 0) {
-        const tt = this.impT / sr, f = 32 + 70 * Math.exp(-tt * 6);
+        const tt = this.impT / sr, f = 32.703 + 70 * Math.exp(-tt * 6); // lands on C1
         this.impPh += 2 * Math.PI * f / sr;
         this.seed = (this.seed * 1664525 + 1013904223) >>> 0; const nz = this.seed / 2147483648 - 1;
         const boom = Math.sin(this.impPh) * Math.exp(-tt / 0.45) * 0.9 + nz * Math.exp(-tt / 0.04) * 0.5;

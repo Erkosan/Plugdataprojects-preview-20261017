@@ -3682,7 +3682,7 @@
     "kick_base_pitch": {
       "min": 0.0,
       "max": 1.0,
-      "default": 0.5,
+      "default": 0.4075,
       "type": "float"
     },
     "kick_tone": {
@@ -3742,7 +3742,7 @@
     "snare_body_pitch": {
       "min": 0.0,
       "max": 1.0,
-      "default": 0.37,
+      "default": 0.4297,
       "type": "float"
     },
     "snare_body": {
@@ -11166,7 +11166,7 @@
   "sounds": {
     "clean": {
       "kick_pitch": 0.5,
-      "kick_base_pitch": 0.5,
+      "kick_base_pitch": 0.4075,
       "kick_pitch_decay": 0.4,
       "kick_tone": 0.6,
       "kick_click": 0.3,
@@ -11175,7 +11175,7 @@
       "kick_drive": 0,
       "kick_level": 0.8,
       "kick_pan": 0.5,
-      "snare_body_pitch": 0.37,
+      "snare_body_pitch": 0.4297,
       "snare_body_decay": 0.4,
       "snare_noise_decay": 0.515,
       "snare_crack_amount": 0.4,
@@ -11207,7 +11207,7 @@
     },
     "hard": {
       "kick_pitch": 0.5,
-      "kick_base_pitch": 0.5,
+      "kick_base_pitch": 0.4075,
       "kick_pitch_decay": 0.4,
       "kick_tone": 0.6,
       "kick_click": 0.3,
@@ -11216,7 +11216,7 @@
       "kick_drive": 0.25,
       "kick_level": 0.8,
       "kick_pan": 0.5,
-      "snare_body_pitch": 0.37,
+      "snare_body_pitch": 0.4297,
       "snare_body_decay": 0.4,
       "snare_noise_decay": 0.515,
       "snare_crack_amount": 0.4,
@@ -11248,7 +11248,7 @@
     },
     "dub": {
       "kick_pitch": 0.5,
-      "kick_base_pitch": 0.5,
+      "kick_base_pitch": 0.4075,
       "kick_pitch_decay": 0.4,
       "kick_tone": 0.6,
       "kick_click": 0.3,
@@ -11257,7 +11257,7 @@
       "kick_drive": 0.05,
       "kick_level": 0.8,
       "kick_pan": 0.5,
-      "snare_body_pitch": 0.37,
+      "snare_body_pitch": 0.4297,
       "snare_body_decay": 0.4,
       "snare_noise_decay": 0.515,
       "snare_crack_amount": 0.4,
@@ -11289,7 +11289,7 @@
     },
     "metal": {
       "kick_pitch": 0.5,
-      "kick_base_pitch": 0.5,
+      "kick_base_pitch": 0.4075,
       "kick_pitch_decay": 0.4,
       "kick_tone": 0.6,
       "kick_click": 0.3,
@@ -11298,7 +11298,7 @@
       "kick_drive": 0,
       "kick_level": 0.8,
       "kick_pan": 0.5,
-      "snare_body_pitch": 0.37,
+      "snare_body_pitch": 0.4297,
       "snare_body_decay": 0.4,
       "snare_noise_decay": 0.515,
       "snare_crack_amount": 0.4,
@@ -11330,7 +11330,7 @@
     },
     "sub": {
       "kick_pitch": 0.32,
-      "kick_base_pitch": 0.22,
+      "kick_base_pitch": 0.0717,
       "kick_pitch_decay": 0.4,
       "kick_tone": 0.6,
       "kick_click": 0.08,
@@ -11339,7 +11339,7 @@
       "kick_drive": 0,
       "kick_level": 0.8,
       "kick_pan": 0.5,
-      "snare_body_pitch": 0.25,
+      "snare_body_pitch": 0.2312,
       "snare_body_decay": 0.4,
       "snare_noise_decay": 0.515,
       "snare_crack_amount": 0.4,
@@ -11371,7 +11371,7 @@
     },
     "acid": {
       "kick_pitch": 0.5,
-      "kick_base_pitch": 0.5,
+      "kick_base_pitch": 0.4075,
       "kick_pitch_decay": 0.8,
       "kick_tone": 0.85,
       "kick_click": 0.3,
@@ -11380,7 +11380,7 @@
       "kick_drive": 0,
       "kick_level": 0.8,
       "kick_pan": 0.5,
-      "snare_body_pitch": 0.37,
+      "snare_body_pitch": 0.4297,
       "snare_body_decay": 0.4,
       "snare_noise_decay": 0.515,
       "snare_crack_amount": 0.4,
@@ -11412,7 +11412,7 @@
     },
     "dust": {
       "kick_pitch": 0.5,
-      "kick_base_pitch": 0.5,
+      "kick_base_pitch": 0.4075,
       "kick_pitch_decay": 0.4,
       "kick_tone": 0.25,
       "kick_click": 0.16,
@@ -11421,7 +11421,7 @@
       "kick_drive": 0,
       "kick_level": 0.8,
       "kick_pan": 0.5,
-      "snare_body_pitch": 0.37,
+      "snare_body_pitch": 0.4297,
       "snare_body_decay": 0.4,
       "snare_noise_decay": 0.515,
       "snare_crack_amount": 0.4,
@@ -11453,7 +11453,7 @@
     },
     "clang": {
       "kick_pitch": 0.8,
-      "kick_base_pitch": 0.5,
+      "kick_base_pitch": 0.4075,
       "kick_pitch_decay": 0.4,
       "kick_tone": 0.6,
       "kick_click": 0.3,
@@ -11462,7 +11462,7 @@
       "kick_drive": 0,
       "kick_level": 0.8,
       "kick_pan": 0.5,
-      "snare_body_pitch": 0.78,
+      "snare_body_pitch": 0.7075,
       "snare_body_decay": 0.4,
       "snare_noise_decay": 0.515,
       "snare_crack_amount": 0.8,
@@ -11494,7 +11494,7 @@
     },
     "break": {
       "kick_pitch": 0.5,
-      "kick_base_pitch": 0.5,
+      "kick_base_pitch": 0.4075,
       "kick_pitch_decay": 0.4,
       "kick_tone": 0.6,
       "kick_click": 0.65,
@@ -11503,7 +11503,7 @@
       "kick_drive": 0,
       "kick_level": 0.8,
       "kick_pan": 0.5,
-      "snare_body_pitch": 0.37,
+      "snare_body_pitch": 0.4297,
       "snare_body_decay": 0.3,
       "snare_noise_decay": 0.32,
       "snare_crack_amount": 0.7,
