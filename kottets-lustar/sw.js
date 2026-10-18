@@ -1,5 +1,5 @@
 /* The build replaces the cache key with a content hash and supplies motor assets. */
-const CACHE = 'kottdisk-e94e2630030145d7';
+const CACHE = 'kottdisk-404a2a524d94ce20';
 const ASSETS = ['./', './index.html', './style.css', './app.js', './engine.js', './worklet.js', './kottdisk-engine.js', './params.json', './manifest.webmanifest', './icon.svg'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));

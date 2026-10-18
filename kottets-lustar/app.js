@@ -1,4 +1,4 @@
-import { KottdiskEngine } from './engine.js?v=audio-2';
+import { KottdiskEngine } from './engine.js?v=overhaul-3';
 
 const $ = (selector) => document.querySelector(selector);
 const clamp = (value, min = 0, max = 1) => Math.max(min, Math.min(max, value));
@@ -15,6 +15,8 @@ const PARAMS = [
   ['kd_space', 'SALUHALL', 'RUM', .18, 'scale', '#b5bfa4'],
   ['kd_tender', 'MÖRA', 'EXTRA BETT', 0],
   ['kd_hold', 'LÅT VILA', 'HÅLL TONER', 0],
+  ['zz_kd_bone', 'BEN', 'METALLANSLAG', 0],
+  ['zz_kd_grind', 'KVARNA', 'RYTMISK MALNING', 0],
 ];
 const definitions = Object.fromEntries(PARAMS.map(p => [p[0], p]));
 const defaults = Object.fromEntries(PARAMS.map(p => [p[0], p[3]]));
@@ -46,15 +48,18 @@ const demoOffs = new Set();
 const tenderPointers = new Set();
 const tenderKeys = new Set();
 const heldVoices = new Set();
+const cancelGestures = new Set();
+const performanceInputs = new Map(['kd_tender', 'zz_kd_bone', 'zz_kd_grind'].map(name => [name, new Map()]));
+const momentary = new Set(performanceInputs.keys());
 let downloadsLoaded = false;
 
 const presets = {
   favorit: { name: 'Diskens favorit', values: { ...defaults } },
   falukarlek: { name: 'Falukärlek', values: { ...defaults, kd_tone: .4, kd_bite: .12, kd_ratio: .06, kd_attack: .015, kd_decay: .48, kd_sustain: .56, kd_release: .16, kd_warmth: .36, kd_space: .12 } },
-  nattmorad: { name: 'Nattmörad', values: { ...defaults, kd_tone: .3, kd_bite: .55, kd_ratio: .42, kd_attack: .36, kd_decay: .7, kd_sustain: .82, kd_release: .72, kd_warmth: .32, kd_space: .58 } },
-  glaskropp: { name: 'Glaskropp', values: { ...defaults, kd_tone: .88, kd_bite: .76, kd_ratio: .78, kd_attack: .005, kd_decay: .64, kd_sustain: .09, kd_release: .54, kd_warmth: .06, kd_space: .45 } },
-  ravaror: { name: 'Råa varor', values: { ...defaults, kd_tone: .72, kd_bite: .9, kd_ratio: .51, kd_attack: .01, kd_decay: .23, kd_sustain: .34, kd_release: .08, kd_warmth: .68, kd_space: .06 } },
-  sidenfett: { name: 'Sidenfett', values: { ...defaults, kd_tone: .57, kd_bite: .28, kd_ratio: .18, kd_attack: .61, kd_decay: .67, kd_sustain: .7, kd_release: .83, kd_warmth: .24, kd_space: .72 } },
+  nattmorad: { name: 'Skinksammet', values: { ...defaults, kd_tone: .48, kd_bite: .22, kd_ratio: .08, kd_attack: .6, kd_decay: .65, kd_sustain: .72, kd_release: .62, kd_warmth: .26, kd_space: .52 } },
+  glaskropp: { name: 'Benporslin', values: { ...defaults, kd_tone: .75, kd_bite: .3, kd_ratio: .76, kd_attack: .01, kd_decay: .48, kd_sustain: .12, kd_release: .4, kd_warmth: .08, kd_space: .65 } },
+  ravaror: { name: 'Fläskmorr', values: { ...defaults, kd_tone: .6, kd_bite: .79, kd_ratio: .19, kd_attack: .01, kd_decay: .22, kd_sustain: .68, kd_release: .12, kd_warmth: .86, kd_space: .12 } },
+  sidenfett: { name: 'Knivspets', values: { ...defaults, kd_tone: .82, kd_bite: .52, kd_ratio: .38, kd_attack: .015, kd_decay: .24, kd_sustain: .1, kd_release: .12, kd_warmth: .18, kd_space: .28 } },
 };
 
 function status(message) { $('#menu-status').textContent = message; }
@@ -64,6 +69,7 @@ function fail(error) {
   $('#lcd-state').textContent = 'ÖPPNA MENYN';
   status(error?.message || 'Ljudet kunde inte starta. Försök igen.');
 }
+engine.onerror = error => { ready = false; starting = null; fail(error); };
 function showDisplay(label, value, unit = '%') {
   clearTimeout(displayTimer);
   $('#lcd-label').textContent = label;
@@ -77,7 +83,7 @@ function describe(name) {
 function restDisplay() {
   clearTimeout(displayTimer);
   displayTimer = setTimeout(() => {
-    if (document.querySelector('.knob:focus-visible') || tenderPointers.size || tenderKeys.size) return;
+    if (document.querySelector('.knob:focus-visible') || tenderPointers.size || tenderKeys.size || [...performanceInputs.values()].some(inputs => inputs.size)) return;
     showDisplay('KÖTTETS LUSTAR', '3000', 'FM');
   }, 1800);
 }
@@ -101,26 +107,32 @@ function update(name, value, options = {}) {
     if (!value) heldVoices.clear();
   }
   if (name === 'kd_tender') $('#tender').setAttribute('aria-pressed', String(Boolean(value)));
+  document.querySelectorAll(`[data-performance="${name}"]`).forEach(pad => pad.setAttribute('aria-pressed', String(Boolean(value))));
+  $('#instrument').classList.toggle('is-grinding', Boolean(values.zz_kd_grind));
+  $('#instrument').classList.toggle('is-striking', Boolean(values.zz_kd_bone));
   if (ready) engine.setParam(name, value);
   if (options.display !== false) describe(name);
-  if (options.preset !== false && name !== 'kd_tender' && name !== 'kd_hold') {
+  if (options.preset !== false && !momentary.has(name) && name !== 'kd_hold') {
     selectedPreset = 'custom';
     $('#presets').value = 'custom';
   }
-  if (name !== 'kd_tender') scheduleSave();
-  renderVoices();
+  if (!momentary.has(name)) scheduleSave();
+  if (name === 'kd_hold') renderVoices();
   return true;
 }
 
 async function start() {
-  if (ready) {
+  if (ready && engine.healthy !== false) {
     await engine.start();
+    if (engine.healthy === false) throw new Error('Ljudmotorn behöver öppnas igen.');
     return engine;
   }
   if (starting) return starting;
+  ready = false;
   starting = (async () => {
     try {
       await engine.start();
+      if (engine.healthy === false) throw new Error('Ljudmotorn behöver öppnas igen.');
       for (const [name, value] of Object.entries(values)) engine.setParam(name, value);
       engine.setTransport({ ...transport, playing: hostTransport ? transport.playing : demoEnabled });
       ready = true;
@@ -154,8 +166,8 @@ function playNote(note, velocity = 100, channel = 1, source = `host:${channel}:$
   sources.set(source, key);
   sounding.set(key, { note, velocity, channel });
   heldVoices.delete(key);
-  if (ready && !wasOn) engine.noteOn(note, velocity, channel);
-  if (!ready || engine.context?.state !== 'running') gestureStart();
+  if (ready && engine.healthy !== false && !wasOn) engine.noteOn(note, velocity, channel);
+  if (!ready || engine.healthy === false || engine.context?.state !== 'running') gestureStart();
   renderVoices();
 }
 function releaseSource(source) {
@@ -185,14 +197,17 @@ function clearDemoNotes() {
   for (const timer of demoOffs) clearTimeout(timer);
   demoOffs.clear();
   for (const source of [...sources.keys()]) if (source.startsWith('demo:')) releaseSource(source);
+  for (const [name, inputs] of performanceInputs) {
+    if (!inputs.delete('demo')) continue;
+    if (name === 'kd_tender') syncTender(); else update(name, Math.max(0, ...inputs.values()), { display: false });
+  }
 }
 function panic() {
   toggleDemo(false);
   clearDemoNotes();
   sources.clear(); sounding.clear(); heldVoices.clear();
-  pointerNotes.clear(); computerNotes.clear();
-  tenderPointers.clear(); tenderKeys.clear();
-  update('kd_tender', 0, { display: false });
+  releaseGestures();
+  for (const name of momentary) update(name, 0, { display: false });
   update('kd_hold', 0, { display: false });
   if (ready) engine.panic();
   renderVoices();
@@ -231,30 +246,51 @@ function makeControl(p) {
   root.append(knob, caption, line); $(location === 'scale' ? '#scale-controls' : '#control-bank').append(root);
   controls.set(name, knob);
   let drag;
+  let lastTap;
+  function cancelDrag() {
+    if (!drag) return;
+    const id = drag.id; drag = null; knob.classList.remove('is-dragging');
+    if (knob.hasPointerCapture(id)) knob.releasePointerCapture(id);
+    restDisplay();
+  }
+  cancelGestures.add(cancelDrag);
   knob.addEventListener('pointerdown', event => {
     if (event.button !== 0 || drag) return;
     event.preventDefault(); gestureStart(); knob.focus({ preventScroll: true });
-    drag = { id: event.pointerId, x: event.clientX, y: event.clientY, value: values[name] };
-    knob.setPointerCapture(event.pointerId); describe(name);
+    drag = { id: event.pointerId, x: event.clientX, y: event.clientY, value: values[name], distance: 0, started: event.timeStamp };
+    knob.setPointerCapture(event.pointerId); knob.classList.add('is-dragging'); describe(name);
   });
   knob.addEventListener('pointermove', event => {
     if (!drag || drag.id !== event.pointerId) return;
+    const dx = event.clientX - drag.x, dy = drag.y - event.clientY;
     const scale = $('#instrument').getBoundingClientRect().width / 1200;
-    const delta = (drag.y - event.clientY + (event.clientX - drag.x) * .4) / scale;
-    update(name, drag.value + delta / (event.shiftKey ? 1600 : 200));
+    drag.distance += Math.hypot(dx, dy);
+    drag.x = event.clientX; drag.y = event.clientY;
+    drag.value = clamp(drag.value + (dy + dx * .4) / scale / (event.shiftKey ? 1600 : 200));
+    update(name, drag.value);
   });
-  function finishDrag(event) {
+  knob.addEventListener('pointerup', event => {
     if (drag?.id !== event.pointerId) return;
-    drag = null; restDisplay();
-  }
-  knob.addEventListener('pointerup', finishDrag);
-  knob.addEventListener('pointercancel', finishDrag);
-  knob.addEventListener('lostpointercapture', finishDrag);
+    if (drag.distance < 6 && event.timeStamp - drag.started < 350) {
+      if (lastTap && event.timeStamp - lastTap.time < 350 && Math.hypot(event.clientX - lastTap.x, event.clientY - lastTap.y) < 22) {
+        update(name, defaults[name]); lastTap = null;
+      } else lastTap = { time: event.timeStamp, x: event.clientX, y: event.clientY };
+    } else lastTap = null;
+    cancelDrag();
+  });
+  for (const type of ['pointercancel', 'lostpointercapture']) knob.addEventListener(type, event => { if (drag?.id === event.pointerId) { lastTap = null; cancelDrag(); } });
   knob.addEventListener('pointerenter', () => describe(name));
   knob.addEventListener('pointerleave', () => { if (!drag) restDisplay(); });
   knob.addEventListener('focus', () => describe(name));
-  knob.addEventListener('blur', restDisplay);
-  knob.addEventListener('dblclick', () => update(name, defaults[name]));
+  knob.addEventListener('blur', () => { cancelDrag(); restDisplay(); });
+  knob.addEventListener('dblclick', event => { event.preventDefault(); update(name, defaults[name]); });
+  knob.addEventListener('wheel', event => {
+    event.preventDefault(); gestureStart();
+    const delta = event.deltaY || event.deltaX;
+    if (!delta) return;
+    const pixels = delta * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? 200 : 1);
+    update(name, values[name] - clamp(pixels * .0005, -.1, .1) * (event.shiftKey ? .1 : 1)); restDisplay();
+  }, { passive: false });
   knob.addEventListener('keydown', event => {
     const step = event.shiftKey ? .001 : .01;
     const moves = { ArrowUp: step, ArrowRight: step, ArrowDown: -step, ArrowLeft: -step, PageUp: .1, PageDown: -.1 };
@@ -310,6 +346,7 @@ $('#keyboard').addEventListener('pointermove', event => {
 function releasePointer(event) {
   if (!pointerNotes.has(event.pointerId)) return;
   releaseSource(`pointer:${event.pointerId}`); pointerNotes.delete(event.pointerId);
+  if ($('#keyboard').hasPointerCapture(event.pointerId)) $('#keyboard').releasePointerCapture(event.pointerId);
 }
 for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) $('#keyboard').addEventListener(type, releasePointer);
 
@@ -331,14 +368,16 @@ document.addEventListener('keyup', event => {
   event.preventDefault(); computerNotes.delete(event.code); releaseSource(`computer:${event.code}`);
 });
 
-function syncTender() { update('kd_tender', tenderPointers.size || tenderKeys.size ? 1 : 0); }
+function syncTender() { update('kd_tender', tenderPointers.size || tenderKeys.size || performanceInputs.get('kd_tender').size ? 1 : 0); }
 $('#tender').addEventListener('pointerdown', event => {
   if (event.button !== 0) return;
   event.preventDefault(); gestureStart(); $('#tender').focus({ preventScroll: true });
   $('#tender').setPointerCapture(event.pointerId); tenderPointers.add(event.pointerId); syncTender();
 });
 for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) $('#tender').addEventListener(type, event => {
-  tenderPointers.delete(event.pointerId); syncTender(); restDisplay();
+  tenderPointers.delete(event.pointerId);
+  if ($('#tender').hasPointerCapture(event.pointerId)) $('#tender').releasePointerCapture(event.pointerId);
+  syncTender(); restDisplay();
 });
 $('#tender').addEventListener('keydown', event => {
   if (!['Space', 'Enter'].includes(event.code)) return;
@@ -357,6 +396,59 @@ $('#hold').addEventListener('pointerenter', () => describe('kd_hold'));
 $('#hold').addEventListener('pointerleave', restDisplay);
 $('#hold').addEventListener('focus', () => describe('kd_hold'));
 $('#hold').addEventListener('blur', restDisplay);
+
+// The original counter illustration is also a pressure surface. It never makes sound itself.
+for (const button of document.querySelectorAll('[data-performance]')) {
+  const name = button.dataset.performance, inputs = performanceInputs.get(name);
+  const pointers = new Set(), keys = new Set();
+  const prefix = button.id + ':';
+  function sync() { if (name === 'kd_tender') syncTender(); else update(name, Math.max(0, ...inputs.values())); }
+  function clear() {
+    for (const id of pointers) {
+      inputs.delete(prefix + id);
+      if (button.hasPointerCapture(id)) button.releasePointerCapture(id);
+    }
+    pointers.clear(); for (const key of keys) inputs.delete(prefix + key); keys.clear(); sync();
+  }
+  cancelGestures.add(clear);
+  button.addEventListener('pointerdown', event => {
+    if (event.button !== 0) return;
+    event.preventDefault(); gestureStart(); button.focus({ preventScroll: true });
+    button.setPointerCapture(event.pointerId); pointers.add(event.pointerId); inputs.set(prefix + event.pointerId, 1); sync();
+  });
+  button.addEventListener('pointermove', event => {
+    if (!pointers.has(event.pointerId) || name === 'kd_tender') return;
+    const rect = button.getBoundingClientRect();
+    inputs.set(prefix + event.pointerId, clamp(1 - (event.clientY - (rect.y + rect.height / 2)) / rect.height, .08, 1)); sync();
+  });
+  for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) button.addEventListener(type, event => {
+    if (!pointers.delete(event.pointerId)) return;
+    inputs.delete(prefix + event.pointerId);
+    if (button.hasPointerCapture(event.pointerId)) button.releasePointerCapture(event.pointerId);
+    sync(); restDisplay();
+  });
+  button.addEventListener('keydown', event => {
+    if (!['Space', 'Enter'].includes(event.code)) return;
+    event.preventDefault(); if (event.repeat) return;
+    gestureStart(); keys.add(event.code); inputs.set(prefix + event.code, 1); sync();
+  });
+  button.addEventListener('keyup', event => {
+    if (!keys.delete(event.code)) return;
+    event.preventDefault(); inputs.delete(prefix + event.code); sync(); restDisplay();
+  });
+  button.addEventListener('blur', () => {
+    for (const key of keys) inputs.delete(prefix + key); keys.clear(); sync(); restDisplay();
+  });
+  button.addEventListener('pointerenter', () => describe(name));
+  button.addEventListener('pointerleave', restDisplay);
+  button.addEventListener('focus', () => describe(name));
+  button.addEventListener('click', event => {
+    // Assistive technology can activate a button without pointer/key events.
+    if (event.detail !== 0 || pointers.size || keys.size) return;
+    gestureStart(); inputs.set(prefix + 'assist', 1); sync();
+    setTimeout(() => { inputs.delete(prefix + 'assist'); sync(); restDisplay(); }, 120);
+  });
+}
 
 const phrase = [
   [48, 60, 63, 67], [], [55], [58], [60, 63], [], [67], [63],
@@ -378,6 +470,18 @@ function demoTick() {
       const timer = setTimeout(() => { releaseSource(source); demoOffs.delete(timer); }, duration);
       demoOffs.add(timer);
     });
+    const accent = demoStep % 16 === 6 ? ['zz_kd_bone', .78] : demoStep % 16 === 14 ? ['zz_kd_grind', .72] : demoStep % 8 === 3 ? ['kd_tender', 1] : null;
+    if (accent) {
+      const [name, depth] = accent, inputs = performanceInputs.get(name);
+      inputs.set('demo', depth);
+      if (name === 'kd_tender') syncTender(); else update(name, Math.max(...inputs.values()), { display: false });
+      const timer = setTimeout(() => {
+        inputs.delete('demo');
+        if (name === 'kd_tender') syncTender(); else update(name, Math.max(0, ...inputs.values()), { display: false });
+        demoOffs.delete(timer);
+      }, name === 'zz_kd_grind' ? interval * .85 : 85);
+      demoOffs.add(timer);
+    }
     demoStep++; demoNext += interval;
   }
 }
@@ -401,15 +505,15 @@ async function toggleDemo(force) {
 $('#demo').addEventListener('click', () => toggleDemo().catch(fail));
 $('#panic').addEventListener('click', () => { toggleDemo(false); panic(); status('Alla toner släppta.'); });
 
-function session() { return { schema: 'kottdisk-session', version: 1, preset: selectedPreset, values: { ...values, kd_tender: 0, kd_hold: 0 } }; }
+function session() { return { schema: 'kottdisk-session', version: 1, preset: selectedPreset, values: { ...values, kd_tender: 0, kd_hold: 0, zz_kd_bone: 0, zz_kd_grind: 0 } }; }
 function applySession(data) {
   if (!data || data.version !== 1 || data.schema !== 'kottdisk-session' || !data.values || typeof data.values !== 'object') throw new Error('Det här är inte en KÖTTDISK-session i version 1.');
   for (const [name, value] of Object.entries(data.values)) {
     if (!definitions[name] || typeof value !== 'number' || !Number.isFinite(value) || value < 0 || value > 1) throw new Error('Sessionsfilen innehåller ogiltiga reglage.');
   }
-  if (!Object.keys(defaults).every(name => Object.hasOwn(data.values, name))) throw new Error('Sessionsfilen saknar reglage.');
+  if (!PARAMS.slice(0, 12).every(([name]) => Object.hasOwn(data.values, name))) throw new Error('Sessionsfilen saknar reglage.');
   panic();
-  for (const name of Object.keys(defaults)) update(name, name === 'kd_tender' || name === 'kd_hold' ? 0 : data.values[name], { display: false, preset: false });
+  for (const name of Object.keys(defaults)) update(name, momentary.has(name) || name === 'kd_hold' ? 0 : (data.values[name] ?? defaults[name]), { display: false, preset: false });
   selectedPreset = presets[data.preset] ? data.preset : 'custom'; $('#presets').value = selectedPreset;
   showDisplay('STYCKNING · ÅTERSTÄLLD', '3000', 'FM'); restDisplay();
 }
@@ -511,16 +615,19 @@ async function loadDownloads() {
   } catch { $('#downloads').textContent = 'Byggpaketen kunde inte hämtas. Prova igen när du är ansluten.'; downloadsLoaded = false; }
 }
 $('#menu-open').addEventListener('click', () => {
-  for (const source of [...sources.keys()]) if (source.startsWith('computer:') || source.startsWith('pointer:')) releaseSource(source);
-  computerNotes.clear(); pointerNotes.clear();
+  releaseGestures();
   $('#menu').showModal(); loadDownloads();
 });
 $('#menu-close').addEventListener('click', () => $('#menu').close());
 $('#menu').addEventListener('click', event => { if (event.target !== $('#menu')) return; const rect = $('#menu').getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) $('#menu').close(); });
 $('#menu').addEventListener('cancel', () => panic());
 function releaseGestures() {
+  for (const cancel of cancelGestures) cancel();
   for (const source of [...sources.keys()]) if (/^(computer|pointer|focus):/.test(source)) releaseSource(source);
-  computerNotes.clear(); pointerNotes.clear(); tenderPointers.clear(); tenderKeys.clear(); update('kd_tender', 0, { display: false });
+  for (const id of pointerNotes.keys()) if ($('#keyboard').hasPointerCapture(id)) $('#keyboard').releasePointerCapture(id);
+  for (const id of tenderPointers) if ($('#tender').hasPointerCapture(id)) $('#tender').releasePointerCapture(id);
+  computerNotes.clear(); pointerNotes.clear(); tenderPointers.clear(); tenderKeys.clear();
+  for (const [name, inputs] of performanceInputs) { inputs.clear(); update(name, 0, { display: false }); }
 }
 window.addEventListener('blur', releaseGestures);
 document.addEventListener('visibilitychange', () => { if (document.hidden) { toggleDemo(false); panic(); } });
