@@ -28,8 +28,8 @@ let currentParams = {};
 let activeStep = 0;
 let isPlaying = false;
 let isAudioReady = false;
-let currentPowerSource = 1; // 0 = 220V, 1 = 12V, 2 = Gasol
-let activePresetIndex = 1; // 1 = Ragunda
+let currentPowerSource = 0; // 0 = 220V, 1 = 12V, 2 = Gasol
+let activePresetIndex = 0; // 0 = Böda Sand
 
 // C-minor scale notes in MIDI numbers
 const C_MINOR_SCALE = [48, 50, 51, 53, 55, 56, 58, 60, 62, 63, 65, 67, 68, 70, 72];
@@ -653,25 +653,25 @@ function setupCampingQuirks() {
     {
       name: 'BÖDA SAND',
       title: 'BÖDA SAND · SOL OCH 220V',
-      params: { wave: 0, attack: 0.08, decay: 0.45, sustain: 0.7, release: 0.5, cutoff: 0.65, resonance: 0.25, envmod: 0.35, drive: 0.15, rain: 0.05, flutter: 0.04 },
+      params: { wave: 0, attack: 0.08, decay: 0.45, sustain: 0.6, release: 0.4, cutoff: 0.65, resonance: 0.25, envmod: 0.35, drive: 0.15, rain: 0.0, flutter: 0.04 },
       power: 0
     },
     {
       name: 'RAGUNDA',
       title: 'RAGUNDA · ÖSREGN OCH 12V TAPP',
-      params: { wave: 1, attack: 0.02, decay: 0.35, sustain: 0.55, release: 0.35, cutoff: 0.42, resonance: 0.45, envmod: 0.6, drive: 0.38, rain: 0.85, flutter: 0.3 },
+      params: { wave: 1, attack: 0.02, decay: 0.35, sustain: 0.5, release: 0.35, cutoff: 0.42, resonance: 0.45, envmod: 0.6, drive: 0.38, rain: 0.25, flutter: 0.25 },
       power: 1
     },
     {
       name: 'VARBERG',
       title: 'VARBERG · VÄSTKUSTBLÅST OCH GASOL',
-      params: { wave: 2, attack: 0.01, decay: 0.25, sustain: 0.4, release: 0.25, cutoff: 0.55, resonance: 0.62, envmod: 0.7, drive: 0.65, rain: 0.3, flutter: 0.18 },
+      params: { wave: 2, attack: 0.01, decay: 0.25, sustain: 0.4, release: 0.25, cutoff: 0.55, resonance: 0.5, envmod: 0.7, drive: 0.65, rain: 0.1, flutter: 0.18 },
       power: 2
     },
     {
       name: 'KÖPINGSVIK',
       title: 'KÖPINGSVIK · FULL CAMPINGPANIK',
-      params: { wave: 1, attack: 0.05, decay: 0.5, sustain: 0.8, release: 0.65, cutoff: 0.78, resonance: 0.7, envmod: 0.85, drive: 0.8, rain: 0.6, flutter: 0.65 },
+      params: { wave: 1, attack: 0.05, decay: 0.5, sustain: 0.65, release: 0.5, cutoff: 0.75, resonance: 0.6, envmod: 0.8, drive: 0.7, rain: 0.3, flutter: 0.4 },
       power: 1
     }
   ];
@@ -860,8 +860,8 @@ async function start() {
     for (const [k, v] of Object.entries(paramsDef)) {
       currentParams[k] = v.default;
     }
-    // Set web ambience to cozy caravan rain
-    currentParams['rain'] = 0.35;
+    // Start clean and quiet: rain at 0.0 (Uppehåll)
+    currentParams['rain'] = 0.0;
   } catch (e) {
     console.warn('params.json kunde inte laddas, använder grundinställningar');
   }
@@ -877,8 +877,10 @@ async function start() {
   for (const [k, v] of Object.entries(currentParams)) {
     updateKnobDisplay(k, v);
   }
-  updateWeatherUI(currentParams['rain'] || 0.35);
-  updateVoltmeter(12.1);
+  updateWeatherUI(currentParams['rain'] || 0.0);
+  updateVoltmeter(13.8);
+  LCD_NAME.textContent = 'KNAUS 3000';
+  LCD_VAL.textContent = 'C-MOLL · 116 BPM';
 
   // Register service worker
   if ('serviceWorker' in navigator) {
