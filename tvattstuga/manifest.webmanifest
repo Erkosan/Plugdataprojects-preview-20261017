@@ -1,0 +1,29 @@
+{
+ "name": "TVÄTTSTUGA 3000",
+ "short_name": "TVÄTTSTUGA",
+ "description": "Polymetrisk 5-spårs trummaskin i källarplan 1971. Wascator W75, stenmangel, vattenventil, luddfilter och arg tvättlapp från Britt-Marie.",
+ "start_url": "./",
+ "scope": "./",
+ "display": "fullscreen",
+ "orientation": "landscape",
+ "background_color": "#161c1d",
+ "theme_color": "#cfd6d2",
+ "icons": [
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any maskable"
+  },
+  {
+   "src": "apple-touch-icon.png",
+   "sizes": "180x180",
+   "type": "image/png"
+  },
+  {
+   "src": "icon.svg",
+   "sizes": "any",
+   "type": "image/svg+xml"
+  }
+ ]
+}

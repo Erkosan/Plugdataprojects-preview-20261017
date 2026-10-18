@@ -13,6 +13,7 @@ Dessa kommer från git commits i Plugdataprojects-repot:
 | PERKELE 3000 | `perkele-3000` | `7d35f5b` |
 | ÄLSKOG 3000 | `alskog/utbytbar` | `568cf0d` |
 | GRANNEN 3000 (FOLKHEMMETS SKUGGOR) | `antigravity/folkhemmets-skuggor-grannen` | `070aa6e` |
+| TVÄTTSTUGA 3000 (FOLKHEMMETS SKUGGOR) | `antigravity/folkhemmets-skuggor-grannen` | `c9ba1e4` |
 | KNAUS 3000 (CAMPING-SERIEN) | `antigravity/campingen-knaus-3000` | `892d3cd` |
 
 ## Ocommittade WIP-snapshots (Claude worktrees)

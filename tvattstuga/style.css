@@ -1,0 +1,501 @@
+/* TVÄTTSTUGA 3000 web shell and Tvättstuga B · Källarplan 1971 (FOLKHEMMETS SKUGGOR).
+   Shared controls (chassis, LCD, knobs, steps, menu) come from 3000-series.css;
+   this file draws the 1971 basement laundry room around the machine and scales it as one 1180x740 picture. */
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--ground);
+  background-image:
+    radial-gradient(ellipse at 50% 10%, rgba(168, 255, 219, .09), transparent 62%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .02) 0 1px, transparent 1px 25px);
+  overflow: hidden; overscroll-behavior: none; touch-action: manipulation;
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
+  font-family: var(--font-panel);
+}
+#stage {
+  position: fixed; inset: 0; box-sizing: border-box; display: grid; place-items: center;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+#fit { position: relative; width: calc(1180px * var(--zoom, 1)); height: calc(740px * var(--zoom, 1)); }
+.tv-room {
+  position: absolute; left: 0; top: 0; width: 1180px; height: 740px; overflow: hidden;
+  transform: scale(var(--zoom, 1)); transform-origin: 0 0;
+  --drum-rot: 0deg; --shake-x: 0px; --shake-y: 0px; --obalans: .3; --kalk: .28;
+  background: var(--ground);
+  box-shadow: inset 0 0 110px rgba(0, 0, 0, .78);
+}
+.tv-room > * { position: absolute; }
+.tv-room button { -webkit-user-select: none; user-select: none; font: inherit; }
+.tv-room button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* ---------- UPPER WORLD: KÄLLARPLAN · TVÄTTSTUGA B (0..202px) ---------- */
+.tv-basement {
+  left: 0; top: 0; width: 1180px; height: 204px; overflow: hidden; z-index: 2;
+  background: linear-gradient(180deg, #121819 0%, #1d2628 84%, #151b1c 100%);
+  border-bottom: 3px solid #0d1213;
+}
+.tv-tiles {
+  position: absolute; inset: 0; opacity: .32;
+  background-image:
+    linear-gradient(rgba(207, 214, 210, .14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(207, 214, 210, .14) 1px, transparent 1px);
+  background-size: 25px 25px;
+}
+.tv-lysror {
+  position: absolute; left: 310px; top: 6px; width: 560px; height: 14px;
+  background: #232b2c; border: 1px solid #0f1415; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 32px rgba(168, 255, 219, .24);
+}
+.tv-tube {
+  width: 536px; height: 6px; background: #d6fff0;
+  box-shadow: 0 0 14px #7fffd4, 0 0 28px rgba(43, 140, 190, .45);
+}
+.tv-room.playing .tv-tube, .tv-room.centrifug .tv-tube {
+  animation: tv-flicker 3.2s infinite;
+}
+@keyframes tv-flicker {
+  0%, 92%, 96%, 100% { opacity: 1; }
+  94% { opacity: .68; }
+  98% { opacity: .82; }
+}
+.tv-room-sign {
+  position: absolute; left: 50px; top: 8px; padding: 2px 8px;
+  background: #0f1415; border: 1px solid #344143; color: #e6ece8; font-size: 9px; letter-spacing: .2em;
+}
+
+/* 1. Wascator W75 Industritvättmaskin */
+.tv-wascator {
+  position: absolute; left: 50px; top: 28px; width: 224px; height: 170px;
+  background: linear-gradient(180deg, #dce2df 0%, #cfd6d2 100%);
+  border: 2px solid #182022; box-sizing: border-box;
+  box-shadow: inset 0 2px 0 #ffffff, 0 4px 0 #0f1415;
+  transform: translate(var(--shake-x, 0px), var(--shake-y, 0px));
+}
+.tv-wascator-top {
+  height: 26px; background: #344143; border-bottom: 2px solid #182022;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 8px;
+}
+.tv-wascator-badge {
+  font: 700 9px/1 var(--font-engrave); letter-spacing: .18em; color: #e6ece8;
+}
+.tv-wascator-lamp {
+  width: 10px; height: 10px; border-radius: 50%; background: #3d2219; border: 1px solid #0f1415;
+}
+.tv-room.playing .tv-wascator-lamp, .tv-room.centrifug .tv-wascator-lamp {
+  background: var(--playhead); box-shadow: 0 0 8px var(--playhead);
+}
+.tv-wascator-window {
+  position: absolute; left: 54px; top: 34px; width: 116px; height: 116px; border-radius: 50%;
+  background: #232b2c; border: 6px solid #8a9698; box-sizing: border-box;
+  box-shadow: inset 0 0 0 4px #182022, 0 3px 0 rgba(0, 0, 0, .45);
+  overflow: hidden; cursor: pointer; pointer-events: auto;
+}
+.tv-wascator-drum {
+  position: absolute; inset: 6px; border-radius: 50%; background: #0f1415; overflow: hidden;
+  transform: rotate(var(--drum-rot, 0deg));
+  transition: transform 90ms ease-out;
+}
+.tv-room.centrifug .tv-wascator-drum {
+  animation: tv-spin-wild .16s linear infinite;
+}
+.tv-room.centrifug .tv-wascator {
+  animation: tv-chassis-shake .09s linear infinite;
+}
+@keyframes tv-spin-wild { to { transform: rotate(360deg); } }
+@keyframes tv-chassis-shake {
+  0% { transform: translate(-2px, 1px) rotate(-.6deg); }
+  50% { transform: translate(2px, -1px) rotate(.6deg); }
+  100% { transform: translate(-2px, -1px) rotate(0deg); }
+}
+.tv-water-slosh {
+  position: absolute; left: -12px; right: -12px; bottom: -6px; height: 48px;
+  background: rgba(43, 140, 190, .72); border-top: 3px solid #a8ffdb;
+  border-radius: 38% 42% 0 0;
+}
+.tv-cloth { position: absolute; border-radius: 40% 60% 50% 40%; border: 1px solid #182022; }
+.tv-cloth.c1 { left: 16px; top: 22px; width: 28px; height: 22px; background: var(--ch-kick); }
+.tv-cloth.c2 { right: 14px; top: 34px; width: 26px; height: 24px; background: var(--ch-clap); }
+.tv-cloth.c3 { left: 32px; bottom: 14px; width: 30px; height: 20px; background: var(--ch-tom); }
+.tv-suds { position: absolute; border-radius: 50%; background: #f2f0e6; opacity: .9; }
+.tv-suds.s1 { left: 14px; bottom: 32px; width: 14px; height: 14px; }
+.tv-suds.s2 { right: 18px; bottom: 28px; width: 18px; height: 18px; }
+.tv-window-handle {
+  position: absolute; right: 2px; top: 42px; width: 8px; height: 22px; background: #cfd6d2; border: 1px solid #182022;
+}
+
+/* 2. Stenmangel (Cast-iron roller mangle) */
+.tv-mangel {
+  position: absolute; left: 292px; top: 40px; width: 228px; height: 158px;
+  background: #232b2c; border: 2px solid #182022; box-sizing: border-box; padding: 8px 10px;
+  box-shadow: 0 4px 0 #0f1415;
+}
+.tv-mangel-label {
+  display: block; text-align: left; color: #e6ece8; font-size: 9px; margin-bottom: 8px;
+}
+.tv-mangel-frame {
+  position: relative; height: 108px; background: #141a1b; border: 2px solid #0f1415; padding: 10px; box-sizing: border-box;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.tv-roller {
+  display: block; height: 32px; border-radius: 4px;
+  background: repeating-linear-gradient(90deg, #3b9ab2 0 12px, #2b6f82 12px 16px);
+  border: 2px solid #0f1415; transition: transform 55ms ease-out;
+}
+.tv-sheet {
+  display: block; height: 12px; margin: 0 8px; background: #f2f0e6; border: 1px solid #8a9698;
+}
+.tv-mangel-frame.clamp .tv-roller.top { transform: translateY(9px); background: var(--ch-snare); }
+.tv-mangel-frame.clamp .tv-roller.bot { transform: translateY(-9px); background: var(--ch-snare); }
+.tv-mangel-wheel {
+  position: absolute; right: -12px; top: 48px; width: 24px; height: 56px; border-radius: 50%;
+  border: 4px solid var(--ch-snare); background: #182022;
+}
+
+/* 3. Luddfilter-lucka & Vattenventil */
+.tv-ventil-ludd {
+  position: absolute; left: 538px; top: 40px; width: 234px; height: 158px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.tv-pipe-manifold {
+  position: relative; height: 64px; background: #232b2c; border: 2px solid #182022;
+  display: flex; align-items: center; padding: 0 14px;
+}
+.tv-pipe-manifold::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 26px; height: 12px;
+  background: linear-gradient(180deg, #98b4ba, #526b70); border-top: 1px solid #182022; border-bottom: 1px solid #182022;
+}
+.tv-valve-wheel {
+  position: relative; z-index: 2; width: 38px; height: 38px; border-radius: 50%;
+  border: 5px solid var(--ch-hat); background: #182022; transition: transform 90ms;
+}
+.tv-valve-wheel.turn { transform: rotate(65deg) scale(1.08); }
+.tv-steam-puff {
+  position: absolute; left: 68px; top: 8px; right: 12px; height: 48px; display: flex; align-items: center; gap: 10px;
+  opacity: 0; pointer-events: none;
+}
+.tv-steam-puff i {
+  width: 24px; height: 24px; border-radius: 50%; background: rgba(168, 255, 219, .78);
+  box-shadow: 0 0 12px #78b7c5;
+}
+.tv-steam-puff.puff { animation: tv-steam-burst .26s ease-out; }
+@keyframes tv-steam-burst {
+  0% { opacity: .95; transform: translateX(0) scale(.6); }
+  100% { opacity: 0; transform: translateX(32px) scale(1.45); }
+}
+.tv-ludd-box {
+  flex: 1; background: #232b2c; border: 2px solid #182022; padding: 6px 10px;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.tv-ludd-title { text-align: left; color: #e6ece8; font-size: 9px; }
+.tv-ludd-mesh {
+  height: 44px; background: repeating-linear-gradient(45deg, #141a1b 0 4px, #232b2c 4px 8px);
+  border: 1px solid #0f1415; display: flex; align-items: center; justify-content: space-around; padding: 0 8px;
+}
+.tv-fuzz {
+  width: 28px; height: 18px; border-radius: 50%; background: var(--ch-clap); opacity: .88;
+  border: 1px solid #182022;
+}
+.tv-ludd-box.slap {
+  border-color: var(--ch-clap);
+  animation: tv-ludd-shake .2s ease-out;
+}
+@keyframes tv-ludd-shake {
+  25% { transform: translateX(-4px) scale(1.03); }
+  75% { transform: translateX(4px); }
+}
+
+/* 4. Bokningstavla & Britt-Maries arga tvättlapp */
+.tv-bokning {
+  position: absolute; left: 790px; top: 28px; width: 340px; height: 78px;
+  background: #232b2c; border: 2px solid #182022; box-sizing: border-box; padding: 6px 10px;
+  box-shadow: 0 4px 0 #0f1415;
+}
+.tv-bokning-title {
+  display: block; text-align: left; color: #e6ece8; font-size: 9px; margin-bottom: 6px;
+}
+.tv-cylinders {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+}
+.tv-cyl {
+  height: 36px; border: 2px solid #182022; font: 700 11px/32px var(--font-lcd);
+  text-align: center; font-style: normal; color: #182022;
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .25);
+}
+.tv-cyl.c-orange { background: var(--ch-kick); }
+.tv-cyl.c-blue { background: var(--ch-snare); }
+.tv-cyl.c-gold { background: var(--ch-tom); }
+.tv-cyl.c-cyan { background: var(--ch-hat); }
+.tv-cyl.active { outline: 2px solid #a8ffdb; outline-offset: 1px; }
+
+.tv-note {
+  position: absolute; left: 790px; top: 114px; width: 340px; height: 84px; box-sizing: border-box;
+  padding: 7px 12px; background: #f2f0e6; color: #182022; border: 2px solid #182022;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, .5); font-family: var(--font-lcd);
+  display: flex; flex-direction: column; justify-content: space-between;
+  transform: rotate(-.7deg); cursor: pointer; pointer-events: auto;
+}
+.tv-note::before {
+  content: ''; position: absolute; left: 50%; top: -6px; width: 58px; height: 11px; margin-left: -29px;
+  background: rgba(224, 90, 43, .65); border: 1px solid rgba(24, 32, 34, .4);
+}
+.tv-note strong { font-size: 11px; letter-spacing: .08em; color: var(--playhead); }
+.tv-note span { font-size: 9px; line-height: 1.25; letter-spacing: .05em; font-weight: 700; }
+.tv-note em { font-style: normal; font-size: 9px; font-weight: 700; text-align: right; letter-spacing: .08em; }
+.tv-room.tvattlapp .tv-note, .tv-note.slap {
+  background: #ffd4c4; border-color: var(--playhead);
+  animation: tv-note-slap .16s linear infinite;
+}
+@keyframes tv-note-slap {
+  25% { transform: rotate(2.2deg) scale(1.02); }
+  75% { transform: rotate(-2.2deg) scale(1.02); }
+}
+
+/* ---------- CENTER HARDWARE CHASSIS: TVÄTTSTUGA 3000 (204..604px) ---------- */
+.tv-panel {
+  left: 50px; top: 204px; width: 1080px; height: 400px; box-sizing: border-box; padding: 0; z-index: 5;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .28) 0 8px, transparent 8px),
+    repeating-linear-gradient(90deg, rgba(24, 32, 34, .03) 0 1px, transparent 1px 25px),
+    var(--chassis);
+  transform: translate(var(--shake-x, 0px), var(--shake-y, 0px));
+}
+.tv-panel > * { position: absolute; }
+.tv-brand {
+  left: 16px; top: 14px; width: 224px; display: flex; flex-direction: column; gap: 4px;
+}
+.tv-brand .ds-logo {
+  font-size: 18px; line-height: 20px; letter-spacing: .22em; font-weight: 700; text-align: left; color: var(--engrave);
+}
+.tv-maker {
+  text-align: left; font-size: 8px; letter-spacing: .15em; color: var(--engrave); opacity: .88;
+}
+
+/* Programverk LCD */
+.tv-lcd {
+  left: 244px; top: 10px; width: 492px; height: 58px; min-height: 58px;
+}
+.tv-lcd .ds-lcd-name { font-size: 13px; font-weight: 700; }
+.tv-lcd .ds-lcd-value { font-size: 12px; font-weight: 700; }
+.tv-lcd .ds-lcd-line { font-size: 11px; }
+
+/* 2 Signature Gestures: CENTRIFUG 1400V & ARG TVÄTTLAPP */
+.tv-big {
+  top: 10px; height: 58px; padding: 0 10px;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  font: 700 10px/1.15 var(--font-engrave); letter-spacing: .13em; color: var(--control-ink);
+}
+.tv-big svg {
+  width: 22px; height: 22px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.9;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+#centrifug { left: 744px; width: 160px; }
+#tvattlapp { left: 912px; width: 152px; color: #ffffff; }
+#centrifug[aria-pressed="true"], #tvattlapp[aria-pressed="true"] {
+  color: #ffffff; box-shadow: inset 0 0 0 2px #a8ffdb;
+}
+
+/* 9 Knobs row */
+.tv-knobs {
+  left: 16px; top: 74px; width: 1048px; height: 82px; box-sizing: border-box;
+  display: grid; grid-template-columns: repeat(9, 1fr); align-items: center; padding: 4px 8px 2px;
+}
+.tv-knob {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.tv-knob .ds-engrave {
+  font-size: 9px; letter-spacing: .14em; color: #e6ece8;
+}
+
+/* Transport & Mode row */
+.tv-transport {
+  left: 16px; top: 162px; width: 1048px; height: 44px; box-sizing: border-box;
+  display: flex; align-items: center; gap: 8px; padding: 3px 10px;
+}
+.tv-transport .ds-play {
+  width: 52px; height: 34px; flex-shrink: 0;
+}
+.tv-small {
+  height: 34px; min-width: 68px; padding: 0 10px;
+  font: 700 10px var(--font-engrave); letter-spacing: .12em;
+}
+.tv-sync {
+  padding: 5px 10px; background: var(--velvet); border: 1px solid var(--chassis-edge);
+  font-family: var(--font-lcd); font-size: 10px; letter-spacing: .14em; color: var(--lcd-ink);
+}
+.tv-sync.clocked {
+  color: var(--control-on); border-color: var(--control-on);
+}
+#accBtn { margin-left: auto; }
+
+/* 5-Track x 16-Step Polymetric Sequencer Grid */
+.tv-seq-band {
+  left: 16px; top: 212px; width: 1048px; height: 178px; box-sizing: border-box;
+  padding: 6px 8px; display: flex; flex-direction: column; justify-content: center;
+}
+.tv-seq-grid {
+  display: flex; flex-direction: column; gap: 4px; width: 100%; height: 100%; justify-content: space-between;
+}
+.tv-track-row {
+  display: grid; grid-template-columns: 96px 28px 58px repeat(16, 1fr); gap: 3px; align-items: center; height: 29px;
+}
+.tv-track-sel {
+  height: 29px; padding: 0 6px; display: flex; align-items: center; justify-content: flex-start;
+  font: 700 9px/1 var(--font-engrave); letter-spacing: .12em;
+  background: var(--plate); color: #e6ece8; border: 1px solid var(--control-border);
+}
+.tv-track-sel[aria-pressed="true"] {
+  box-shadow: inset 4px 0 0 var(--tr-color, var(--control-on));
+  color: #ffffff;
+}
+.tv-mute-btn {
+  height: 29px; padding: 0; font: 700 9px/1 var(--font-lcd);
+  background: var(--plate); color: #e6ece8;
+}
+.tv-mute-btn[aria-pressed="true"] {
+  background: var(--mute); color: #ffffff;
+}
+.tv-len-btn {
+  height: 29px; padding: 0 4px; font: 700 9px/1 var(--font-lcd); letter-spacing: .04em;
+  background: var(--plate); color: var(--lcd-ink);
+}
+.tv-step {
+  width: 100%; height: 29px; position: relative; padding: 0;
+  font: 700 10px/1 var(--font-lcd); color: #e6ece8;
+  background: var(--tr-dim, var(--plate));
+}
+.tv-step.beat-start {
+  border-left-width: 2px;
+}
+.tv-step[data-state="1"] {
+  background: var(--tr-color, var(--control-on)); color: var(--control-ink);
+}
+.tv-step[data-state="2"] {
+  background: var(--tr-color, var(--control-on)); color: var(--control-ink);
+  box-shadow: inset 0 0 0 2px #ffffff;
+}
+.tv-step[aria-pressed="true"]::after { display: none; }
+.tv-step.is-current {
+  outline: 2px solid var(--playhead); outline-offset: -2px; z-index: 2;
+}
+.tv-step.is-outside {
+  opacity: .24;
+}
+
+/* ---------- BOTTOM: BOKNINGSTAVLAN & MASKINPARKEN (608..734px) ---------- */
+.tv-floor {
+  left: 0; top: 604px; width: 1180px; height: 136px; z-index: 1;
+  background: linear-gradient(180deg, #101516 0 8px, #161c1d 8px 100%);
+}
+.tv-drain {
+  position: absolute; left: 554px; bottom: 8px; width: 72px; height: 14px;
+  background: repeating-linear-gradient(90deg, #344143 0 4px, #0f1415 4px 8px);
+  border: 1px solid #0f1415;
+}
+.tv-bottom-deck {
+  left: 50px; top: 610px; width: 1080px; height: 120px; z-index: 6;
+  display: grid; grid-template-columns: 516px 548px; gap: 16px;
+}
+.tv-deck-section {
+  background: #232b2c; border: 2px solid #182022; box-sizing: border-box;
+  padding: 6px 10px 8px; display: flex; flex-direction: column; justify-content: space-between;
+  box-shadow: 0 4px 0 #0f1415;
+}
+.tv-deck-label {
+  text-align: left; font-size: 9px; letter-spacing: .18em; color: #e6ece8;
+}
+.tv-pads {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; height: 84px; touch-action: none;
+}
+.tv-pad {
+  position: relative; height: 100%; padding: 6px 4px; box-sizing: border-box;
+  display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+  background: var(--pad-color, var(--control)); color: var(--control-ink);
+  border: 2px solid #182022; box-shadow: inset 0 -5px 0 rgba(0, 0, 0, .28);
+  cursor: pointer; touch-action: none;
+}
+.tv-pad-name { font: 700 9px/1.1 var(--font-engrave); letter-spacing: .1em; text-align: center; }
+.tv-pad-sub { font: 700 8px/1 var(--font-lcd); opacity: .78; }
+.tv-pad-key {
+  padding: 1px 5px; background: rgba(24, 32, 34, .18); font: 700 9px/1.1 var(--font-lcd);
+}
+.tv-pad.down {
+  transform: translateY(2px);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .35), 0 0 12px var(--pad-color, var(--control-on));
+  filter: brightness(1.12);
+}
+
+.tv-keys {
+  display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; height: 84px; touch-action: none;
+}
+.tv-key {
+  position: relative; height: 100%; padding: 6px 4px; box-sizing: border-box;
+  display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+  background: linear-gradient(90deg, #b8c2be 0 6px, #e6ece8 6px 82%, #9da8a4 100%);
+  color: #182022; border: 2px solid #182022; border-radius: 3px;
+  box-shadow: inset 0 -6px 0 #8a9698; cursor: pointer; touch-action: none;
+}
+.tv-key-pipe {
+  width: 18px; height: 28px; border-radius: 9px;
+  background: linear-gradient(90deg, #344143, #cfd6d2 50%, #232b2c);
+  border: 1px solid #182022;
+}
+.tv-key-note { font: 700 11px/1 var(--font-lcd); }
+.tv-key-hint { font: 700 8px/1 var(--font-lcd); opacity: .7; }
+.tv-key.down {
+  background: linear-gradient(90deg, #b88800 0 6px, var(--ch-tom) 6px 82%, #966f00 100%);
+  box-shadow: inset 0 -2px 0 #594308, 0 0 12px rgba(230, 171, 2, .65);
+  transform: translateY(2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-room *, .tv-room *::before, .tv-room *::after { animation: none !important; transition: none !important; }
+}
+
+/* ---------- GEAR MENU (shell outside the room) ---------- */
+.utility { position: fixed; z-index: 20; right: max(12px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); }
+#menu > summary { list-style: none; cursor: pointer; }
+#menu > summary::-webkit-details-marker { display: none; }
+.menu-panel {
+  position: fixed; z-index: 21; right: max(12px, env(safe-area-inset-right)); bottom: calc(max(12px, env(safe-area-inset-bottom)) + 54px);
+  width: min(440px, calc(100vw - 24px)); max-height: calc(100dvh - 90px); overflow: auto;
+  -webkit-user-select: text; user-select: text;
+}
+.menu-panel.show-midi-map .ds-menu-actions,
+.menu-panel.show-midi-map #preset-panel,
+.menu-panel.show-midi-map #downloads,
+.menu-panel.show-midi-map #about-panel { display: none; }
+.ds-menu-actions button:disabled { opacity: .55; cursor: default; }
+.preset-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.preset-grid button {
+  min-height: 36px; padding: 6px 8px; border: 1px solid var(--menu-button-border);
+  background: var(--menu-button); color: var(--menu-button-ink); font: 600 11px/1.25 var(--font-panel);
+  text-align: left; cursor: pointer;
+}
+.preset-grid button:hover { background: var(--menu-button-hover); }
+.preset-grid button[aria-checked="true"] {
+  border-color: var(--control-on); box-shadow: inset 3px 0 0 var(--control-on); font-weight: 700;
+}
+.download-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-8); }
+.download-grid a {
+  display: block; padding: 10px 6px; border: 1px solid var(--menu-button-border);
+  background: var(--menu-button); color: var(--menu-button-ink); text-align: center; text-decoration: none; font-size: 12px; font-weight: 650;
+}
+.download-grid a:hover, .download-kit a:hover { background: var(--menu-button-hover); }
+.download-kit { margin-top: var(--space-8); }
+.download-kit a {
+  display: block; padding: 12px 8px; border: 1px solid var(--menu-button-border); border-top-width: 3px; border-top-color: var(--menu-border);
+  background: var(--menu-button); color: var(--menu-button-ink); text-align: center; text-decoration: none; font-size: 12px; font-weight: 650;
+}
+.download-note { margin: 8px 0 0; font-size: 11px; line-height: 1.5; color: var(--menu-muted); }
+.midi-map-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.midi-map-heading strong { margin: 0; }
+.midi-map-heading button {
+  min-height: 32px; border: 1px solid var(--menu-button-border); background: var(--menu-button);
+  color: var(--menu-button-ink); font: 12px var(--font-panel); padding: 0 12px; cursor: pointer;
+}
+.midi-map-list { list-style: none; margin: 0; padding: 0; font-size: 12px; line-height: 1.85; }
+.midi-map-list code { display: inline-block; min-width: 9.5em; font-family: var(--font-lcd); font-variant-numeric: tabular-nums; }
+.credits {
+  display: flex; justify-content: space-between; margin-top: var(--space-8); padding-top: var(--space-8);
+  border-top: 1px solid var(--menu-button-border); font-size: 10px; color: var(--menu-muted);
+}
+.credits a { color: var(--menu-muted); }

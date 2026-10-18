@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="sv" data-theme="tvattstuga">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#cfd6d2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="TVÄTTSTUGA 3000. Polymetrisk 5-spårs trummaskin i källarplan 1971. Wascator W75, stenmangel, vattenventil, luddfilter och Britt-Maries arga tvättlapp i c-moll.">
+<title>TVÄTTSTUGA 3000 — Pastor Gregorius</title>
+<link rel="icon" href="icon-512.png" sizes="512x512" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="modulepreload" href="tvattstuga-engine.js">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="3000-series.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <defs>
+  <symbol id="i-centrifug" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4 C15 7 15 11 12 12 C9 13 9 17 12 20"/><path d="M4 12 C7 9 11 9 12 12 C13 15 17 15 20 12"/></symbol>
+  <symbol id="i-lapp" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="12" y1="15" x2="12" y2="17"/><circle cx="12" cy="19" r="0.6" fill="currentColor"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 5 L19 12 L7 19 Z" fill="currentColor"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><path d="M6 5 H10 V19 H6 Z M14 5 H18 V19 H14 Z" fill="currentColor"/></symbol>
+ </defs>
+</svg>
+<main id="stage">
+<div id="fit">
+<div class="tv-room ds-ground" id="room" data-theme="tvattstuga">
+ <!-- UPPER VISUAL WORLD: KÄLLARPLAN · TVÄTTSTUGA B -->
+ <div class="tv-basement" id="basement" aria-hidden="true">
+  <div class="tv-tiles"></div>
+  <div class="tv-lysror" id="lysror"><span class="tv-tube"></span></div>
+  <span class="tv-room-sign ds-engrave">KÄLLARPLAN · TVÄTTSTUGA B</span>
+
+  <!-- 1. WASCATOR W75 INDUSTRITVÄTTMASKIN -->
+  <div class="tv-wascator" id="wascator">
+   <div class="tv-wascator-top">
+    <span class="tv-wascator-badge">WASCATOR W75</span>
+    <span class="tv-wascator-lamp" id="wascator-lamp"></span>
+   </div>
+   <div class="tv-wascator-window" id="wascator-window">
+    <div class="tv-wascator-drum" id="wascator-drum">
+     <span class="tv-water-slosh"></span>
+     <i class="tv-cloth c1"></i>
+     <i class="tv-cloth c2"></i>
+     <i class="tv-cloth c3"></i>
+     <i class="tv-suds s1"></i>
+     <i class="tv-suds s2"></i>
+    </div>
+    <span class="tv-window-handle"></span>
+   </div>
+  </div>
+
+  <!-- 2. STENMANGEL (CAST-IRON ROLLER MANGLE) -->
+  <div class="tv-mangel" id="stenmangel">
+   <span class="tv-mangel-label ds-engrave">STENMANGEL</span>
+   <div class="tv-mangel-frame" id="mangel-rollers">
+    <span class="tv-roller top"></span>
+    <span class="tv-sheet"></span>
+    <span class="tv-roller bot"></span>
+   </div>
+   <span class="tv-mangel-wheel"></span>
+  </div>
+
+  <!-- 3. LUDDFILTER-LUCKA & VATTENVENTIL -->
+  <div class="tv-ventil-ludd" id="ventil-ludd">
+   <div class="tv-pipe-manifold">
+    <span class="tv-valve-wheel" id="ventil-wheel"></span>
+    <div class="tv-steam-puff" id="ventil-steam"><i></i><i></i><i></i></div>
+   </div>
+   <div class="tv-ludd-box" id="ludd-trap">
+    <span class="tv-ludd-title ds-engrave">LUDDFILTER</span>
+    <div class="tv-ludd-mesh"><i class="tv-fuzz f1"></i><i class="tv-fuzz f2"></i><i class="tv-fuzz f3"></i></div>
+   </div>
+  </div>
+
+  <!-- 4. BOKNINGSTAVLA (07–22) & BRITT-MARIES ARGA TVÄTTLAPP -->
+  <div class="tv-bokning" id="bokningstavla">
+   <span class="tv-bokning-title ds-engrave">BOKNINGSTAVLA · PASS 07–22</span>
+   <div class="tv-cylinders">
+    <i class="tv-cyl c-orange" title="07–11">07</i>
+    <i class="tv-cyl c-blue" title="11–14">11</i>
+    <i class="tv-cyl c-gold active" title="14–18">14</i>
+    <i class="tv-cyl c-cyan" title="18–22">18</i>
+   </div>
+  </div>
+
+  <div class="tv-note" id="tvattlapp-note">
+   <strong>TA BORT LUDDET!!</strong>
+   <span>ANNARS STÄNGS STRÖMMEN AV!</span>
+   <em>/ BRITT-MARIE, 4TR</em>
+  </div>
+ </div>
+
+ <!-- CENTER HARDWARE CHASSIS: TVÄTTSTUGA 3000 -->
+ <div class="ds-chassis tv-panel" id="panel">
+  <div class="tv-brand">
+   <span class="ds-logo">TVÄTTSTUGA 3000</span>
+   <span class="ds-engrave tv-maker">PASTOR GREGORIUS · FOLKHEMMETS SKUGGOR</span>
+  </div>
+
+  <!-- PROGRAMVERK / BOKNINGSTAVLA LCD -->
+  <div class="ds-lcd tv-lcd" aria-live="polite">
+   <div class="ds-lcd-glow"></div>
+   <div class="ds-lcd-top">
+    <span class="ds-lcd-name" id="lname">KULÖRTVÄTT 60° (C-MOLL)</span>
+    <span class="ds-lcd-value" id="lval">60°C</span>
+   </div>
+   <div class="ds-lcd-line" id="lline">WASCATOR W75 · 5-SPÅRS POLYMETRISK TVÄTTMASKIN</div>
+  </div>
+
+  <!-- 2 SIGNATURE GESTURES -->
+  <button class="ds-control tv-big" id="centrifug" type="button" aria-pressed="false" style="--ds-face:var(--ch-tom);--ds-face-on:var(--control-on)" aria-label="CENTRIFUG 1400 VARV: rusning på/av (Q)">
+   <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-centrifug"/></svg>
+   <span>CENTRIFUG 1400V</span>
+  </button>
+  <button class="ds-control tv-big" id="tvattlapp" type="button" aria-pressed="false" style="--ds-face:var(--playhead);--ds-face-on:var(--control-on)" aria-label="ARG TVÄTTLAPP: skäll och fill på/av (W)">
+   <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-lapp"/></svg>
+   <span>ARG TVÄTTLAPP</span>
+  </button>
+
+  <!-- 9 KNOBS (0–100 in LCD, no numbers printed on knobs) -->
+  <div class="ds-plate tv-knobs" id="knobs"></div>
+
+  <!-- TRANSPORT & SEQUENCER TOOLS -->
+  <div class="ds-plate tv-transport">
+   <button class="ds-control ds-play" id="play" type="button" aria-pressed="false" aria-label="Spela tvättprogram (mellanslag)">
+    <svg viewBox="0 0 24 24" style="width:42%;height:42%"><path id="pi" d="M7 5 L19 12 L7 19 Z" fill="currentColor"/></svg>
+   </button>
+   <button class="ds-control tv-small" id="stopBtn" type="button" aria-label="Stoppa tvättprogram">STOPP</button>
+   <span class="ds-engrave tv-sync" id="syncBadge">INTERN</span>
+   <button class="ds-control tv-small" id="swingBtn" type="button" aria-label="Swing (0–100)">SWING 15</button>
+   <button class="ds-control tv-small" id="accBtn" type="button" aria-pressed="false" aria-label="Koktvätt: accent eller öppen ventil (Shift)">KOKTVÄTT</button>
+   <button class="ds-control tv-small" id="randTrackBtn" type="button" aria-label="Slumpa aktivt spår">SLUMPA SPÅR</button>
+   <button class="ds-control tv-small" id="clearTrackBtn" type="button" aria-label="Skölj (rensa) aktivt spår">SKÖLJ SPÅR</button>
+  </div>
+
+  <!-- 5-TRACK x 16-STEP POLYMETRIC SEQUENCER GRID -->
+  <div class="ds-plate ds-plate--band tv-seq-band">
+   <div class="tv-seq-grid" id="seq-grid" role="group" aria-label="5-spårs polymetrisk 16-stegssekvenser"></div>
+  </div>
+ </div>
+
+ <!-- BOTTOM: BOKNINGSTAVLAN & MASKINPARKEN (#pads + #keys) -->
+ <div class="tv-floor" aria-hidden="true">
+  <span class="tv-drain"></span>
+ </div>
+ <div class="tv-bottom-deck">
+  <div class="tv-deck-section tv-pads-wrap">
+   <span class="tv-deck-label ds-engrave">MASKINPARKEN · SLAGPLATTOR (Z–N)</span>
+   <div class="tv-pads" id="pads" role="group" aria-label="Maskinparken: 6 slagplattor"></div>
+  </div>
+  <div class="tv-deck-section tv-keys-wrap">
+   <span class="tv-deck-label ds-engrave">CENTRIFUGTRUMMA · C-MOLL (C3–C4 · A–K)</span>
+   <div class="tv-keys" id="keys" role="group" aria-label="Centrifugtrumma: 8 ståltoner i c-moll C3 till C4"></div>
+  </div>
+ </div>
+</div>
+</div>
+</main>
+
+<!-- GEAR MENU (ds-gear, ds-menu) -->
+<section class="utility" aria-label="Inställningar">
+ <details id="menu">
+  <summary class="ds-gear" aria-label="Inställningar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></summary>
+  <div class="ds-menu menu-panel">
+   <div class="ds-menu-actions" id="menu-actions">
+    <button id="preset-toggle" type="button" aria-controls="preset-panel" aria-expanded="true">Välj tvättprogram</button>
+    <button id="randomize" type="button">Slumpa tvättpass</button>
+    <button id="clear" type="button">Rensa program</button>
+    <button id="save-local" type="button">Spara session</button>
+    <button id="save" type="button">Exportera session</button>
+    <button id="open" type="button">Importera session</button>
+    <button id="midi" type="button">Anslut MIDI</button>
+    <button id="install-app" type="button">Installera app</button>
+    <button id="fullscreen" type="button">Helskärm</button>
+    <button id="midi-map-toggle" type="button" aria-controls="midi-map-panel" aria-expanded="false">MIDI-mappning</button>
+    <input id="load" type="file" accept="application/json,.json" aria-label="Importera session" hidden>
+   </div>
+   <div class="ds-menu-section" id="preset-panel">
+    <strong>Välj tvättprogram (c-moll)</strong>
+    <div class="preset-grid" id="preset-list"></div>
+   </div>
+   <div class="ds-menu-section" id="downloads" hidden>
+    <strong>Hämta VST3 — TVÄTTSTUGA 3000</strong>
+    <div class="download-grid" id="download-grid"></div>
+    <div class="download-kit" id="download-kit" hidden></div>
+    <p class="download-note">Byggkitet innehåller PlugData-patcharna och bygger VST3 på din egen Mac (Intel och Apple Silicon), Windows-dator eller Linux. Läs BUILD-VST3.md i kitet.</p>
+   </div>
+   <div class="ds-menu-section" id="midi-map-panel" hidden>
+    <div class="midi-map-heading"><strong>MIDI-mappning (kanal 7 och 1)</strong><button id="midi-map-back" type="button">Tillbaka</button></div>
+    <ul id="midi-map-list" class="midi-map-list"></ul>
+   </div>
+   <div class="ds-menu-section" id="about-panel">
+    <strong>Om TVÄTTSTUGA 3000</strong>
+    <p class="ds-menu-help" id="menu-help">Spela på maskinparken med Z X C V B N och centrifugens stålrör i c-moll (C3–C4) med A S D F G H J K. Q startar CENTRIFUG 1400 VARV, W river av ARG TVÄTTLAPP (Britt-Marie, 4tr), och mellanslag startar programverket. Klicka på ett steg i 5×16-matrisen för att växla mellan 0 (vila), 1 (slag / stängd ventil) och 2 (koktvätt-accent / öppen ventil). Varje spår har egen längd (LEN 1–16) för polymetriska källarrytmer.</p>
+   </div>
+   <div class="credits"><span>Pastor Gregorius · powered by heavy</span><a href="THIRD_PARTY_NOTICES.txt">Licenser</a></div>
+  </div>
+ </details>
+</section>
+<script type="module" src="app.js"></script>
+</body>
+</html>
