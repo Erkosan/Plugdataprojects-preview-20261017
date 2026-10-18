@@ -77,10 +77,12 @@
     </div>
    </div>
    <!-- Spilld öl-pöl (håller ID #beer-ring för 100% bakåtkompatibilitet med befintliga tester) -->
-   <button class="beer-ring beer-puddle" id="beer-ring" title="Spilld folköl (ölet rinner mot kretsarna!)" aria-label="Spilld folköl på campingbordet">
+   <button class="beer-ring beer-puddle" id="beer-ring" title="Spilld folköl (klicka för kortslutning i kretsarna)" aria-label="Spilld folköl på campingbordet">
     <span class="puddle-fluid"></span>
-    <span class="puddle-foam"></span>
-    <span class="beer-label">SPILLD FOLKÖL · KORTIS</span>
+    <span class="puddle-highlight"></span>
+    <span class="puddle-foam f1"></span>
+    <span class="puddle-foam f2"></span>
+    <span class="puddle-foam f3"></span>
    </button>
   </div>
 
@@ -307,7 +309,7 @@
     <div class="section-title">SEKVENS & MASTER</div>
     <div class="master-controls">
      <button class="ds-control ds-play" id="play" aria-pressed="false" aria-label="Spela sequencern">
-      <svg viewBox="0 0 24 24" style="width:40%;height:40%"><path id="pi" d="M7 5 L19 12 L7 19 Z" fill="currentColor"/></svg>
+      <svg viewBox="0 0 24 24" style="width:20px;height:20px;display:block;"><path id="pi" d="M7 5 L19 12 L7 19 Z" fill="currentColor"/></svg>
      </button>
      <button class="ds-control rec-btn" id="rec" aria-pressed="false" aria-label="Spela in melodi till sequencern (REC)"><span class="rec-led"></span><span class="rec-text">REC</span></button>
      <div class="bpm-wrap">
@@ -320,11 +322,6 @@
       </div>
       <span class="knob-label">SVÄNG</span>
      </div>
-     <!-- Big panic gesture button -->
-     <button class="ds-control panic-btn" id="panic" aria-pressed="false" aria-label="Strömavbrott (panikknapp)">
-      <span class="panic-led"></span>
-      <span class="panic-text">STRÖMAVBROTT</span>
-     </button>
      <!-- Master Volume with Graduation Collar -->
      <div class="ds-knob-container" data-param="volume" data-label="VOLYM" data-unit="%">
       <div class="vol-collar"></div>

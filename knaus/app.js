@@ -209,18 +209,40 @@ function playSfx(type) {
       buzz.connect(bG).connect(audioCtx.destination);
       buzz.start(t);
       buzz.stop(t + 0.13);
-    } else if (type === 'piezo-click') {
-      // Mekaniskt metall-klick
-      const osc = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      osc.type = 'square';
-      osc.frequency.setValueAtTime(1750, t);
-      osc.frequency.exponentialRampToValueAtTime(250, t + 0.02);
-      g.gain.setValueAtTime(0.45, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.025);
-      osc.connect(g).connect(audioCtx.destination);
-      osc.start(t);
-      osc.stop(t + 0.03);
+    } else if (type === 'piezo-click' || type === 'piezo-snap') {
+      // Mekaniskt metall-klick + kraftigt kvartskristall-slag och fjäderklang
+      const snap = audioCtx.createOscillator();
+      const snapG = audioCtx.createGain();
+      snap.type = 'triangle';
+      snap.frequency.setValueAtTime(3400, t);
+      snap.frequency.exponentialRampToValueAtTime(140, t + 0.025);
+      snapG.gain.setValueAtTime(0.75, t);
+      snapG.gain.exponentialRampToValueAtTime(0.001, t + 0.025);
+      snap.connect(snapG).connect(audioCtx.destination);
+      snap.start(t);
+      snap.stop(t + 0.03);
+
+      const thud = audioCtx.createOscillator();
+      const thudG = audioCtx.createGain();
+      thud.type = 'sine';
+      thud.frequency.setValueAtTime(340, t);
+      thud.frequency.exponentialRampToValueAtTime(55, t + 0.06);
+      thudG.gain.setValueAtTime(0.6, t);
+      thudG.gain.exponentialRampToValueAtTime(0.001, t + 0.07);
+      thud.connect(thudG).connect(audioCtx.destination);
+      thud.start(t);
+      thud.stop(t + 0.08);
+
+      const twang = audioCtx.createOscillator();
+      const twangG = audioCtx.createGain();
+      twang.type = 'sawtooth';
+      twang.frequency.setValueAtTime(1250, t + 0.008);
+      twang.frequency.exponentialRampToValueAtTime(420, t + 0.09);
+      twangG.gain.setValueAtTime(0.25, t + 0.008);
+      twangG.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+      twang.connect(twangG).connect(audioCtx.destination);
+      twang.start(t + 0.008);
+      twang.stop(t + 0.11);
     } else if (type === 'gas-whoosh') {
       // Varm gasol-tändning
       const dur = 0.55;
@@ -275,6 +297,27 @@ function playSfx(type) {
       const g = audioCtx.createGain();
       g.gain.setValueAtTime(0.01, t);
       g.gain.linearRampToValueAtTime(0.38, t + 0.06);
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      src.connect(filter).connect(g).connect(audioCtx.destination);
+      src.start(t);
+      src.stop(t + dur);
+    } else if (type === 'flame-crackle') {
+      // Mjukt sprakande och väsande från brinnande tändsticka och låga
+      const dur = 2.2;
+      const buf = audioCtx.createBuffer(1, Math.floor(audioCtx.sampleRate * dur), audioCtx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < data.length; i++) {
+        data[i] = Math.random() < 0.025 ? (Math.random() * 2 - 1) * 1.4 : (Math.random() * 2 - 1) * 0.12;
+      }
+      const src = audioCtx.createBufferSource();
+      src.buffer = buf;
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(1900, t);
+      filter.Q.value = 1.3;
+      const g = audioCtx.createGain();
+      g.gain.setValueAtTime(0.01, t);
+      g.gain.linearRampToValueAtTime(0.22, t + 0.1);
       g.gain.exponentialRampToValueAtTime(0.001, t + dur);
       src.connect(filter).connect(g).connect(audioCtx.destination);
       src.start(t);
@@ -592,6 +635,7 @@ function setupSequencer() {
     isPlaying = !isPlaying;
     setParam('start', isPlaying ? 1 : 0);
     PLAY_BTN.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
+    PLAY_BTN.classList.toggle('playing', isPlaying);
     const path = PLAY_BTN.querySelector('#pi');
     if (path) {
       path.setAttribute('d', isPlaying ? 'M6 5 H10 V19 H6 Z M14 5 H18 V19 H14 Z' : 'M7 5 L19 12 L7 19 Z');
@@ -1056,6 +1100,7 @@ function setupCampingQuirks() {
 
   // 3. Truma Gasolvärmare & Piezo-tändare
   const PIEZO_BTN = document.getElementById('piezo');
+  const TRUMA_HEATER = document.getElementById('truma-heater');
   const GAS_WINDOW = document.getElementById('gas-window');
   const GAS_FLAME = document.getElementById('gas-flame');
   if (PIEZO_BTN) {
@@ -1064,18 +1109,19 @@ function setupCampingQuirks() {
       initAudio();
       PIEZO_BTN.classList.add('pressed', 'spark');
       if (GAS_WINDOW) GAS_WINDOW.classList.add('spark');
-      playSfx('piezo-click');
+      playSfx('piezo-snap');
 
       setTimeout(() => {
         PIEZO_BTN.classList.remove('pressed', 'spark');
         if (GAS_WINDOW) GAS_WINDOW.classList.remove('spark');
-      }, 200);
+      }, 180);
 
       if (!gasHeaterLit) {
         // Tänd Truma gasolbrännare
         gasHeaterLit = true;
         playSfx('gas-whoosh');
         if (GAS_FLAME) GAS_FLAME.classList.add('lit');
+        if (TRUMA_HEATER) TRUMA_HEATER.classList.add('lit');
         savedDriveBeforeHeater = currentParams['drive'] || 0.35;
         setParam('drive', Math.min(1.0, savedDriveBeforeHeater + 0.35), true);
         LCD_NAME.textContent = 'PIEZO · GASOLVÄRMARE';
@@ -1085,6 +1131,7 @@ function setupCampingQuirks() {
         gasHeaterLit = false;
         playSfx('gas-puff');
         if (GAS_FLAME) GAS_FLAME.classList.remove('lit');
+        if (TRUMA_HEATER) TRUMA_HEATER.classList.remove('lit');
         setParam('drive', savedDriveBeforeHeater, true);
         LCD_NAME.textContent = 'PIEZO · GASOLVÄRMARE';
         LCD_VAL.textContent = 'SLÄCKT (TRUMA 3000)';
@@ -1247,26 +1294,46 @@ function setupCampingQuirks() {
     });
   }
 
-  // 6. Solstickan tändsticksask
+  // 6. Solstickan tändsticksask & tändsticka
   const SOLSTICKAN_BOX = document.getElementById('solstickan');
   const MATCHSTICK = document.getElementById('matchstick');
-  if (SOLSTICKAN_BOX) {
-    SOLSTICKAN_BOX.addEventListener('pointerdown', (e) => {
-      e.preventDefault();
-      if (matchStriking) return;
-      matchStriking = true;
-      initAudio();
-      playSfx('match-scratch');
-      if (MATCHSTICK) MATCHSTICK.classList.add('strike');
-      LCD_NAME.textContent = 'SOLSTICKAN';
-      LCD_VAL.textContent = 'TÄNDSTICKA DRAGEN';
+  const CAMPING_TABLE = document.getElementById('camping-table');
+  const CHASSIS = document.querySelector('.knaus-chassis');
 
-      setTimeout(() => {
-        if (MATCHSTICK) MATCHSTICK.classList.remove('strike');
-        matchStriking = false;
-      }, 2200);
-    });
-  }
+  const triggerMatchStrike = (e) => {
+    if (e) e.preventDefault();
+    if (matchStriking) return;
+    matchStriking = true;
+    initAudio();
+    playSfx('match-scratch');
+    setTimeout(() => playSfx('flame-crackle'), 160);
+
+    if (MATCHSTICK) MATCHSTICK.classList.add('strike');
+    if (CAMPING_TABLE) CAMPING_TABLE.classList.add('match-lit');
+    if (CHASSIS) CHASSIS.classList.add('match-lit');
+
+    // Värmer upp analoga kretsarna en smula
+    const preMatchDrive = currentParams['drive'] || 0.35;
+    setParam('drive', Math.min(1.0, preMatchDrive + 0.20), true);
+
+    LCD_NAME.textContent = 'SOLSTICKAN · FLAMMA';
+    LCD_VAL.textContent = 'VÄRMER KRETSARNA';
+
+    setTimeout(() => {
+      if (MATCHSTICK) MATCHSTICK.classList.remove('strike');
+      if (CAMPING_TABLE) CAMPING_TABLE.classList.remove('match-lit');
+      if (CHASSIS) CHASSIS.classList.remove('match-lit');
+      if (!gasHeaterLit) {
+        setParam('drive', preMatchDrive, true);
+      }
+      matchStriking = false;
+      LCD_NAME.textContent = 'SOLSTICKAN';
+      LCD_VAL.textContent = 'STICKAN SLOCKNAD';
+    }, 3200);
+  };
+
+  if (SOLSTICKAN_BOX) SOLSTICKAN_BOX.addEventListener('pointerdown', triggerMatchStrike);
+  if (MATCHSTICK) MATCHSTICK.addEventListener('pointerdown', triggerMatchStrike);
 
   // 7. Weather Badge Toggle
   WEATHER_BADGE.addEventListener('pointerdown', (e) => {

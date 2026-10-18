@@ -623,72 +623,112 @@ html, body {
   position: absolute;
   left: 74px;
   top: 14px;
-  width: 72px;
-  height: 40px;
-  border-radius: 50% 60% 45% 55%;
-  border: 2px solid rgba(217, 119, 6, 0.6);
-  background: radial-gradient(ellipse at 42% 40%, rgba(245, 158, 11, 0.35) 0%, rgba(180, 83, 9, 0.22) 55%, rgba(120, 53, 15, 0.45) 95%, transparent 100%);
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.35), inset 0 1px 3px rgba(255, 255, 255, 0.4);
+  width: 42px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid rgba(217, 119, 6, 0.4);
+  background: radial-gradient(ellipse at 50% 50%, rgba(245, 158, 11, 0.45) 0%, rgba(180, 83, 9, 0.25) 60%, transparent 100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   padding: 0;
   touch-action: none;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 4;
 }
 
 .beer-ring:hover {
-  border-color: rgba(245, 158, 11, 0.95);
-  transform: scale(1.04);
+  transform: scale(1.05);
 }
 
 .beer-ring.expanded, .beer-puddle.expanded {
-  width: 135px;
-  height: 46px;
-  left: 54px;
-  top: 10px;
-  background: radial-gradient(ellipse at 45% 40%, rgba(251, 191, 36, 0.8) 0%, rgba(245, 158, 11, 0.65) 50%, rgba(180, 83, 9, 0.75) 85%, transparent 100%);
-  border: 2.5px solid rgba(245, 158, 11, 0.95);
-  box-shadow: 0 0 18px rgba(245, 158, 11, 0.65), inset 0 2px 4px rgba(255, 255, 255, 0.65);
-  animation: puddleGush 0.5s ease-out;
+  width: 142px;
+  height: 48px;
+  left: 48px;
+  top: 8px;
+  border-radius: 42% 58% 68% 32% / 45% 55% 45% 55%;
+  background:
+    radial-gradient(ellipse at 35% 30%, rgba(255, 255, 255, 0.8) 0%, transparent 25%),
+    radial-gradient(ellipse at 45% 45%, #fde047 0%, #f59e0b 35%, #d97706 70%, #92400e 100%);
+  border: 1px solid rgba(180, 83, 9, 0.85);
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.45),
+    inset 0 2px 4px rgba(255, 255, 255, 0.75),
+    inset 0 -2px 5px rgba(120, 53, 15, 0.85);
+  animation: puddleGush 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes puddleGush {
-  0% { transform: scale(0.6); opacity: 0.4; }
-  60% { transform: scale(1.08); opacity: 1; }
+  0% { transform: scale(0.3); opacity: 0; }
+  60% { transform: scale(1.05); opacity: 1; }
   100% { transform: scale(1); opacity: 1; }
 }
 
 .beer-ring.dry, .beer-puddle.dry {
-  width: 20px;
-  height: 12px;
+  width: 16px;
+  height: 10px;
   opacity: 0;
-  transform: scale(0.2);
-  transition: all 0.3s ease-in;
+  transform: scale(0.15);
+  transition: all 0.35s ease-in;
 }
 
-.puddle-foam, .beer-foam {
+.puddle-highlight {
   position: absolute;
   top: 4px;
-  left: 12px;
-  width: 18px;
-  height: 8px;
+  left: 18px;
+  width: 52px;
+  height: 14px;
   border-radius: 50%;
-  background: rgba(254, 243, 199, 0.7);
-  filter: blur(1px);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, transparent 100%);
+  transform: rotate(-4deg);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.beer-ring.expanded .puddle-highlight {
+  opacity: 1;
+}
+
+.puddle-foam {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff 40%, #fef3c7 85%, #fde68a 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.beer-ring.expanded .puddle-foam {
+  opacity: 1;
+}
+
+.puddle-foam.f1 {
+  top: 8px;
+  left: 28px;
+  width: 16px;
+  height: 11px;
+}
+
+.puddle-foam.f2 {
+  bottom: 8px;
+  right: 32px;
+  width: 22px;
+  height: 14px;
+}
+
+.puddle-foam.f3 {
+  top: 18px;
+  right: 56px;
+  width: 13px;
+  height: 10px;
 }
 
 .beer-label {
-  font-family: var(--font-engrave);
-  font-size: 7px;
-  font-weight: 900;
-  letter-spacing: 0.8px;
-  color: rgba(254, 243, 199, 0.95);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
-  text-transform: uppercase;
-  z-index: 2;
+  display: none !important;
 }
 
 /* Wettex-trasa */
@@ -837,93 +877,115 @@ html, body {
 
 .matchstick {
   position: absolute;
-  bottom: 8px;
-  right: -24px;
-  width: 32px;
-  height: 4px;
+  bottom: -4px;
+  right: -36px;
+  width: 38px;
+  height: 6px;
   display: flex;
   align-items: center;
-  opacity: 0;
-  pointer-events: none;
+  opacity: 1;
+  pointer-events: auto;
+  cursor: pointer;
   transform-origin: left center;
   z-index: 10;
+  transition: transform 0.15s ease;
+}
+
+.matchstick:hover {
+  transform: rotate(-10deg) translateY(-2px);
 }
 
 .matchstick.strike {
   opacity: 1;
-  animation: matchStrikeAction 2.2s ease-out forwards;
+  animation: matchStrikeAction 3.2s ease-out forwards;
 }
 
 @keyframes matchStrikeAction {
-  0% { transform: translate(-20px, 8px) rotate(-15deg); opacity: 1; }
-  15% { transform: translate(-4px, 4px) rotate(0deg); opacity: 1; }
-  30% { transform: translate(12px, -6px) rotate(10deg); opacity: 1; }
-  85% { transform: translate(12px, -6px) rotate(10deg); opacity: 1; }
-  100% { transform: translate(12px, -6px) rotate(10deg); opacity: 0; }
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  12% { transform: translate(-32px, -3px) rotate(-16deg); opacity: 1; }
+  22% { transform: translate(-10px, 4px) rotate(2deg); opacity: 1; }
+  35% { transform: translate(16px, -12px) rotate(12deg); opacity: 1; }
+  85% { transform: translate(16px, -12px) rotate(12deg); opacity: 1; }
+  100% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
 }
 
 .match-wood {
-  width: 26px;
-  height: 3px;
+  width: 30px;
+  height: 3.5px;
   background: #fef3c7;
   border: 0.5px solid #d97706;
+  border-radius: 0.5px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .match-head {
-  width: 6px;
-  height: 5px;
-  background: #b91c1c;
+  width: 8px;
+  height: 6px;
+  background: radial-gradient(circle at 40% 40%, #ef4444 0%, #b91c1c 65%, #7f1d1d 100%);
   border-radius: 50% 30% 30% 50%;
   position: relative;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .match-flame {
   position: absolute;
-  right: -5px;
-  top: -14px;
-  width: 14px;
-  height: 20px;
-  border-radius: 50% 50% 30% 30% / 60% 60% 40% 40%;
-  background: radial-gradient(ellipse at 50% 75%, #ffffff 0%, #fef08a 25%, #f97316 65%, #dc2626 95%, transparent 100%);
+  right: -8px;
+  top: -24px;
+  width: 20px;
+  height: 28px;
+  border-radius: 50% 50% 35% 35% / 60% 60% 40% 40%;
+  background: radial-gradient(ellipse at 50% 75%, #ffffff 0%, #fef08a 25%, #f97316 60%, #dc2626 90%, transparent 100%);
   opacity: 0;
-  filter: drop-shadow(0 0 6px #f97316);
+  filter: drop-shadow(0 0 10px #f97316) drop-shadow(0 0 4px #fef08a);
   pointer-events: none;
 }
 
 .matchstick.strike .match-flame {
   opacity: 1;
-  animation: matchFlameBurn 2s ease-out forwards;
+  animation: matchFlameBurn 3.0s ease-out forwards;
 }
 
 @keyframes matchFlameBurn {
   0% { opacity: 0; transform: scale(0.2); }
-  15% { opacity: 1; transform: scale(1.4); }
-  25% { opacity: 1; transform: scale(1.0) rotate(5deg); }
-  50% { opacity: 0.9; transform: scale(1.1) rotate(-4deg); }
-  75% { opacity: 0.7; transform: scale(0.8) rotate(3deg); }
+  18% { opacity: 1; transform: scale(1.6); }
+  35% { opacity: 1; transform: scale(1.2) rotate(6deg); }
+  50% { opacity: 0.95; transform: scale(1.3) rotate(-5deg); }
+  75% { opacity: 0.8; transform: scale(0.9) rotate(4deg); }
   90% { opacity: 0.3; transform: scale(0.4); }
   100% { opacity: 0; transform: scale(0); }
 }
 
 .match-smoke {
   position: absolute;
-  right: -2px;
-  top: -20px;
-  width: 16px;
-  height: 16px;
-  background: radial-gradient(circle, rgba(148, 163, 184, 0.7) 0%, transparent 80%);
+  right: -4px;
+  top: -26px;
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle, rgba(148, 163, 184, 0.75) 0%, transparent 80%);
   border-radius: 50%;
   opacity: 0;
+  pointer-events: none;
 }
 
 .matchstick.strike .match-smoke {
-  animation: matchSmokeRise 1.2s ease-out 1.2s forwards;
+  animation: matchSmokeRise 1.8s ease-out 1.6s forwards;
 }
 
 @keyframes matchSmokeRise {
   0% { opacity: 0; transform: translateY(0) scale(0.4); }
-  40% { opacity: 0.7; transform: translateY(-8px) scale(1.2); }
-  100% { opacity: 0; transform: translateY(-24px) scale(2.0); }
+  40% { opacity: 0.75; transform: translateY(-12px) scale(1.3); }
+  100% { opacity: 0; transform: translateY(-34px) scale(2.4); }
+}
+
+/* Ambient firelight flicker when Solstickan match is burning */
+.camping-table.match-lit,
+.knaus-chassis.match-lit {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 0 25px rgba(245, 158, 11, 0.45),
+    inset 0 0 35px rgba(245, 158, 11, 0.25);
+  filter: brightness(1.05) saturate(1.1);
+  transition: filter 0.2s ease, box-shadow 0.2s ease;
 }
 /* ==========================================================================
    3. Profilerad Aluminiumlist (#chassis-trim) runt Chassit
@@ -1533,54 +1595,83 @@ html, body {
 .truma-heater {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
+  gap: 10px;
+  background: linear-gradient(180deg, #475569 0%, #334155 35%, #1e293b 100%);
   border: 1.5px solid #0f172a;
-  border-radius: 3px;
-  padding: 2px 8px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 2px 4px rgba(0, 0, 0, 0.35);
-  height: 30px;
+  border-radius: 4px;
+  padding: 3px 10px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.6),
+    0 2px 5px rgba(0, 0, 0, 0.45);
+  height: 34px;
+  box-sizing: border-box;
+  transition: box-shadow 0.3s ease;
+}
+
+.truma-heater.lit {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 0 16px rgba(245, 158, 11, 0.55),
+    0 2px 5px rgba(0, 0, 0, 0.45);
 }
 
 .truma-badge {
   font-family: var(--font-engrave);
   font-size: 8px;
   font-weight: 900;
-  letter-spacing: 1px;
-  color: #94a3b8;
+  letter-spacing: 1.2px;
+  color: #e2e8f0;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+  padding: 2px 5px;
+  background: #0f172a;
+  border: 1px solid #64748b;
+  border-radius: 2px;
 }
 
 .truma-grill {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .truma-slits {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 2.5px;
+  transition: filter 0.3s ease;
 }
 
 .truma-slits span {
   display: block;
-  width: 14px;
+  width: 16px;
   height: 2px;
   background: #020617;
-  border-bottom: 0.5px solid #475569;
+  border-bottom: 0.5px solid #64748b;
+  border-radius: 1px;
+  transition: all 0.3s ease;
 }
 
-/* Inspektionsglas titthål för gasollåga */
+.truma-heater.lit .truma-slits span {
+  background: #7c2d12;
+  border-bottom: 0.5px solid #ea580c;
+  box-shadow: 0 0 6px #ea580c;
+}
+
+/* Inspektionsglas titthål för gasollåga - Gedigen mässingsram */
 .gas-window {
-  width: 20px;
-  height: 20px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  border: 2px solid #b45309;
-  background: radial-gradient(circle, #020617 55%, #1e293b 100%);
+  border: 2.5px solid #d97706;
+  background: radial-gradient(circle, #020617 45%, #0f172a 75%, #78350f 100%);
   position: relative;
   overflow: hidden;
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.95), 0 0 3px rgba(217, 119, 6, 0.4);
+  box-shadow:
+    inset 0 0 6px rgba(0, 0, 0, 0.98),
+    0 0 5px rgba(217, 119, 6, 0.6),
+    0 1px 2px rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
 }
 
 .gas-flame {
@@ -1589,8 +1680,8 @@ html, body {
   left: 50%;
   transform: translateX(-50%) scale(0);
   opacity: 0;
-  width: 12px;
-  height: 16px;
+  width: 14px;
+  height: 20px;
   transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s ease;
   pointer-events: none;
 }
@@ -1598,13 +1689,13 @@ html, body {
 .gas-flame.lit {
   transform: translateX(-50%) scale(1);
   opacity: 1;
-  animation: flameFlicker 0.14s infinite alternate ease-in-out;
+  animation: flameFlicker 0.12s infinite alternate ease-in-out;
 }
 
 @keyframes flameFlicker {
-  0% { transform: translateX(-50%) scale(0.95) rotate(-1deg); filter: drop-shadow(0 0 4px #f59e0b); }
-  50% { transform: translateX(-50%) scale(1.08) rotate(2deg); filter: drop-shadow(0 0 8px #f97316); }
-  100% { transform: translateX(-50%) scale(1.02) rotate(-2deg); filter: drop-shadow(0 0 5px #3b82f6); }
+  0% { transform: translateX(-50%) scale(0.95) rotate(-2deg); filter: drop-shadow(0 0 5px #f59e0b) drop-shadow(0 0 2px #38bdf8); }
+  50% { transform: translateX(-50%) scale(1.1) rotate(1.5deg); filter: drop-shadow(0 0 9px #f97316) drop-shadow(0 0 4px #60a5fa); }
+  100% { transform: translateX(-50%) scale(1.02) rotate(-1deg); filter: drop-shadow(0 0 6px #f59e0b); }
 }
 
 .flame-core {
@@ -1612,10 +1703,10 @@ html, body {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 6px;
-  height: 7px;
+  width: 8px;
+  height: 9px;
   border-radius: 50%;
-  background: radial-gradient(circle, #93c5fd 0%, #2563eb 70%, transparent 100%);
+  background: radial-gradient(circle, #bae6fd 0%, #38bdf8 45%, #1d4ed8 85%, transparent 100%);
 }
 
 .flame-halo {
@@ -1623,16 +1714,16 @@ html, body {
   bottom: 2px;
   left: 50%;
   transform: translateX(-50%);
-  width: 10px;
-  height: 14px;
+  width: 12px;
+  height: 18px;
   border-radius: 50% 50% 35% 35% / 60% 60% 40% 40%;
-  background: radial-gradient(ellipse at 50% 65%, #ffffff 0%, #fef08a 30%, #f59e0b 70%, transparent 100%);
+  background: radial-gradient(ellipse at 50% 65%, #ffffff 0%, #fef08a 25%, #f59e0b 65%, #b45309 95%, transparent 100%);
 }
 
 .piezo-arc {
   position: absolute;
-  inset: 1px;
-  background: radial-gradient(circle, #ffffff 15%, #38bdf8 55%, transparent 85%);
+  inset: 0;
+  background: radial-gradient(circle, #ffffff 20%, #38bdf8 60%, transparent 85%);
   opacity: 0;
   pointer-events: none;
 }
@@ -1643,19 +1734,19 @@ html, body {
 }
 
 @keyframes piezoSparkArc {
-  0% { transform: scale(1.6); opacity: 1; filter: drop-shadow(0 0 6px #60a5fa); }
-  100% { transform: scale(0.3); opacity: 0; }
+  0% { transform: scale(1.8); opacity: 1; filter: drop-shadow(0 0 8px #38bdf8); }
+  100% { transform: scale(0.2); opacity: 0; }
 }
 
-/* Gedigen röd mekanisk piezo-knapp */
+/* Gedigen röd mekanisk piezo-knapp med synlig fjäder */
 .piezo-btn {
   position: relative;
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  background: radial-gradient(circle at 40% 40%, #ef4444 0%, #b91c1c 70%, #7f1d1d 100%);
-  border: 2px solid #450a0a;
+  background: radial-gradient(circle at 40% 35%, #ef4444 0%, #dc2626 45%, #991b1b 80%, #7f1d1d 100%);
+  border: 1.5px solid #450a0a;
   border-radius: 3px;
   color: #ffffff;
   font-family: var(--font-engrave);
@@ -1668,22 +1759,45 @@ html, body {
   box-shadow:
     0 3px 0 #450a0a,
     0 5px 8px rgba(0, 0, 0, 0.4),
-    inset 0 1px 1px rgba(255, 255, 255, 0.5);
-  transition: transform 0.06s ease, box-shadow 0.06s ease;
+    inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
+}
+
+.piezo-btn:hover {
+  filter: brightness(1.1);
 }
 
 .piezo-btn:active, .piezo-btn.pressed {
   transform: translateY(3px);
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.9), 0 0 0 #450a0a;
+  box-shadow:
+    0 0 0 #450a0a,
+    inset 0 2px 5px rgba(0, 0, 0, 0.95);
+}
+
+.piezo-spring {
+  display: inline-block;
+  width: 8px;
+  height: 12px;
+  background: repeating-linear-gradient(180deg, #94a3b8 0 1.5px, #334155 1.5px 3px);
+  border-radius: 1px;
+  border-left: 1px solid #cbd5e1;
+  border-right: 1px solid #1e293b;
+  margin-right: 2px;
+  transition: transform 0.05s ease;
+}
+
+.piezo-btn:active .piezo-spring,
+.piezo-btn.pressed .piezo-spring {
+  transform: scaleY(0.4);
 }
 
 .piezo-spark {
   position: absolute;
   top: -8px;
-  left: 8px;
-  width: 18px;
-  height: 18px;
-  background: radial-gradient(circle, #ffffff 15%, #60a5fa 45%, #facc15 75%, transparent 100%);
+  left: 12px;
+  width: 22px;
+  height: 22px;
+  background: radial-gradient(circle, #ffffff 15%, #38bdf8 45%, #facc15 75%, transparent 100%);
   opacity: 0;
   pointer-events: none;
 }
@@ -1905,28 +2019,36 @@ html, body {
 }
 
 .ds-knob-container[data-param="volume"] {
-  width: 50px;
-  margin-right: 0;
+  width: 58px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin: 0;
 }
 
 /* Master Controls */
 .master-controls {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 4px;
+  justify-content: space-around;
+  gap: 8px;
   height: 104px;
-  padding: 0 10px;
+  padding: 0 6px;
   box-sizing: border-box;
   touch-action: none;
+  width: 100%;
+  overflow: visible;
 }
 
 .ds-play {
   width: 44px;
   height: 44px;
-  border: 2px solid #0f172a;
-  border-radius: 3px;
-  background: linear-gradient(180deg, #2a9d8f 0%, #1e7066 100%);
+  flex-shrink: 0;
+  border: 2px solid #064e3b;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #10b981 0%, #059669 60%, #047857 100%);
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -1934,25 +2056,37 @@ html, body {
   cursor: pointer;
   touch-action: none;
   box-shadow:
-    0 3px 0 #0f172a,
-    0 4px 6px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
-  transition: all 0.06s ease;
+    0 3px 0 #064e3b,
+    0 4px 6px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  transition: all 0.08s ease;
+}
+
+.ds-play:hover {
+  filter: brightness(1.1);
 }
 
 .ds-play:active {
   transform: translateY(2px);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 1px 0 #064e3b, inset 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
-.ds-play[aria-pressed="true"] {
-  background: linear-gradient(180deg, #e63946 0%, #ad1d28 100%);
+.ds-play[aria-pressed="true"],
+.ds-play.playing {
+  background: linear-gradient(180deg, #f59e0b 0%, #d97706 60%, #b45309 100%);
+  border-color: #78350f;
+  box-shadow:
+    0 2px 0 #451a03,
+    0 0 12px rgba(245, 158, 11, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .bpm-wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex-shrink: 0;
+  width: 48px;
 }
 
 .small-label {
@@ -1983,9 +2117,10 @@ html, body {
 .rec-btn {
   width: 44px;
   height: 44px;
+  flex-shrink: 0;
   background: radial-gradient(circle at 45% 45%, #4a1518 0%, #2b0c0e 70%, #1a0607 100%);
   border: 2px solid #5a191c;
-  border-radius: 3px;
+  border-radius: 4px;
   color: #ffb4b4;
   display: flex;
   flex-direction: column;
@@ -2002,6 +2137,10 @@ html, body {
   transition: all 0.08s ease;
   padding: 2px;
   box-sizing: border-box;
+}
+
+.master-controls .ds-knob-container {
+  flex-shrink: 0;
 }
 
 .rec-btn:hover {
