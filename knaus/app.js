@@ -30,6 +30,7 @@ let isPlaying = false;
 let isAudioReady = false;
 let currentPowerSource = 0; // 0 = 220V, 1 = 12V, 2 = Gasol
 let activePresetIndex = 0; // 0 = Böda Sand
+const fingers = new Map(); // pointerId -> midi note (live held keys)
 
 // C-minor scale notes in MIDI numbers
 const C_MINOR_SCALE = [48, 50, 51, 53, 55, 56, 58, 60, 62, 63, 65, 67, 68, 70, 72];
@@ -39,12 +40,17 @@ function midiToName(m) {
   return `${NOTE_NAMES[m % 12]}${Math.floor(m / 12) - 1}`;
 }
 
-// Fit scaling
+// Fit scaling: scale the room as one picture
 function updateFit() {
-  const w = window.innerWidth, h = window.innerHeight;
-  const zoom = Math.min(w / 1180, h / 740, 1.5);
-  ROOT.style.setProperty('--zoom', Math.max(0.28, zoom).toFixed(3));
+  const stage = document.getElementById('stage') || ROOT;
+  const cs = getComputedStyle(stage);
+  const w = stage.clientWidth - parseFloat(cs.paddingLeft || 0) - parseFloat(cs.paddingRight || 0);
+  const h = stage.clientHeight - parseFloat(cs.paddingTop || 0) - parseFloat(cs.paddingBottom || 0);
+  const zoom = Math.max(0.2, Math.min(w / 1180, h / 740));
+  document.documentElement.style.setProperty('--zoom', zoom.toFixed(4));
 }
+new ResizeObserver(updateFit).observe(document.getElementById('stage') || ROOT);
+window.addEventListener('orientationchange', () => setTimeout(updateFit, 250));
 window.addEventListener('resize', updateFit);
 updateFit();
 
@@ -97,12 +103,6 @@ for (const type of ['pointerdown', 'touchend', 'click', 'keydown']) {
   window.addEventListener(type, () => { if (!audioCtx) initAudio(); }, { capture: true, passive: true });
 }
 
-// Prevent browser gestures from dragging the page on phone
-document.addEventListener('touchmove', (e) => {
-  if (e.target.closest('#stage')) {
-    e.preventDefault();
-  }
-}, { passive: false });
 
 function handleEngineEvent(name, values) {
   if (name === 'ev_step') {
@@ -131,8 +131,13 @@ function highlightStep(stepIdx) {
 function highlightKey(midiNote) {
   const keyEl = KEYS_CONTAINER.querySelector(`[data-note="${midiNote}"]`);
   if (keyEl) {
-    keyEl.classList.add('active', 'down');
-    setTimeout(() => keyEl.classList.remove('active', 'down'), 120);
+    keyEl.classList.add('active');
+    setTimeout(() => {
+      keyEl.classList.remove('active');
+      if (![...fingers.values()].includes(midiNote)) {
+        keyEl.classList.remove('down');
+      }
+    }, 120);
   }
 }
 
@@ -412,6 +417,7 @@ function setupKeyboard() {
     const key = document.createElement('div');
     const isRoot = (midi % 12 === 0);
     key.className = `kn-key ds-key w white ${isRoot ? 'scale-c' : ''}`;
+    key.id = `key${midi}`;
     key.setAttribute('data-note', midi);
     key.setAttribute('tabindex', '0');
     key.setAttribute('aria-label', midiToName(midi));
@@ -431,6 +437,7 @@ function setupKeyboard() {
   blackNotes.forEach(({ midi, afterIdx }) => {
     const bKey = document.createElement('div');
     bKey.className = 'kn-key ds-key b black';
+    bKey.id = `key${midi}`;
     bKey.setAttribute('data-note', midi);
     bKey.setAttribute('tabindex', '0');
     bKey.setAttribute('aria-label', midiToName(midi));
@@ -448,87 +455,62 @@ function setupKeyboard() {
     KEYS_CONTAINER.appendChild(bKey);
   });
 
-  const fingerNotes = new Map();
-
-  function keyAtPoint(x, y) {
-    const el = document.elementFromPoint(x, y);
-    if (!el) return null;
-    const keyEl = el.closest('.kn-key');
-    return keyEl ? parseInt(keyEl.dataset.note, 10) : null;
-  }
-
-  function noteFromEvent(e) {
-    const targetKey = e.target && e.target.closest ? e.target.closest('.kn-key') : null;
-    if (targetKey && targetKey.dataset.note) {
-      return parseInt(targetKey.dataset.note, 10);
-    }
-    if (e.clientX !== undefined && e.clientY !== undefined) {
-      return keyAtPoint(e.clientX, e.clientY);
-    }
-    return null;
-  }
-
-  const bindKey = (el, midi) => {
-    el.addEventListener('pointerdown', (e) => {
-      e.preventDefault();
-      initAudio();
-      fingerNotes.set(e.pointerId || 0, midi);
-      triggerNoteOn(midi, 100);
-    });
-    el.addEventListener('pointerup', (e) => {
-      triggerNoteOff(midi);
-      fingerNotes.delete(e.pointerId || 0);
-    });
-    el.addEventListener('pointerleave', (e) => {
-      if (fingerNotes.has(e.pointerId || 0)) {
-        triggerNoteOff(midi);
-        fingerNotes.delete(e.pointerId || 0);
-      }
-    });
+  // Multi-finger sliding / glissando keyboard (identical to Turbotutte 3000 & Svettan 3000)
+  const keyAt = (x, y, fallbackEl) => {
+    let el = (x !== undefined && y !== undefined && (x !== 0 || y !== 0)) ? document.elementFromPoint(x, y) : null;
+    if (!el && fallbackEl) el = fallbackEl;
+    const keyEl = el && (el.classList?.contains('ds-key') ? el : el.closest?.('.ds-key, .kn-key'));
+    return keyEl && keyEl.dataset.note !== undefined ? parseInt(keyEl.dataset.note, 10) : null;
   };
 
-  whiteNotes.forEach((midi, idx) => {
-    const key = KEYS_CONTAINER.children[idx];
-    if (key) bindKey(key, midi);
-  });
+  const keyOn = (sem) => {
+    if (sem === null || sem === undefined) return;
+    initAudio();
+    triggerNoteOn(sem, 100);
+  };
 
-  const allKeyEls = KEYS_CONTAINER.querySelectorAll('.kn-key.b');
-  allKeyEls.forEach((bKey, bIdx) => {
-    if (blackNotes[bIdx]) bindKey(bKey, blackNotes[bIdx].midi);
-  });
+  const keyOff = (sem) => {
+    if (sem === null || sem === undefined) return;
+    triggerNoteOff(sem);
+  };
 
   KEYS_CONTAINER.addEventListener('pointerdown', (e) => {
+    const sem = keyAt(e.clientX, e.clientY, e.target);
+    if (sem === null) return;
     e.preventDefault();
-    initAudio();
-    try { KEYS_CONTAINER.setPointerCapture(e.pointerId); } catch {}
-    const note = noteFromEvent(e);
-    if (note !== null && !fingerNotes.has(e.pointerId)) {
-      fingerNotes.set(e.pointerId, note);
-      triggerNoteOn(note, 100);
-    }
+    try { KEYS_CONTAINER.setPointerCapture(e.pointerId); } catch { /* synthetic pointers */ }
+    fingers.set(e.pointerId, sem);
+    if ([...fingers.values()].filter(v => v === sem).length === 1) keyOn(sem);
   });
 
   KEYS_CONTAINER.addEventListener('pointermove', (e) => {
-    if (!fingerNotes.has(e.pointerId)) return;
-    const oldNote = fingerNotes.get(e.pointerId);
-    const newNote = keyAtPoint(e.clientX, e.clientY);
-    if (newNote !== null && newNote !== oldNote) {
-      triggerNoteOff(oldNote);
-      triggerNoteOn(newNote, 100);
-      fingerNotes.set(e.pointerId, newNote);
-    }
+    if (!fingers.has(e.pointerId)) return;
+    const was = fingers.get(e.pointerId), sem = keyAt(e.clientX, e.clientY);
+    if (sem === was) return;
+    fingers.set(e.pointerId, sem);
+    if (sem !== null && ![...fingers.entries()].some(([id, v]) => id !== e.pointerId && v === sem)) keyOn(sem);
+    if (was !== null && ![...fingers.values()].includes(was)) keyOff(was);
   });
 
-  const endFinger = (e) => {
-    if (!fingerNotes.has(e.pointerId)) return;
-    const note = fingerNotes.get(e.pointerId);
-    triggerNoteOff(note);
-    fingerNotes.delete(e.pointerId);
+  const lift = (e) => {
+    if (!fingers.has(e.pointerId)) return;
+    const sem = fingers.get(e.pointerId);
+    fingers.delete(e.pointerId);
+    if (sem !== null && ![...fingers.values()].includes(sem)) keyOff(sem);
     try { KEYS_CONTAINER.releasePointerCapture(e.pointerId); } catch {}
   };
 
-  KEYS_CONTAINER.addEventListener('pointerup', endFinger);
-  KEYS_CONTAINER.addEventListener('pointercancel', endFinger);
+  KEYS_CONTAINER.addEventListener('pointerup', lift);
+  KEYS_CONTAINER.addEventListener('pointercancel', lift);
+  KEYS_CONTAINER.addEventListener('lostpointercapture', lift);
+  KEYS_CONTAINER.addEventListener('contextmenu', (e) => e.preventDefault());
+
+  window.addEventListener('blur', () => {
+    for (const sem of [...fingers.values()]) {
+      if (sem !== null) keyOff(sem);
+    }
+    fingers.clear();
+  });
 
   // Computer keyboard bindings
   const KEY_MAP = {
@@ -561,7 +543,7 @@ function setupKeyboard() {
   });
 }
 
-function triggerNoteOn(pitch, vel) {
+function triggerNoteOn(pitch, vel = 100) {
   if (workletNode) {
     workletNode.port.postMessage({ type: 'midi', bytes: [0x92, pitch, vel] });
   }
@@ -570,6 +552,8 @@ function triggerNoteOn(pitch, vel) {
   LCD_NAME.textContent = 'TON';
   LCD_VAL.textContent = `${midiToName(pitch)} (${pitch})`;
   updateVoltmeterJitter();
+  if (!window.__knausNotes) window.__knausNotes = [];
+  window.__knausNotes.push({ type: 'on', note: pitch, vel });
 }
 
 function triggerNoteOff(pitch) {
@@ -578,6 +562,8 @@ function triggerNoteOff(pitch) {
   }
   const keyEl = KEYS_CONTAINER.querySelector(`[data-note="${pitch}"]`);
   if (keyEl) keyEl.classList.remove('down', 'active');
+  if (!window.__knausNotes) window.__knausNotes = [];
+  window.__knausNotes.push({ type: 'off', note: pitch });
 }
 
 // Panic button (STRÖMAVBROTT)
@@ -849,7 +835,8 @@ window.knaus = {
   params: currentParams,
   get analyser() { return analyserNode; },
   get audioCtx() { return audioCtx; },
-  get isReady() { return isAudioReady; }
+  get isReady() { return isAudioReady; },
+  get fingers() { return fingers; }
 };
 
 // Bootstrap

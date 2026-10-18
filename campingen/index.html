@@ -35,8 +35,23 @@
  <div class="camping-table">
   <button class="beer-ring" id="beer-ring" title="Spilld folköl (klicka för sekvensvariation)" aria-label="Spilld folköl på campingbordet">
    <span class="beer-foam"></span>
-   <span class="beer-label">PRIPPS</span>
+   <span class="beer-label">PRIPPS BLÅ 2.8%</span>
   </button>
+  <div class="solstickan-box" title="Solstickan tändsticksask för gasolköket" aria-hidden="true">
+   <div class="solstickan-inner">
+    <div class="solstickan-sun"></div>
+    <span class="solstickan-text">SOLSTICKAN</span>
+   </div>
+  </div>
+ </div>
+
+ <!-- Profilerad aluminiumlist runt chassit (#chassis-trim) -->
+ <div class="chassis-trim" id="chassis-trim">
+  <!-- Corner reinforcement plates with rivets -->
+  <div class="trim-corner tl"><span class="rivet"></span></div>
+  <div class="trim-corner tr"><span class="rivet"></span></div>
+  <div class="trim-corner bl"><span class="rivet"></span></div>
+  <div class="trim-corner br"><span class="rivet"></span></div>
  </div>
 
  <!-- The KNAUS 3000 Instrument Chassis -->
@@ -47,15 +62,23 @@
   <div class="chassis-screw bl"></div>
   <div class="chassis-screw br"></div>
 
-  <!-- Classic blue & orange Knaus caravan stripes -->
-  <div class="knaus-stripe-blue"></div>
-  <div class="knaus-stripe-orange"></div>
+  <!-- Classic 1970/80s Knaus Südwind camping stripes (senapsgult, mossgrönt, mörkblått, cremevitt) -->
+  <div class="knaus-stripes-wrap">
+   <div class="stripe-mustard"></div>
+   <div class="stripe-moss"></div>
+   <div class="stripe-blue"></div>
+   <div class="stripe-cream"></div>
+  </div>
 
-  <!-- Header: Brand logo, LCD, Voltmeter, Weather badge -->
+  <!-- Header: Brand emblem, LCD, Voltmeter, Weather badge -->
   <div class="knaus-header">
-   <div class="knaus-brand">
+   <div class="knaus-brand knaus-emblem" id="knaus-emblem">
+    <span class="emblem-rivet tl"></span>
+    <span class="emblem-rivet tr"></span>
+    <span class="emblem-rivet bl"></span>
+    <span class="emblem-rivet br"></span>
     <span class="knaus-logo">KNAUS 3000</span>
-    <span class="knaus-tagline">SÜDWIND SPECIAL · 12V CAMPING</span>
+    <span class="knaus-tagline">SÜDWIND LYX · 12V / 220V / GASOL</span>
    </div>
    <!-- LCD Display -->
    <div class="ds-lcd knaus-lcd" aria-live="polite">
@@ -73,9 +96,15 @@
      <span class="meter-value" id="meter-val-text">12.1V</span>
     </div>
     <div class="meter-dial">
+     <div class="meter-scale-sectors">
+      <span class="sec-bad">URLADDAT</span>
+      <span class="sec-ok">DRIFT</span>
+      <span class="sec-charge">LADDNING</span>
+     </div>
      <div class="meter-scale"></div>
      <div class="meter-needle" id="meter-needle"></div>
      <div class="meter-pivot"></div>
+     <div class="meter-glass"></div>
     </div>
    </div>
    <!-- Rain / Weather indicator -->
@@ -215,8 +244,9 @@
       <span class="panic-led"></span>
       <span class="panic-text">STRÖMAVBROTT</span>
      </button>
-     <!-- Master Volume -->
+     <!-- Master Volume with Graduation Collar -->
      <div class="ds-knob-container" data-param="volume" data-label="VOLYM" data-unit="%">
+      <div class="vol-collar"></div>
       <div class="ds-knob large" id="knob-volume" tabindex="0" role="slider" aria-label="Volym" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.8">
        <div class="knob-indicator"></div>
       </div>
@@ -231,13 +261,16 @@
    <div class="seq-steps-grid" id="steps" role="group" aria-label="16-stegs sequencer i c-moll"></div>
   </div>
 
-  <!-- Bottom: 2-octave portable plastic camping keyboard -->
+  <!-- Bottom: 2-octave portable plastic camping keyboard with Teak Sidecheeks -->
   <div class="knaus-keys-wrap">
+   <div class="teak-cheek left"></div>
    <div class="knaus-keys-strip">
     <span class="strip-label">FÖRTÄLTSKLAVIATUR · C3 – C5 (C-MOLL)</span>
     <span class="strip-sub">MULTITOUCH & GLISSANDO</span>
    </div>
+   <div class="kn-keys-felt"></div>
    <div class="kn-keys" id="keys" role="group" aria-label="Campingkeyboard: C3 till C5"></div>
+   <div class="teak-cheek right"></div>
   </div>
  </div>
 </div>
