@@ -1,0 +1,230 @@
+{
+ "arp": {
+  "min": 0.0,
+  "max": 3.0,
+  "default": 0.0,
+  "type": "int"
+ },
+ "hold": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.0,
+  "type": "bool"
+ },
+ "overbord": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.0,
+  "type": "bool"
+ },
+ "bpm": {
+  "min": 30.0,
+  "max": 300.0,
+  "default": 100.0,
+  "type": "int"
+ },
+ "start": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.0,
+  "type": "bool"
+ },
+ "length": {
+  "min": 1.0,
+  "max": 16.0,
+  "default": 16.0,
+  "type": "int"
+ },
+ "swing": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.0,
+  "type": "float"
+ },
+ "ekotid": {
+  "min": 0.0,
+  "max": 3.0,
+  "default": 1.0,
+  "type": "int"
+ },
+ "g0": {
+  "min": 0.0,
+  "max": 2.0,
+  "default": 0.0,
+  "type": "int"
+ },
+ "g1": {
+  "min": 0.0,
+  "max": 2.0,
+  "default": 0.0,
+  "type": "int"
+ },
+ "g2": {
+  "min": 0.0,
+  "max": 2.0,
+  "default": 2.0,
+  "type": "int"
+ },
+ "g3": {
+  "min": 0.0,
+  "max": 2.0,
+  "default": 0.0,
+  "type": "int"
+ },
+ "g4": {
+  "min": 0.0,
+  "max": 2.0,
+  "default": 0.0,
+  "type": "int"
+ },
+ "g5": {
+  "min": 0.0,
+  "max": 2.0,
+  "default": 0.0,
+  "type": "int"
+ },
+ "g6": {
+  "min": 0.0,
+  "max": 2.0,
+  "default": 2.0,
+  "type": "int"
+ },
+ "g7": {
+  "min": 0.0,
+  "max": 2.0,
+  "default": 1.0,
+  "type": "int"
+ },
+ "g8": {
+  "min": 0.0,
+  "max": 2.0,
+  "default": 0.0,
+  "type": "int"
+ },
+ "g9": {
+  "min": 0.0,
+  "max": 2.0,
+  "default": 0.0,
+  "type": "int"
+ },
+ "g10": {
+  "min": 0.0,
+  "max": 2.0,
+  "default": 2.0,
+  "type": "int"
+ },
+ "g11": {
+  "min": 0.0,
+  "max": 2.0,
+  "default": 0.0,
+  "type": "int"
+ },
+ "g12": {
+  "min": 0.0,
+  "max": 2.0,
+  "default": 0.0,
+  "type": "int"
+ },
+ "g13": {
+  "min": 0.0,
+  "max": 2.0,
+  "default": 1.0,
+  "type": "int"
+ },
+ "g14": {
+  "min": 0.0,
+  "max": 2.0,
+  "default": 2.0,
+  "type": "int"
+ },
+ "g15": {
+  "min": 0.0,
+  "max": 2.0,
+  "default": 0.0,
+  "type": "int"
+ },
+ "sjogang": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.45,
+  "type": "float"
+ },
+ "kuling": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.3,
+  "type": "float"
+ },
+ "rakbuffe": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.55,
+  "type": "float"
+ },
+ "dimma": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.35,
+  "type": "float"
+ },
+ "vagfyll": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.3,
+  "type": "float"
+ },
+ "klirr": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.5,
+  "type": "float"
+ },
+ "spritback": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.6,
+  "type": "float"
+ },
+ "tullkvot": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.3,
+  "type": "float"
+ },
+ "eko": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.35,
+  "type": "float"
+ },
+ "ekofb": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.45,
+  "type": "float"
+ },
+ "gung": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.7,
+  "type": "float"
+ },
+ "diskotek": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.3,
+  "type": "float"
+ },
+ "volume": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.8,
+  "type": "float"
+ },
+ "stot": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.45,
+  "type": "float"
+ }
+}

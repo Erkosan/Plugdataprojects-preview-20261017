@@ -15,6 +15,7 @@ Dessa kommer från git commits i Plugdataprojects-repot:
 | GRANNEN 3000 (FOLKHEMMETS SKUGGOR) | `antigravity/folkhemmets-skuggor-grannen` | `070aa6e` |
 | TVÄTTSTUGA 3000 (FOLKHEMMETS SKUGGOR) | `antigravity/folkhemmets-skuggor-grannen` | `c9ba1e4` |
 | KNAUS 3000 (CAMPING-SERIEN) | `antigravity/campingen-knaus-3000` | `892d3cd` |
+| TAXFREE 3000 (TULLFRI LYCKA) | `antigravity/tullfri-lycka-taxfree` | `c082f6e` |
 
 ## Ocommittade WIP-snapshots (Claude worktrees)
 

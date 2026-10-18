@@ -1,0 +1,16 @@
+{
+ "name": "TAXFREE 3000",
+ "short_name": "TAXFREE",
+ "description": "Däck 6 klockan 03:30 i kuling: dub-ackord och flaskresonans på en gungande Finlandsfärja.",
+ "start_url": "./",
+ "scope": "./",
+ "display": "fullscreen",
+ "orientation": "landscape",
+ "background_color": "#08101a",
+ "theme_color": "#08101a",
+ "icons": [
+  {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"},
+  {"src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png"},
+  {"src": "icon.svg", "sizes": "any", "type": "image/svg+xml"}
+ ]
+}

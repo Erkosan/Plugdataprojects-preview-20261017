@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="sv" data-theme="taxfree">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08101a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="TAXFREE 3000. Polyfon dub-chord och Karplus-Strong flaskresonans från däck 6 klockan 03:30 i kuling. Pastor Gregorius instrumentserie.">
+<title>TAXFREE 3000 — Pastor Gregorius</title>
+<link rel="icon" href="icon-512.png" sizes="512x512" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="modulepreload" href="taxfree-engine.js">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="3000-series.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <defs>
+  <symbol id="i-gear" viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-anchor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="21" stroke="currentColor" stroke-width="2"/><path d="M5 12 H19 M5 12 C5 17 8 21 12 21 C16 21 19 17 19 12" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-lifebuoy" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M4.93 4.93 L8.82 8.82 M15.18 15.18 L19.07 19.07 M19.07 4.93 L15.18 8.82 M8.82 15.18 L4.93 19.07" stroke="currentColor" stroke-width="2.5"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 5 L19 12 L7 19 Z" fill="currentColor"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" fill="currentColor"/></symbol>
+ </defs>
+</svg>
+<main id="stage">
+<div id="fit">
+<div class="tf-ship" id="ship" data-theme="taxfree">
+ <div class="tf-ceiling">
+  <div class="tf-lamp" style="left:180px"><i></i></div>
+  <div class="tf-lamp" style="left:590px"><i></i></div>
+  <div class="tf-lamp" style="left:1000px"><i></i></div>
+ </div>
+
+ <!-- Havsutsikt genom panoramaventiler i kuling kl 03:30 -->
+ <div class="tf-porthole" aria-hidden="true">
+  <div class="tf-sea"></div>
+  <div class="tf-rain"></div>
+  <div class="tf-horizon"></div>
+ </div>
+
+ <!-- Neonskylt: TAXFREE / TULLFRI LYCKA -->
+ <div class="tf-neon-sign" aria-hidden="true">
+  <span class="tf-neon-sub">TULLFRI LYCKA · DÄCK 6</span>
+  <span class="tf-neon-title">TAXFREE 3000</span>
+ </div>
+
+ <!-- MAN ÖVERBORD stor livboj -->
+ <button class="tf-lifebuoy" id="overbord" aria-label="MAN ÖVERBORD: fartyget kränger och ackordet sugs under ytan (Q)">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-lifebuoy"/></svg>
+  <span>MAN ÖVERBORD</span>
+ </button>
+
+ <!-- ANKARE: Håll ackordet (sustain) -->
+ <button class="ds-control tf-anchor" id="hold" aria-pressed="false" aria-label="ANKARE: håll ackordet (I)">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-anchor"/></svg>
+  <span>ANKARE</span>
+ </button>
+
+ <!-- Heltäckningsmatta och mässingsräcke -->
+ <div class="tf-carpet" aria-hidden="true"></div>
+ <div class="tf-spill" aria-hidden="true"></div>
+ <div class="tf-railing" aria-hidden="true"></div>
+
+ <!-- Spritbacken: 16 flaskor som klirrar och agerar gate-steg -->
+ <div class="tf-crate-wrap">
+  <div class="tf-crate-header">
+   <span class="ds-engrave">SPRITBACKEN · 16 FLASKOR</span>
+   <span class="tf-crate-status" id="crateStatus">DUB-SKANK</span>
+  </div>
+  <div class="tf-crate" id="crate" role="group" aria-label="Spritbacken: 16 flaskor (gate-steg)"></div>
+ </div>
+
+ <!-- Panelen (chassit) -->
+ <div class="ds-chassis tf-panel">
+  <div class="tf-panel-top">
+   <div class="tf-brand">
+    <span class="ds-logo">TAXFREE 3000</span>
+    <span class="ds-engrave tf-sub">PASTOR GREGORIUS · DUB-CHORD & KARPLUS-RESONATOR</span>
+   </div>
+   <button class="ds-gear" id="gearBtn" aria-label="Inställningar och meny" aria-haspopup="dialog">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-gear"/></svg>
+   </button>
+  </div>
+
+  <div class="ds-lcd tf-lcd" aria-live="polite">
+   <div class="ds-lcd-glow"></div>
+   <div class="ds-lcd-top">
+    <span class="ds-lcd-name" id="lname">TAXFREE · REDO</span>
+    <span class="ds-lcd-value" id="lval">C-MOLL</span>
+   </div>
+   <div class="ds-lcd-line" id="lline">SPELA PÅ BARDISKEN ELLER TRYCK PÅ SPRITBACKEN</div>
+  </div>
+
+  <!-- Rattar grupperade i maritima sektioner -->
+  <div class="tf-knobs-area">
+   <div class="ds-plate tf-section">
+    <span class="ds-engrave tf-sec-title">KLANG & FORM</span>
+    <div class="tf-knob-row" id="groupKlang"></div>
+   </div>
+
+   <div class="ds-plate tf-section">
+    <span class="ds-engrave tf-sec-title">FLASKOR & GLAS</span>
+    <div class="tf-knob-row" id="groupGlas"></div>
+   </div>
+
+   <div class="ds-plate tf-section">
+    <span class="ds-engrave tf-sec-title">SJÖGÅNG & VÅGOR</span>
+    <div class="tf-knob-row" id="groupSjo"></div>
+    <div class="tf-switch-row">
+     <label class="ds-engrave">DANSGOLV · ARP</label>
+     <div class="tf-toggle-group" id="arpGroup">
+      <button class="ds-control tf-opt active" data-val="0">AV</button>
+      <button class="ds-control tf-opt" data-val="1">UPP</button>
+      <button class="ds-control tf-opt" data-val="2">NER</button>
+      <button class="ds-control tf-opt" data-val="3">SLUMP</button>
+     </div>
+    </div>
+   </div>
+
+   <div class="ds-plate tf-section">
+    <span class="ds-engrave tf-sec-title">BANDEKO & RUM</span>
+    <div class="tf-knob-row" id="groupEko"></div>
+    <div class="tf-switch-row">
+     <label class="ds-engrave">RELING · EKOTID</label>
+     <div class="tf-toggle-group" id="ekotidGroup">
+      <button class="ds-control tf-opt" data-val="0">1/8</button>
+      <button class="ds-control tf-opt active" data-val="1">3/16</button>
+      <button class="ds-control tf-opt" data-val="2">1/4</button>
+      <button class="ds-control tf-opt" data-val="3">3/8</button>
+     </div>
+    </div>
+   </div>
+
+   <div class="ds-plate tf-section tf-master-sec">
+    <span class="ds-engrave tf-sec-title">MASTER</span>
+    <div class="tf-knob-row" id="groupMaster"></div>
+    <div class="tf-transport">
+     <button class="ds-control ds-play" id="playBtn" aria-pressed="false" aria-label="Starta spritbacken (Mellanslag)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use id="playIcon" href="#i-play"/></svg>
+     </button>
+     <div class="tf-bpm-wrap">
+      <label class="ds-engrave" for="bpm">BPM</label>
+      <input class="ds-bpm" id="bpm" type="number" min="30" max="300" value="100">
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+
+ <!-- Bardisken: Klaviatur (2 oktaver C3 till C5) -->
+ <div class="tf-bar">
+  <div class="tf-bar-brass-trim"></div>
+  <button class="ds-control tf-oct-btn" id="odn" aria-label="Oktav ner (Z)">OKT −</button>
+  <div class="tf-keys" id="keys" role="group" aria-label="Bardisken: klaviatur i c-moll"></div>
+  <button class="ds-control tf-oct-btn" id="oup" aria-label="Oktav upp (X)">OKT +</button>
+ </div>
+
+ <!-- Vattenyta / under vatten vid MAN ÖVERBORD -->
+ <div class="tf-underwater" id="underwater" aria-hidden="true">
+  <div class="tf-water-bubbles" id="bubbles"></div>
+  <div class="tf-water-splash" id="splash"></div>
+ </div>
+
+ <!-- Kugghjulsmeny -->
+ <dialog class="ds-menu" id="menuDialog" aria-label="Taxfree-menyn">
+  <div class="ds-menu-head">
+   <span class="ds-logo">TAXFREE 3000</span>
+   <button class="ds-control tf-close-btn" id="closeMenuBtn" aria-label="Stäng meny">✕</button>
+  </div>
+  <div class="ds-menu-body">
+   <div class="ds-menu-group">
+    <button class="ds-menu-item" id="btnExempel">Spela exempel (C-moll9 Dub)</button>
+    <button class="ds-menu-item" id="btnRensa">Rensa / Nollställ</button>
+   </div>
+   <div class="ds-menu-group">
+    <button class="ds-menu-item" id="btnSpara">Spara session</button>
+    <button class="ds-menu-item" id="btnOppna">Öppna sparad session</button>
+   </div>
+   <div class="ds-menu-group">
+    <button class="ds-menu-item" id="btnMidi">Anslut Web MIDI</button>
+    <button class="ds-menu-item" id="btnMidiMap">Visa MIDI-mappning</button>
+    <button class="ds-menu-item" id="btnFullscreen">Helskärm</button>
+   </div>
+   <div class="ds-menu-group" id="downloadsGroup">
+    <span class="ds-engrave">NEDLADDNINGAR (VST3)</span>
+    <div id="downloadsList"></div>
+   </div>
+   <div class="ds-menu-group">
+    <span class="ds-engrave">OM INSTRUMENTET</span>
+    <p class="tf-help-text">
+     <strong>TAXFREE 3000</strong> är första maskinen i <em>TULLFRI LYCKA (Östersjöfärjan 1991)</em>.
+     Kombinerar 6-rösters analog wavefolded dub-ackord i c-moll med klirrande flaskresonans (Karplus-Strong)
+     och ett gungande bandeko som svajar i otakt med dyningen på däck 6.
+    </p>
+   </div>
+  </div>
+ </dialog>
+
+ <!-- MIDI Dialog -->
+ <dialog class="ds-menu" id="midiDialog" aria-label="MIDI-karta">
+  <div class="ds-menu-head">
+   <span class="ds-logo">MIDI-KARTA · KANAL 4</span>
+   <button class="ds-control tf-close-btn" id="closeMidiBtn" aria-label="Stäng">✕</button>
+  </div>
+  <div class="ds-menu-body">
+   <table class="tf-midi-table">
+    <thead><tr><th>CC</th><th>Namn</th><th>Betydelse</th></tr></thead>
+    <tbody>
+     <tr><td>16 / 74</td><td>RÄKBUFFÉ</td><td>Filter Cutoff</td></tr>
+     <tr><td>17 / 71</td><td>DIMMA</td><td>Resonans</td></tr>
+     <tr><td>18</td><td>VÅGFYLLA</td><td>Wavefold Mättnad</td></tr>
+     <tr><td>19</td><td>STÖT</td><td>Decay / Längd</td></tr>
+     <tr><td>20</td><td>KLIRR</td><td>Flaskresonans Nivå</td></tr>
+     <tr><td>21</td><td>SPRITBACK</td><td>Flaskklangstid</td></tr>
+     <tr><td>22 / 77</td><td>TULLKVOT</td><td>Drive</td></tr>
+     <tr><td>23 / 1</td><td>SJÖGÅNG</td><td>Svaj / Dyning</td></tr>
+     <tr><td>24</td><td>KULING</td><td>LFO-fart</td></tr>
+     <tr><td>25</td><td>BANDEKO</td><td>Eko Mängd</td></tr>
+     <tr><td>26</td><td>SVALL</td><td>Eko Feedback</td></tr>
+     <tr><td>27</td><td>RELING</td><td>Ekotid (1/8 till 3/8)</td></tr>
+     <tr><td>28</td><td>GUNG</td><td>Gate-djup</td></tr>
+     <tr><td>29</td><td>DISKOTEK</td><td>Rum / Reverb</td></tr>
+     <tr><td>30</td><td>DANSGOLV</td><td>Arpeggiator-läge</td></tr>
+     <tr><td>31</td><td>MAN ÖVERBORD</td><td>Sjösjuka-gest</td></tr>
+     <tr><td>64</td><td>ANKARE</td><td>Håll ackordet (Sustain)</td></tr>
+     <tr><td>7</td><td>VOLYM</td><td>Mastervolym</td></tr>
+     <tr><td>14</td><td>TEMPO</td><td>BPM (30–300)</td></tr>
+     <tr><td>15</td><td>START</td><td>Spritbacken Play/Stopp</td></tr>
+     <tr><td>120 / 123</td><td>PANIK</td><td>Tysta alla röster</td></tr>
+    </tbody>
+   </table>
+  </div>
+ </dialog>
+
+</div>
+</div>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>

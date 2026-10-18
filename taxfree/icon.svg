@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+ <rect width="512" height="512" fill="#08101a"/>
+ <!-- Rolling sea wave -->
+ <path d="M0 340 C120 300 220 380 340 330 C420 300 480 340 512 320 L512 512 L0 512 Z" fill="#0c1e34"/>
+ <path d="M0 380 C100 350 200 420 320 370 C410 330 460 380 512 360 L512 512 L0 512 Z" fill="#142c4b"/>
+ <!-- Brass railing -->
+ <rect x="30" y="240" width="452" height="14" rx="4" fill="#cda851"/>
+ <rect x="60" y="254" width="10" height="90" fill="#cda851"/>
+ <rect x="180" y="254" width="10" height="90" fill="#cda851"/>
+ <rect x="320" y="254" width="10" height="90" fill="#cda851"/>
+ <rect x="440" y="254" width="10" height="90" fill="#cda851"/>
+ <!-- Lifebuoy MAN ÖVERBORD -->
+ <circle cx="256" cy="170" r="110" fill="#ff385c"/>
+ <circle cx="256" cy="170" r="60" fill="#08101a"/>
+ <path d="M256 60 L256 110 M256 230 L256 280 M146 170 L196 170 M316 170 L366 170" stroke="#f0f6ff" stroke-width="24"/>
+ <!-- Bottles in the crate -->
+ <rect x="180" y="100" width="28" height="65" rx="4" fill="#00e5ff" fill-opacity="0.8"/>
+ <rect x="188" y="80" width="12" height="22" fill="#cda851"/>
+ <rect x="304" y="100" width="28" height="65" rx="4" fill="#ffe600" fill-opacity="0.8"/>
+ <rect x="312" y="80" width="12" height="22" fill="#cda851"/>
+ <!-- Neon title text -->
+ <text x="256" y="440" font-family="sans-serif" font-weight="900" font-size="36" letter-spacing="4" fill="#ffe600" text-anchor="middle" filter="drop-shadow(0 0 10px #ffe600)">TAXFREE</text>
+ <text x="256" y="480" font-family="sans-serif" font-weight="900" font-size="28" letter-spacing="6" fill="#00e5ff" text-anchor="middle" filter="drop-shadow(0 0 12px #00e5ff)">3000</text>
+</svg>

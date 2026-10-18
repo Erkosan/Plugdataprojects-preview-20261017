@@ -1,0 +1,421 @@
+/* TAXFREE 3000 Web Shell & Däck 6 (Östersjöfärjan 1991).
+   Fixed dimensions 1180x740 scaled via --zoom. */
+html, body {
+  margin: 0; height: 100%;
+}
+body {
+  background: var(--ground);
+  background-image: radial-gradient(ellipse at 50% 20%, rgba(0, 229, 255, .08), transparent 60%);
+  overflow: hidden; overscroll-behavior: none; touch-action: manipulation;
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
+  font-family: var(--font-panel);
+}
+#stage {
+  position: fixed; inset: 0; box-sizing: border-box; display: grid; place-items: center;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+#fit {
+  position: relative; width: calc(1180px * var(--zoom, 1)); height: calc(740px * var(--zoom, 1));
+}
+.tf-ship {
+  position: absolute; left: 0; top: 0; width: 1180px; height: 740px; overflow: hidden;
+  transform: scale(var(--zoom, 1)) rotate(var(--lean, 0deg));
+  transform-origin: 0 0;
+  transition: transform 0.08s ease-out;
+  background:
+    radial-gradient(ellipse at 80% 30%, rgba(0, 229, 255, .12), transparent 50%),
+    radial-gradient(ellipse at 20% 70%, rgba(255, 56, 92, .1), transparent 50%),
+    linear-gradient(180deg, #091322 0%, #0d1a2c 40%, #08101a 100%);
+  box-shadow: inset 0 0 140px rgba(0, 0, 0, .85);
+}
+.tf-ship > * { position: absolute; }
+.tf-ship button { -webkit-user-select: none; user-select: none; font: inherit; }
+.tf-ship button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* Ceiling & lamps */
+.tf-ceiling {
+  left: 0; top: 0; width: 1180px; height: 32px;
+  background: linear-gradient(180deg, #050b14 0%, #111d2e 85%, var(--chassis-edge) 100%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .7);
+  z-index: 5;
+}
+.tf-lamp {
+  position: absolute; top: 12px; width: 60px; height: 20px;
+  background: var(--chassis-edge); border-radius: 0 0 30px 30px;
+}
+.tf-lamp i {
+  position: absolute; left: 16px; top: 8px; width: 28px; height: 10px;
+  border-radius: 0 0 14px 14px; background: #fffbe6;
+  box-shadow: 0 0 25px 10px rgba(255, 230, 100, .7);
+}
+
+/* Stormy sea through porthole */
+.tf-porthole {
+  left: 40px; top: 48px; width: 280px; height: 130px;
+  border: 4px solid var(--chassis-edge); border-radius: 8px;
+  overflow: hidden; background: #030810;
+  box-shadow: inset 0 0 25px rgba(0,0,0,.9), 0 4px 12px rgba(0,0,0,.6);
+  z-index: 2;
+}
+.tf-sea {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, #071526 0%, #0c233e 60%, #153a66 100%);
+}
+.tf-sea::after {
+  content: ''; position: absolute; left: -50px; right: -50px; bottom: 0; height: 60px;
+  background: radial-gradient(ellipse at 50% 100%, rgba(41, 231, 196, .25), transparent 70%);
+  animation: tf-waves 4s ease-in-out infinite alternate;
+}
+@keyframes tf-waves {
+  0% { transform: translateY(8px) skewX(-4deg); }
+  100% { transform: translateY(-8px) skewX(4deg); }
+}
+.tf-rain {
+  position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(105deg, transparent 0 12px, rgba(200, 230, 255, .15) 12px 14px);
+  opacity: .7;
+}
+
+/* Neon Sign */
+.tf-neon-sign {
+  left: 360px; top: 44px; width: 440px; height: 120px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 3; pointer-events: none;
+}
+.tf-neon-sub {
+  font-family: var(--font-engrave); font-size: 11px; letter-spacing: 0.35em;
+  color: #00e5ff; text-shadow: 0 0 8px #00e5ff, 0 0 18px rgba(0,229,255,.6);
+  margin-bottom: 4px;
+}
+.tf-neon-title {
+  font-family: var(--font-panel); font-weight: 900; font-size: 42px; letter-spacing: 0.18em;
+  color: #ffe600; text-shadow: 0 0 12px #ffe600, 0 0 28px rgba(255,230,0,.7), 0 0 45px rgba(255,180,0,.4);
+  animation: tf-neon-pulse 3.5s ease-in-out infinite alternate;
+}
+@keyframes tf-neon-pulse {
+  0% { opacity: .92; }
+  92% { opacity: 1; }
+  94% { opacity: .75; }
+  96% { opacity: 1; }
+  100% { opacity: .98; }
+}
+
+/* Lifebuoy: MAN ÖVERBORD */
+.tf-lifebuoy {
+  right: 50px; top: 44px; width: 130px; height: 130px;
+  border-radius: 50%; padding: 0; cursor: pointer; border: 4px solid #fff;
+  background: radial-gradient(circle, #08101a 32%, #ff385c 33% 70%, #fff 70% 74%, #ff385c 74%);
+  box-shadow: 0 6px 18px rgba(0,0,0,.8), 0 0 0 2px var(--chassis-edge);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 4; transition: transform .1s, box-shadow .2s;
+}
+.tf-lifebuoy:hover {
+  transform: scale(1.04);
+  box-shadow: 0 8px 24px rgba(255,56,92,.6), 0 0 0 3px var(--chassis-edge);
+}
+.tf-lifebuoy:active { transform: scale(0.96); }
+.tf-lifebuoy svg { width: 36px; height: 36px; color: #fff; filter: drop-shadow(0 2px 4px rgba(0,0,0,.6)); }
+.tf-lifebuoy span {
+  position: absolute; bottom: -24px; left: -20px; right: -20px;
+  font-family: var(--font-engrave); font-size: 10px; font-weight: 800; letter-spacing: 0.15em;
+  color: #ff5277; text-align: center; text-shadow: 0 0 8px rgba(255,56,92,.8);
+}
+
+/* ANKARE (hold sustain) */
+.tf-anchor {
+  right: 210px; top: 76px; width: 100px; height: 70px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  border: 2px solid var(--chassis-edge); border-radius: var(--radius-2);
+  background: var(--control); color: var(--control-ink); cursor: pointer;
+  z-index: 4; transition: all .15s;
+}
+.tf-anchor svg { width: 26px; height: 26px; color: var(--chassis-edge); }
+.tf-anchor span { font-family: var(--font-engrave); font-size: 10px; letter-spacing: 0.2em; }
+.tf-anchor[aria-pressed="true"] {
+  background: var(--chassis-edge); color: #08101a;
+  box-shadow: 0 0 18px var(--chassis-edge);
+}
+.tf-anchor[aria-pressed="true"] svg { color: #08101a; }
+
+/* Carpet & Spilled drink */
+.tf-carpet {
+  left: 0; bottom: 0; width: 1180px; height: 180px; pointer-events: none;
+  background:
+    repeating-linear-gradient(45deg, #2b1220 0 20px, #1c0b16 20px 40px),
+    radial-gradient(circle at 50% 50%, rgba(200, 30, 80, .15), transparent 70%);
+  opacity: .85;
+}
+.tf-spill {
+  left: 450px; bottom: 40px; width: 280px; height: 90px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 50%, rgba(41, 231, 196, .2), rgba(0, 140, 180, .08) 60%, transparent 80%);
+  filter: blur(4px);
+}
+.tf-railing {
+  left: 0; top: 182px; width: 1180px; height: 10px; pointer-events: none;
+  background: linear-gradient(180deg, #ffe9a6 0%, var(--chassis-edge) 50%, #7e5c1a 100%);
+  box-shadow: 0 4px 10px rgba(0,0,0,.7);
+  z-index: 3;
+}
+
+/* Spritbacken: 16 flaskor */
+.tf-crate-wrap {
+  left: 50px; top: 202px; width: 1080px; height: 72px;
+  background: linear-gradient(180deg, #111a28, #0a111a);
+  border: 2px solid var(--chassis-edge); border-radius: 4px;
+  box-shadow: 0 6px 14px rgba(0,0,0,.6);
+  padding: 6px 12px; box-sizing: border-box; z-index: 4;
+}
+.tf-crate-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 4px; padding: 0 4px;
+}
+.tf-crate-status {
+  font-family: var(--font-lcd); font-size: 10px; color: var(--lcd-ink); letter-spacing: 0.1em;
+}
+.tf-crate {
+  display: grid; grid-template-columns: repeat(16, 1fr); gap: 6px; height: 38px;
+}
+.tf-bottle {
+  border: 1px solid rgba(205, 168, 81, .4); border-radius: 3px;
+  background: rgba(10, 20, 32, .8); cursor: pointer;
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  padding: 2px 0; transition: transform .05s, border-color .15s, box-shadow .15s;
+}
+.tf-bottle:hover { border-color: var(--focus); }
+.tf-bottle::before {
+  content: ''; width: 10px; height: 18px; border-radius: 2px 2px 1px 1px;
+  background: #2a3d52; transition: background .15s;
+}
+.tf-bottle::after {
+  content: ''; width: 4px; height: 6px; background: var(--chassis-edge);
+  position: absolute; top: 4px;
+}
+.tf-bottle[data-state="1"]::before {
+  background: #2fdc80; box-shadow: 0 0 8px rgba(47, 220, 128, .6);
+}
+.tf-bottle[data-state="2"]::before {
+  background: #ffe600; box-shadow: 0 0 10px rgba(255, 230, 0, .8);
+}
+.tf-bottle.step-lit {
+  border-color: #fff !important;
+  box-shadow: 0 0 12px #ffe600 !important;
+}
+.tf-bottle.clinking {
+  animation: tf-clink 0.25s ease-in-out;
+}
+@keyframes tf-clink {
+  0% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-4px) rotate(-8deg); }
+  75% { transform: translateY(-2px) rotate(8deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* Panelen (Chassis) */
+.tf-panel {
+  left: 50px; top: 284px; width: 1080px; height: 300px;
+  background: var(--chassis); border: 2px solid var(--chassis-edge);
+  box-shadow: 0 12px 0 var(--chassis-edge), 0 24px 30px rgba(0,0,0,.7);
+  box-sizing: border-box; padding: 12px 16px; z-index: 5;
+}
+.tf-panel-top {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+}
+.tf-brand { display: flex; flex-direction: column; }
+.tf-sub { color: var(--chassis-edge); margin-top: 2px; }
+
+/* LCD Display */
+.tf-lcd {
+  position: relative; width: 100%; height: 50px; margin-bottom: 12px;
+  background: linear-gradient(180deg, var(--lcd-top) 0%, var(--lcd-mid) 100%);
+  border: 2px solid var(--lcd-bezel); border-radius: var(--radius-2);
+  padding: 6px 12px; box-sizing: border-box; overflow: hidden;
+  box-shadow: inset 0 0 12px rgba(0,0,0,.9), 0 0 12px var(--lcd-glow);
+}
+.tf-lcd-top {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.tf-lcd-name {
+  font-family: var(--font-lcd); font-size: 13px; font-weight: 800;
+  color: var(--lcd-ink); letter-spacing: 0.12em;
+}
+.tf-lcd-value {
+  font-family: var(--font-lcd); font-size: 14px; font-weight: 800;
+  color: var(--lcd-value); letter-spacing: 0.1em;
+}
+.tf-lcd-line {
+  font-family: var(--font-lcd); font-size: 10px; color: var(--lcd-ink);
+  letter-spacing: 0.08em; opacity: .85; margin-top: 3px;
+}
+
+/* Knobs area */
+.tf-knobs-area {
+  display: grid; grid-template-columns: 1.1fr 0.9fr 1fr 1.3fr 0.7fr; gap: 8px; height: 185px;
+}
+.tf-section {
+  background: var(--plate); border: 1px solid rgba(205, 168, 81, .25); border-radius: var(--radius-2);
+  padding: 6px 8px; box-sizing: border-box; display: flex; flex-direction: column;
+}
+.tf-sec-title {
+  color: var(--chassis-edge); font-size: 9px; letter-spacing: 0.2em; margin-bottom: 8px; text-align: center;
+}
+.tf-knob-row {
+  display: flex; justify-content: space-around; align-items: center; flex: 1;
+}
+.tf-switch-row {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 4px;
+}
+.tf-toggle-group {
+  display: flex; gap: 2px; width: 100%;
+}
+.tf-opt {
+  flex: 1; height: 22px; font-family: var(--font-engrave); font-size: 8px; font-weight: 800;
+  border: 1px solid var(--control-border); background: var(--control); color: var(--control-ink);
+  cursor: pointer; padding: 0;
+}
+.tf-opt.active {
+  background: var(--control-on); color: #08101a; border-color: var(--control-on);
+  font-weight: 900;
+}
+
+/* Knob component */
+.tf-knob-wrap {
+  display: flex; flex-direction: column; align-items: center; width: 50px; cursor: ns-resize;
+}
+.tf-knob-wrap label {
+  font-family: var(--font-engrave); font-size: 8px; letter-spacing: 0.08em; color: var(--engrave);
+  margin-top: 4px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 52px;
+}
+.tf-knob-dial {
+  width: 44px; height: 44px; position: relative;
+}
+.tf-knob-dial svg { width: 100%; height: 100%; }
+
+/* Transport */
+.tf-master-sec { justify-content: space-between; }
+.tf-transport {
+  display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 6px;
+}
+.ds-play {
+  width: 44px; height: 44px; border: 2px solid var(--run); background: var(--run-idle); color: #fff;
+  border-radius: var(--radius-2); cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.ds-play[aria-pressed="true"] { background: var(--run); color: #08101a; }
+.ds-play svg { width: 22px; height: 22px; }
+.tf-bpm-wrap { display: flex; flex-direction: column; align-items: center; }
+.tf-bpm-wrap input {
+  width: 54px; height: 26px; font-family: var(--font-lcd); font-size: 13px; font-weight: 800;
+  background: var(--lcd-mid); color: var(--lcd-value); border: 1px solid var(--lcd-bezel);
+  border-radius: var(--radius-2); text-align: center;
+}
+
+/* Bar Counter (Klaviatur) */
+.tf-bar {
+  left: 50px; top: 602px; width: 1080px; height: 120px;
+  background: linear-gradient(180deg, #1b120c 0%, #2b1d14 40%, #150d08 100%);
+  border: 2px solid var(--chassis-edge); border-radius: 4px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.8);
+  display: flex; align-items: center; padding: 8px 16px; box-sizing: border-box; z-index: 6;
+}
+.tf-bar-brass-trim {
+  position: absolute; left: 0; right: 0; top: 0; height: 4px;
+  background: linear-gradient(90deg, var(--chassis-edge), #ffe89e, var(--chassis-edge));
+}
+.tf-oct-btn {
+  width: 44px; height: 80px; background: #0c1522; color: var(--chassis-edge);
+  border: 1px solid var(--chassis-edge); border-radius: var(--radius-2);
+  font-family: var(--font-engrave); font-size: 10px; font-weight: 800; cursor: pointer;
+}
+.tf-keys {
+  flex: 1; height: 96px; display: flex; position: relative; margin: 0 12px;
+}
+.tf-key {
+  position: relative; flex: 1; height: 100%; cursor: pointer; border: 1px solid #111;
+  box-sizing: border-box; user-select: none;
+}
+.tf-key-white {
+  background: linear-gradient(180deg, #eae5d8 0%, #fffdf8 80%, #dcd6c5 100%);
+  border-radius: 0 0 4px 4px; z-index: 1;
+}
+.tf-key-white.active, .tf-key-white:active {
+  background: var(--control-on); box-shadow: 0 0 14px var(--control-on);
+}
+.tf-key-black {
+  position: absolute; width: 2.8%; height: 60%; background: linear-gradient(180deg, #2b3038 0%, #11151c 100%);
+  border-radius: 0 0 3px 3px; z-index: 2; margin-left: -1.4%;
+  box-shadow: 2px 3px 6px rgba(0,0,0,.7);
+}
+.tf-key-black.active, .tf-key-black:active {
+  background: var(--focus); box-shadow: 0 0 14px var(--focus);
+}
+
+/* Underwater state (MAN ÖVERBORD) */
+.tf-underwater {
+  position: absolute; inset: 0; pointer-events: none; z-index: 20;
+  background: radial-gradient(ellipse at 50% 50%, rgba(0, 180, 216, .35), rgba(3, 4, 94, .85) 80%);
+  opacity: 0; transition: opacity .35s ease-out;
+}
+.tf-ship.underwater .tf-underwater { opacity: 1; }
+.tf-water-bubbles {
+  position: absolute; inset: 0; overflow: hidden;
+}
+.tf-bubble {
+  position: absolute; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.9), rgba(0, 229, 255, .3) 60%, transparent 80%);
+  box-shadow: 0 0 6px rgba(0,229,255,.6);
+  animation: tf-rise 2.2s linear infinite;
+}
+@keyframes tf-rise {
+  0% { transform: translateY(740px) scale(0.6); opacity: 0; }
+  20% { opacity: 0.9; }
+  90% { opacity: 0.9; }
+  100% { transform: translateY(-50px) scale(1.2); opacity: 0; }
+}
+
+/* Splash when surfacing */
+.tf-water-splash {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.9), rgba(41,231,196,.5) 50%, transparent 80%);
+}
+.tf-water-splash.splashing {
+  animation: tf-splash-anim .6s ease-out;
+}
+@keyframes tf-splash-anim {
+  0% { opacity: 1; transform: scale(0.7); }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+
+/* Menu Dialogs */
+.ds-menu {
+  position: fixed; inset: 0; margin: auto; width: 440px; max-height: 85vh;
+  background: var(--menu-surface); border: 2px solid var(--chassis-edge);
+  border-top: 6px solid var(--chassis-edge); border-radius: var(--radius-2);
+  color: var(--menu-ink); box-shadow: 0 16px 40px rgba(0,0,0,.9);
+  padding: 0; overflow-y: auto; z-index: 50;
+}
+.ds-menu::backdrop { background: rgba(0,0,0,.65); backdrop-filter: blur(3px); }
+.ds-menu-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; background: rgba(0,0,0,.3); border-bottom: 1px solid var(--chassis-edge);
+}
+.tf-close-btn {
+  background: transparent; border: 0; color: var(--chassis-edge); font-size: 16px; cursor: pointer;
+}
+.ds-menu-body { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+.ds-menu-group { display: flex; flex-direction: column; gap: 6px; }
+.ds-menu-item {
+  height: 36px; background: var(--menu-button); color: var(--menu-button-ink);
+  border: 1px solid var(--menu-button-border); border-radius: var(--radius-2);
+  font-family: var(--font-panel); font-size: 12px; font-weight: 700;
+  cursor: pointer; text-align: left; padding: 0 12px; transition: background .15s;
+}
+.ds-menu-item:hover { background: var(--menu-button-hover); }
+.tf-help-text {
+  font-size: 11px; line-height: 1.5; color: var(--menu-muted); margin: 0;
+}
+.tf-midi-table {
+  width: 100%; border-collapse: collapse; font-size: 11px;
+}
+.tf-midi-table th, .tf-midi-table td {
+  padding: 6px 8px; text-align: left; border-bottom: 1px solid rgba(205,168,81,.2);
+}
+.tf-midi-table th { color: var(--chassis-edge); font-family: var(--font-engrave); }
