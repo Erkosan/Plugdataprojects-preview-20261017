@@ -116,6 +116,18 @@
   --blood: #8e1520;
   --vault-stone: #2a2425;
   --skin: #e2b49a;
+  --lcd-bg: #e4e4e4;
+  --ch-concrete: #c87a28;
+  --ch-concrete-dim: #4a3117;
+  --ch-filter: #5d9ea6;
+  --ch-pipe: #5d9ea6;
+  --ch-pipe-dim: #274145;
+  --ch-klagar: #d93829;
+  --ch-klagar-dim: #541b15;
+  --ch-clap: #c994c7;
+  --ch-clap-dim: #4f394e;
+  --ch-tom: #e6ab02;
+  --ch-tom-dim: #594308;
   --shadow-menu: 0 4px 0 #25292426;
   --shadow-patch: 0 3px 8px #38253240;
   --shadow-chassis: 0 12px 0 rgba(27,10,16,0.35), inset 0 0 0 2px #4a1726, inset 0 0 60px rgba(0,0,0,0.45);
@@ -157,6 +169,7 @@
   --run: #28c76f;
   --run-idle: #28c76f;
   --solo: #e49fc6;
+  --lcd-bg: #3d2338;
 }
 [data-theme="alskog"] {
   --ground: #d8c3cd;
@@ -194,6 +207,7 @@
   --rec: #c0283f;
   --mute: #e0436e;
   --solo: #f4ecd8;
+  --lcd-bg: #3d2338;
 }
 [data-theme="turbotutte"] {
   --ground: #dfe8e6;
@@ -231,6 +245,7 @@
   --rec: #e4002b;
   --mute: #e4002b;
   --solo: #fecb00;
+  --lcd-bg: #141414;
 }
 [data-theme="svettan"] {
   --ground: #1e140e;
@@ -274,6 +289,7 @@
   --key-white-on: #ffb35c;
   --key-black-on: #ff6a2a;
   --field: #f6eadb;
+  --lcd-bg: #2a1408;
 }
 [data-theme="perkele"] {
   --ground: #16191a;
@@ -387,6 +403,136 @@
   --run: #28c76f;
   --run-idle: #28c76f;
   --solo: #e49fc6;
+}
+[data-theme="grannen"] {
+  --ground: #1b1f22;
+  --chassis: #363b3e;
+  --chassis-edge: #181b1d;
+  --plate: #282c2f;
+  --plate-band: #484e52;
+  --velvet: #111416;
+  --control: #e6dec8;
+  --control-on: #d96b27;
+  --control-border: #181b1d;
+  --control-border-hover: #000000;
+  --control-ink: #181b1d;
+  --knob-arc: #181b1d;
+  --knob-pointer: #181b1d;
+  --engrave: #ece5d3;
+  --playhead: #e0462e;
+  --menu-surface: #f0eadb;
+  --menu-border: #363b3e;
+  --menu-ink: #181b1d;
+  --menu-muted: #52585c;
+  --menu-tint: #e2dac7;
+  --menu-button: #faf6ec;
+  --menu-button-hover: #e8e0cd;
+  --menu-button-border: #686f73;
+  --menu-button-ink: #181b1d;
+  --lcd-top: #0c0e10;
+  --lcd-mid: #14181b;
+  --lcd-bezel: #282c2f;
+  --lcd-ink: #f2ede2;
+  --lcd-value: #d96b27;
+  --lcd-glow: #d96b27;
+  --focus: #e6dec8;
+  --run: #3d9e56;
+  --run-idle: #245932;
+  --rec: #e0462e;
+  --mute: #e0462e;
+  --solo: #d96b27;
+  --key-black: #2b2623;
+  --key-white: #e6dec8;
+  --key-white-on: #d96b27;
+  --key-black-on: #e0462e;
+  --field: #f0eadb;
+  --lcd-bg: #0c0e10;
+}
+[data-theme="tvattstuga"] {
+  --ground: #161c1d;
+  --chassis: #cfd6d2;
+  --chassis-edge: #182022;
+  --plate: #232b2c;
+  --plate-band: #344143;
+  --velvet: #0f1415;
+  --control: #f2f0e6;
+  --control-on: #2b8cbe;
+  --control-border: #182022;
+  --control-border-hover: #000000;
+  --control-ink: #182022;
+  --knob-arc: #182022;
+  --knob-pointer: #182022;
+  --engrave: #1f282a;
+  --playhead: #e05a2b;
+  --menu-surface: #eef2f0;
+  --menu-border: #2b8cbe;
+  --menu-ink: #182022;
+  --menu-muted: #4a585b;
+  --menu-tint: #dde5e2;
+  --menu-button: #fafaf6;
+  --menu-button-hover: #e4ece9;
+  --menu-button-border: #5c6d70;
+  --menu-button-ink: #182022;
+  --lcd-top: #0a1210;
+  --lcd-mid: #11221d;
+  --lcd-bezel: #232b2c;
+  --lcd-ink: #a8ffdb;
+  --lcd-value: #7fffd4;
+  --lcd-glow: #2b8cbe;
+  --focus: #2b8cbe;
+  --run: #3d9e56;
+  --run-idle: #245932;
+  --rec: #e05a2b;
+  --mute: #e05a2b;
+  --solo: #2b8cbe;
+  --key-black: #232b2c;
+  --key-white: #e6ece8;
+  --key-white-on: #2b8cbe;
+  --key-black-on: #e05a2b;
+  --field: #f2f0e6;
+  --lcd-bg: #0a1210;
+}
+[data-theme="knaus"] {
+  --ground: #2d3d36;
+  --chassis: #e5eae8;
+  --chassis-edge: #1b437c;
+  --plate: #f0f4f2;
+  --plate-band: #2b5b99;
+  --velvet: #1c252d;
+  --control: #e69500;
+  --control-on: #ffa700;
+  --control-border: #1b437c;
+  --control-border-hover: #ffb703;
+  --control-ink: #1c252d;
+  --knob-arc: #2b5b99;
+  --knob-pointer: #d90429;
+  --engrave: #334155;
+  --playhead: #ffb703;
+  --menu-surface: #ffffff;
+  --menu-border: #1b437c;
+  --menu-ink: #1c252d;
+  --menu-muted: #64748b;
+  --menu-tint: rgba(43, 91, 153, 0.12);
+  --menu-button: #f1f5f9;
+  --menu-button-hover: #e2e8f0;
+  --menu-button-border: #cbd5e1;
+  --menu-button-ink: #0f172a;
+  --lcd-top: #12261f;
+  --lcd-mid: #0c1a15;
+  --lcd-bezel: #1b437c;
+  --lcd-ink: #52b788;
+  --lcd-value: #d8f3dc;
+  --lcd-glow: rgba(82, 183, 136, 0.3);
+  --focus: #ffb703;
+  --run: #2a9d8f;
+  --run-idle: #264653;
+  --rec: #e63946;
+  --mute: #e63946;
+  --solo: #ffb703;
+  --key-black: #1e293b;
+  --key-white: #f8fafc;
+  --key-white-on: #ffb703;
+  --key-black-on: #e69500;
 }
 :root {
   --space-hairline: 1px;
