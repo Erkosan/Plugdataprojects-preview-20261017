@@ -24,23 +24,86 @@
  <!-- Background ambient elements: förtält, takfönster med regndroppar, campingbord -->
  <div class="camping-sky"></div>
  <div class="caravan-awning"></div>
- <div class="caravan-window">
+ <div class="caravan-window" id="caravan-window">
   <div class="rain-drops" id="rain-drops" aria-hidden="true"></div>
-  <button class="mosquito-zapper" id="zapper" title="Knottdödare i takfönstret (klicka för zap)" aria-label="Knottdödare i takfönstret">
-   <span class="zapper-grid"></span>
-   <span class="zapper-label">KNOTT</span>
-   <span class="zapper-spark" id="zapper-spark"></span>
-  </button>
+  <div class="zapper-flash" id="zapper-flash" aria-hidden="true"></div>
+  <div class="zapper-hanger">
+   <div class="zapper-chain"></div>
+   <button class="mosquito-zapper" id="zapper" title="Knottdödare i takluckan (klicka för högspännings-zap)" aria-label="Knottdödare med UV-ljus i takluckan">
+    <div class="zapper-cap top"></div>
+    <div class="uv-core">
+     <div class="uv-tube"></div>
+     <div class="zapper-grid"></div>
+    </div>
+    <div class="zapper-cap bottom"></div>
+    <span class="zapper-label">KNOTT</span>
+    <span class="zapper-spark" id="zapper-spark"></span>
+    <span class="zap-smoke" id="zap-smoke"></span>
+   </button>
+  </div>
+  <div class="mosquito-swarm" id="mosquito-swarm">
+   <div class="mosquito m1" id="mosquito1" title="Knott (klicka för att zappa)"></div>
+   <div class="mosquito m2" id="mosquito2" title="Knott (klicka för att zappa)"></div>
+   <div class="mosquito m3" id="mosquito3" title="Knott (klicka för att zappa)"></div>
+  </div>
  </div>
- <div class="camping-table">
-  <button class="beer-ring" id="beer-ring" title="Spilld folköl (klicka för sekvensvariation)" aria-label="Spilld folköl på campingbordet">
-   <span class="beer-foam"></span>
-   <span class="beer-label">PRIPPS BLÅ 2.8%</span>
+
+ <div class="camping-table" id="camping-table">
+  <!-- Retro 3D Pripps Blå ölburk, kapsyl och spilld öl -->
+  <div class="beer-station">
+   <div class="beer-can-assembly" id="beer-assembly">
+    <div class="beer-can" id="beer-can" role="button" tabindex="0" title="Pripps Blå 2.8% ölburk (klicka för att välta burken)" aria-label="Pripps Blå 2.8% ölburk">
+     <div class="beer-can-top">
+      <div class="beer-rim"></div>
+      <button class="beer-tab" id="beer-tab" title="Kapsyl (klicka: PFFFFT-TSCH!)" aria-label="Öppna ölburkens kapsyl"></button>
+      <div class="beer-mouth"></div>
+      <div class="beer-foam-mouth" id="beer-foam-mouth"></div>
+     </div>
+     <div class="beer-can-body">
+      <div class="can-shine"></div>
+      <div class="can-stripes">
+       <span class="cs-gold"></span>
+       <span class="cs-blue"></span>
+       <span class="cs-cream"></span>
+      </div>
+      <div class="can-logo">
+       <span class="can-brand-pripps">PRIPPS</span>
+       <span class="can-brand-bla">BLÅ</span>
+       <span class="can-brand-type">KLASS II · 2.8%</span>
+      </div>
+      <div class="can-sweat"></div>
+     </div>
+     <div class="beer-can-base"></div>
+    </div>
+   </div>
+   <!-- Spilld öl-pöl (håller ID #beer-ring för 100% bakåtkompatibilitet med befintliga tester) -->
+   <button class="beer-ring beer-puddle" id="beer-ring" title="Spilld folköl (ölet rinner mot kretsarna!)" aria-label="Spilld folköl på campingbordet">
+    <span class="puddle-fluid"></span>
+    <span class="puddle-foam"></span>
+    <span class="beer-label">SPILLD FOLKÖL · KORTIS</span>
+   </button>
+  </div>
+
+  <!-- Klassisk rosa/gul rutmönstrad Wettex-trasa -->
+  <button class="wettex-cloth" id="wettex-cloth" title="Wettex-trasa (klicka för att torka upp ölet och torka kretsarna)" aria-label="Wettex-trasa för att torka campingbordet">
+   <div class="wettex-grid"></div>
+   <span class="wettex-brand">WETTEX</span>
+   <span class="wettex-sub">SUGESTYV · 100% REN</span>
   </button>
-  <div class="solstickan-box" title="Solstickan tändsticksask för gasolköket" aria-hidden="true">
+
+  <!-- Solstickan tändsticksask med Solstickepojken -->
+  <div class="solstickan-box" id="solstickan" role="button" tabindex="0" title="Solstickan tändsticksask (klicka för att dra en sticka mot plånet)" aria-label="Solstickan tändsticksask">
    <div class="solstickan-inner">
     <div class="solstickan-sun"></div>
+    <div class="solstickan-boy"></div>
     <span class="solstickan-text">SOLSTICKAN</span>
+   </div>
+   <div class="solstickan-striker"></div>
+   <div class="matchstick" id="matchstick">
+    <div class="match-wood"></div>
+    <div class="match-head"></div>
+    <div class="match-flame" id="match-flame"></div>
+    <div class="match-smoke" id="match-smoke"></div>
    </div>
   </div>
  </div>
@@ -114,7 +177,7 @@
    </button>
   </div>
 
-  <!-- Camping Schnell-val Bar: Kraft, Campingplatser, Piezo -->
+  <!-- Camping Schnell-val Bar: Kraft, Campingplatser, Truma Gasolvärmare & Piezo -->
   <div class="knaus-bar">
    <div class="power-group" role="radiogroup" aria-label="Strömkälla">
     <span class="bar-label">KRAFT</span>
@@ -133,11 +196,28 @@
      <button class="preset-btn" data-preset="3">KÖPINGSVIK</button>
     </div>
    </div>
-   <button class="piezo-btn" id="piezo" title="Piezo-tändare (klicka för gnista)" aria-label="Piezo-tändare">
-    <span class="piezo-spark" id="piezo-spark"></span>
-    <span class="piezo-cap"></span>
-    <span class="piezo-text">PIEZO · GNISTA</span>
-   </button>
+   <!-- Vintage Truma 3000 Gasolvärmare med titthål och Piezo-tändare -->
+   <div class="truma-heater" id="truma-heater" title="Truma 3000 gasolvärmare">
+    <div class="truma-badge">TRUMA 3000</div>
+    <div class="truma-grill">
+     <div class="truma-slits">
+      <span></span><span></span><span></span>
+     </div>
+     <div class="gas-window" id="gas-window" title="Titthål gasollåga">
+      <div class="gas-flame" id="gas-flame">
+       <div class="flame-core"></div>
+       <div class="flame-halo"></div>
+      </div>
+      <div class="piezo-arc" id="piezo-arc"></div>
+     </div>
+    </div>
+    <button class="piezo-btn" id="piezo" title="Piezo-tändare (klicka för att tända/släcka gasolvärmaren)" aria-label="Piezo-tändare">
+     <span class="piezo-spring"></span>
+     <span class="piezo-spark" id="piezo-spark"></span>
+     <span class="piezo-cap"></span>
+     <span class="piezo-text">PIEZO · GNISTA</span>
+    </button>
+   </div>
   </div>
 
   <!-- Main Controls Body -->
@@ -229,6 +309,7 @@
      <button class="ds-control ds-play" id="play" aria-pressed="false" aria-label="Spela sequencern">
       <svg viewBox="0 0 24 24" style="width:40%;height:40%"><path id="pi" d="M7 5 L19 12 L7 19 Z" fill="currentColor"/></svg>
      </button>
+     <button class="ds-control rec-btn" id="rec" aria-pressed="false" aria-label="Spela in melodi till sequencern (REC)"><span class="rec-led"></span><span class="rec-text">REC</span></button>
      <div class="bpm-wrap">
       <label for="bpm" class="small-label">TEMPO</label>
       <input class="ds-bpm" id="bpm" type="number" inputmode="numeric" min="30" max="300" value="116" aria-label="Tempo, BPM">
@@ -281,7 +362,7 @@
 <section class="utility" aria-label="Inställningar">
  <details id="menu">
   <summary class="ds-gear" aria-label="Inställningar">
-   <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+   <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
   </summary>
   <div class="ds-menu menu-panel">
    <div class="ds-menu-actions" id="menu-actions">

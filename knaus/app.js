@@ -7,7 +7,7 @@ const LCD_VAL = document.getElementById('lval');
 const LCD_LINE = document.getElementById('lline');
 const PLAY_BTN = document.getElementById('play');
 const BPM_INPUT = document.getElementById('bpm');
-const PANIC_BTN = document.getElementById('panic');
+const REC_BTN = document.getElementById('rec');
 const STEPS_CONTAINER = document.getElementById('steps');
 const KEYS_CONTAINER = document.getElementById('keys');
 const WEATHER_BADGE = document.getElementById('wbadge');
@@ -27,9 +27,18 @@ let paramsDef = {};
 let currentParams = {};
 let activeStep = 0;
 let isPlaying = false;
+let isRecording = false;
+let recStep = 0; // Target step for step-recording (0..15)
 let isAudioReady = false;
 let currentPowerSource = 0; // 0 = 220V, 1 = 12V, 2 = Gasol
 let activePresetIndex = 0; // 0 = Böda Sand
+let beerCanOpened = false;
+let beerCanKnocked = false;
+let beerSpilled = false;
+let gasHeaterLit = false;
+let savedDriveBeforeHeater = 0.35;
+let matchStriking = false;
+let sagTimeout = null;
 const fingers = new Map(); // pointerId -> midi note (live held keys)
 
 // C-minor scale notes in MIDI numbers
@@ -104,13 +113,245 @@ for (const type of ['pointerdown', 'touchend', 'click', 'keydown']) {
 }
 
 
+
+// Tactile Web Audio Sound Effects Synthesizer (Zero-latency procedural camping sfx)
+function playSfx(type) {
+  if (!audioCtx) return;
+  const t = audioCtx.currentTime;
+  try {
+    if (type === 'beer-open') {
+      // PFFFFT-TSCH! metall-knäpp + fräsande kolsyrehiss
+      const osc = audioCtx.createOscillator();
+      const oscG = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(1400, t);
+      osc.frequency.exponentialRampToValueAtTime(180, t + 0.035);
+      oscG.gain.setValueAtTime(0.4, t);
+      oscG.gain.exponentialRampToValueAtTime(0.001, t + 0.035);
+      osc.connect(oscG).connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + 0.04);
+
+      const buf = audioCtx.createBuffer(1, Math.floor(audioCtx.sampleRate * 0.3), audioCtx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buf;
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(4200, t);
+      filter.frequency.exponentialRampToValueAtTime(1600, t + 0.28);
+      filter.Q.value = 2.2;
+      const noiseG = audioCtx.createGain();
+      noiseG.gain.setValueAtTime(0.35, t);
+      noiseG.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+      noise.connect(filter).connect(noiseG).connect(audioCtx.destination);
+      noise.start(t);
+      noise.stop(t + 0.3);
+    } else if (type === 'beer-clonk') {
+      // KLONK! Burken välter omkull mot campingbordet
+      [260, 490, 780].forEach((freq, idx) => {
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.type = idx === 0 ? 'sine' : 'triangle';
+        osc.frequency.setValueAtTime(freq, t);
+        osc.frequency.exponentialRampToValueAtTime(freq * 0.65, t + 0.22);
+        g.gain.setValueAtTime(0.35 / (idx + 1), t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+        osc.connect(g).connect(audioCtx.destination);
+        osc.start(t);
+        osc.stop(t + 0.23);
+      });
+    } else if (type === 'wettex-swipe') {
+      // Mjukt fuktigt Wettex-torkljud
+      const dur = 0.45;
+      const buf = audioCtx.createBuffer(1, Math.floor(audioCtx.sampleRate * dur), audioCtx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+      const src = audioCtx.createBufferSource();
+      src.buffer = buf;
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(900, t);
+      filter.frequency.linearRampToValueAtTime(350, t + dur);
+      filter.Q.value = 1.4;
+      const g = audioCtx.createGain();
+      g.gain.setValueAtTime(0.01, t);
+      g.gain.linearRampToValueAtTime(0.22, t + 0.08);
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      src.connect(filter).connect(g).connect(audioCtx.destination);
+      src.start(t);
+      src.stop(t + dur);
+    } else if (type === 'zap') {
+      // BZZZZ-ZAP! 12V Högspänningsgnista
+      const dur = 0.16;
+      const buf = audioCtx.createBuffer(1, Math.floor(audioCtx.sampleRate * dur), audioCtx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * (i < 300 ? 1 : 0.4);
+      const src = audioCtx.createBufferSource();
+      src.buffer = buf;
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'highpass';
+      filter.frequency.value = 1400;
+      const g = audioCtx.createGain();
+      g.gain.setValueAtTime(0.55, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      src.connect(filter).connect(g).connect(audioCtx.destination);
+      src.start(t);
+      src.stop(t + dur);
+
+      const buzz = audioCtx.createOscillator();
+      const bG = audioCtx.createGain();
+      buzz.type = 'sawtooth';
+      buzz.frequency.setValueAtTime(95, t);
+      bG.gain.setValueAtTime(0.28, t);
+      bG.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+      buzz.connect(bG).connect(audioCtx.destination);
+      buzz.start(t);
+      buzz.stop(t + 0.13);
+    } else if (type === 'piezo-click') {
+      // Mekaniskt metall-klick
+      const osc = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(1750, t);
+      osc.frequency.exponentialRampToValueAtTime(250, t + 0.02);
+      g.gain.setValueAtTime(0.45, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.025);
+      osc.connect(g).connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + 0.03);
+    } else if (type === 'gas-whoosh') {
+      // Varm gasol-tändning
+      const dur = 0.55;
+      const buf = audioCtx.createBuffer(1, Math.floor(audioCtx.sampleRate * dur), audioCtx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+      const src = audioCtx.createBufferSource();
+      src.buffer = buf;
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(160, t);
+      filter.frequency.linearRampToValueAtTime(500, t + 0.12);
+      filter.frequency.exponentialRampToValueAtTime(120, t + dur);
+      const g = audioCtx.createGain();
+      g.gain.setValueAtTime(0.01, t);
+      g.gain.linearRampToValueAtTime(0.4, t + 0.09);
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      src.connect(filter).connect(g).connect(audioCtx.destination);
+      src.start(t);
+      src.stop(t + dur);
+    } else if (type === 'gas-puff') {
+      // Gasol-släckning
+      const dur = 0.2;
+      const buf = audioCtx.createBuffer(1, Math.floor(audioCtx.sampleRate * dur), audioCtx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+      const src = audioCtx.createBufferSource();
+      src.buffer = buf;
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 600;
+      const g = audioCtx.createGain();
+      g.gain.setValueAtTime(0.2, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      src.connect(filter).connect(g).connect(audioCtx.destination);
+      src.start(t);
+      src.stop(t + dur);
+    } else if (type === 'match-scratch') {
+      // SCCCCH-FSH! Svavel drag mot plån
+      const dur = 0.38;
+      const buf = audioCtx.createBuffer(1, Math.floor(audioCtx.sampleRate * dur), audioCtx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+      const src = audioCtx.createBufferSource();
+      src.buffer = buf;
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(3400, t);
+      filter.frequency.exponentialRampToValueAtTime(5400, t + 0.16);
+      filter.frequency.exponentialRampToValueAtTime(1400, t + dur);
+      filter.Q.value = 2.4;
+      const g = audioCtx.createGain();
+      g.gain.setValueAtTime(0.01, t);
+      g.gain.linearRampToValueAtTime(0.38, t + 0.06);
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      src.connect(filter).connect(g).connect(audioCtx.destination);
+      src.start(t);
+      src.stop(t + dur);
+    }
+  } catch (err) {
+    console.warn('Sfx error:', err);
+  }
+}
+
+// Voltmeter Voltage Sag under tunga basnoter och sequencer-slag
+function triggerVoltageSag(pitch = 48, vel = 100) {
+  if (currentParams['brownout'] === 1) return;
+  const bassWeight = Math.max(0, (65 - pitch) / 17);
+  const velWeight = Math.min(1.2, vel / 100);
+  let baseV = 12.1;
+  let maxDrop = 0.9;
+  if (currentPowerSource === 0) {
+    baseV = 13.8;
+    maxDrop = 0.7;
+  } else if (currentPowerSource === 2) {
+    baseV = 12.4;
+    maxDrop = 0.8;
+  } else {
+    maxDrop = 1.1; // 12V batteri saggar mest!
+  }
+
+  const sagAmount = bassWeight * velWeight * maxDrop;
+  if (sagAmount < 0.12) return;
+
+  const targetV = Math.max(10.8, baseV - sagAmount);
+  updateVoltmeter(targetV);
+
+  // Subtil dimning av chassi och LCD
+  const chassis = document.querySelector('.knaus-chassis');
+  const lcd = document.querySelector('.knaus-lcd');
+  if (chassis) chassis.classList.add('voltage-sag');
+  if (lcd) lcd.classList.add('voltage-sag');
+
+  clearTimeout(sagTimeout);
+  sagTimeout = setTimeout(() => {
+    if (chassis) chassis.classList.remove('voltage-sag');
+    if (lcd) lcd.classList.remove('voltage-sag');
+    sagTimeout = null;
+    updateVoltmeterJitter();
+  }, 190);
+}
+
 function handleEngineEvent(name, values) {
   if (name === 'ev_step') {
     const step = Math.round(values[0]);
     activeStep = step;
     highlightStep(step);
-    // Subtle voltmeter needle twitch with sequencer beat
-    updateVoltmeterJitter();
+
+    // Kontrollera om steget har gate och accent
+    const stepVal = currentParams[`step${step}`] || 0;
+    const gate = Math.floor(stepVal / 64) % 2;
+    const accent = Math.floor(stepVal / 128) % 2;
+    const stepPitch = (stepVal % 64) + 12;
+
+    if (gate > 0) {
+      triggerVoltageSag(stepPitch, accent > 0 ? 127 : 85);
+      if (accent > 0) {
+        // Rytmisk mikrozap vid sequencer-accent
+        const spark = document.getElementById('zapper-spark');
+        if (spark) {
+          spark.style.opacity = '0.7';
+          spark.style.transform = 'scale(1.2)';
+          setTimeout(() => {
+            spark.style.opacity = '0';
+            spark.style.transform = 'scale(1)';
+          }, 70);
+        }
+      }
+    } else {
+      updateVoltmeterJitter();
+    }
   } else if (name === 'ev_note') {
     const pitch = Math.round(values[0]);
     highlightKey(pitch);
@@ -155,7 +396,7 @@ function updateVoltmeter(voltage) {
 }
 
 function updateVoltmeterJitter() {
-  if (currentParams['brownout'] === 1) return;
+  if (currentParams['brownout'] === 1 || sagTimeout !== null) return;
   let baseV = 12.1;
   if (currentPowerSource === 0) baseV = 13.8;
   else if (currentPowerSource === 2) baseV = 12.4;
@@ -308,6 +549,7 @@ function setupSequencer() {
   for (let i = 0; i < 16; i++) {
     const stepEl = document.createElement('div');
     stepEl.className = 'seq-step';
+    stepEl.id = `step-${i}`;
     stepEl.setAttribute('data-step', i);
     stepEl.setAttribute('role', 'button');
     stepEl.setAttribute('tabindex', '0');
@@ -326,7 +568,18 @@ function setupSequencer() {
     stepEl.addEventListener('pointerdown', (e) => {
       e.preventDefault();
       initAudio();
-      cycleStep(i);
+      lastRecClick = 0;
+      if (isRecording) {
+        recStep = i;
+        updateRecTarget();
+        const val = currentParams[`step${i}`] || 0;
+        const gate = Math.floor(val / 64) % 2;
+        const pitch = (val % 64) + 12;
+        LCD_NAME.textContent = `INSPELNING · STEG ${recStep + 1}`;
+        LCD_VAL.textContent = gate ? midiToName(pitch) : 'VILA / TOMT';
+      } else {
+        cycleStep(i);
+      }
     });
 
     STEPS_CONTAINER.appendChild(stepEl);
@@ -343,8 +596,14 @@ function setupSequencer() {
     if (path) {
       path.setAttribute('d', isPlaying ? 'M6 5 H10 V19 H6 Z M14 5 H18 V19 H14 Z' : 'M7 5 L19 12 L7 19 Z');
     }
-    LCD_NAME.textContent = isPlaying ? 'SEQUENCER' : 'SEQUENCER STOPPAD';
-    LCD_VAL.textContent = isPlaying ? 'SPELAR' : 'PAUS';
+    updateRecTarget();
+    if (isRecording) {
+      LCD_NAME.textContent = isPlaying ? 'INSPELNING · LIVE OVERDUB' : `INSPELNING · STEG ${recStep + 1}`;
+      LCD_VAL.textContent = isPlaying ? 'SPELA IN TILL SLINGA' : 'TRYCK TANGENT FÖR NOT';
+    } else {
+      LCD_NAME.textContent = isPlaying ? 'SEQUENCER' : 'SEQUENCER STOPPAD';
+      LCD_VAL.textContent = isPlaying ? 'SPELAR' : 'PAUS';
+    }
   });
 
   // BPM
@@ -529,7 +788,14 @@ function setupKeyboard() {
       triggerNoteOn(midi, 100);
     } else if (e.code === 'Space') {
       e.preventDefault();
-      PLAY_BTN.dispatchEvent(new PointerEvent('pointerdown'));
+      if (isRecording && !isPlaying) {
+        recordRest();
+      } else {
+        PLAY_BTN.dispatchEvent(new PointerEvent('pointerdown'));
+      }
+    } else if (e.code === 'KeyV' && isRecording) {
+      e.preventDefault();
+      recordRest();
     }
   });
 
@@ -544,14 +810,55 @@ function setupKeyboard() {
 }
 
 function triggerNoteOn(pitch, vel = 100) {
+  lastRecClick = 0;
+
+  // Voltage Sag vid djupa bastoner
+  if (pitch < 62) {
+    triggerVoltageSag(pitch, vel);
+  }
+
+  // Berusad sluddring om öl runnit in i kretsarna
+  let noteToPlay = pitch;
+  if (beerSpilled) {
+    if (Math.random() < 0.35) {
+      noteToPlay = Math.max(48, Math.min(72, pitch + (Math.random() < 0.5 ? -1 : 1)));
+    }
+    // Tillfälligt extra ryck i flutter
+    if (workletNode) {
+      workletNode.port.postMessage({ type: 'param', name: 'flutter', value: 0.95 });
+      setTimeout(() => {
+        if (beerSpilled && workletNode) workletNode.port.postMessage({ type: 'param', name: 'flutter', value: 0.85 });
+      }, 100);
+    }
+  }
+
   if (workletNode) {
-    workletNode.port.postMessage({ type: 'midi', bytes: [0x92, pitch, vel] });
+    workletNode.port.postMessage({ type: 'midi', bytes: [0x92, noteToPlay, vel] });
   }
   const keyEl = KEYS_CONTAINER.querySelector(`[data-note="${pitch}"]`);
   if (keyEl) keyEl.classList.add('down', 'active');
-  LCD_NAME.textContent = 'TON';
-  LCD_VAL.textContent = `${midiToName(pitch)} (${pitch})`;
-  updateVoltmeterJitter();
+
+  if (isRecording) {
+    const targetStep = isPlaying ? activeStep : recStep;
+    const val = (pitch - 12) + 64;
+    setParam(`step${targetStep}`, val, false);
+    currentParams[`step${targetStep}`] = val;
+    const stepEl = document.getElementById(`step-${targetStep}`) || STEPS_CONTAINER.children[targetStep];
+    if (stepEl) updateStepUI(stepEl, targetStep);
+    LCD_NAME.textContent = `INSPELNING · STEG ${targetStep + 1}`;
+    LCD_VAL.textContent = midiToName(pitch);
+    if (!isPlaying) {
+      recStep = (recStep + 1) % 16;
+      updateRecTarget();
+    }
+  } else {
+    LCD_NAME.textContent = 'TON';
+    LCD_VAL.textContent = `${midiToName(pitch)} (${pitch})`;
+  }
+
+  if (pitch >= 62) {
+    updateVoltmeterJitter();
+  }
   if (!window.__knausNotes) window.__knausNotes = [];
   window.__knausNotes.push({ type: 'on', note: pitch, vel });
 }
@@ -566,29 +873,90 @@ function triggerNoteOff(pitch) {
   window.__knausNotes.push({ type: 'off', note: pitch });
 }
 
-// Panic button (STRÖMAVBROTT)
-function setupPanic() {
-  const triggerPanic = (active) => {
-    setParam('brownout', active ? 1 : 0);
-    PANIC_BTN.setAttribute('aria-pressed', active ? 'true' : 'false');
-    if (active) {
-      LCD_NAME.textContent = 'STRÖMAVBROTT';
-      LCD_VAL.textContent = 'KALLT I VAGNEN!';
-      updateVoltmeter(0.0);
-    } else {
-      LCD_NAME.textContent = 'KNAUS 3000';
-      LCD_VAL.textContent = 'DRIFT ÅTERSTÄLLD';
-      updateVoltmeter(currentPowerSource === 0 ? 13.8 : (currentPowerSource === 1 ? 12.1 : 12.4));
+// Sequencer REC & Step-recording functions
+function updateRecTarget() {
+  for (let i = 0; i < 16; i++) {
+    const stepEl = document.getElementById(`step-${i}`) || STEPS_CONTAINER.children[i];
+    if (stepEl) {
+      if (isRecording && !isPlaying && i === recStep) {
+        stepEl.classList.add('rec-target');
+      } else {
+        stepEl.classList.remove('rec-target');
+      }
     }
-  };
+  }
+}
 
-  PANIC_BTN.addEventListener('pointerdown', (e) => {
+function toggleRecord(forceState) {
+  isRecording = (forceState !== undefined) ? !!forceState : !isRecording;
+  if (REC_BTN) {
+    REC_BTN.setAttribute('aria-pressed', isRecording ? 'true' : 'false');
+    REC_BTN.classList.toggle('recording', isRecording);
+  }
+  updateRecTarget();
+  if (isRecording) {
+    LCD_NAME.textContent = isPlaying ? 'INSPELNING · LIVE OVERDUB' : `INSPELNING · STEG ${recStep + 1}`;
+    LCD_VAL.textContent = isPlaying ? 'SPELA IN TILL SLINGA' : 'TRYCK TANGENT FÖR NOT';
+  } else {
+    LCD_NAME.textContent = 'INSPELNING AVBRUTEN';
+    LCD_VAL.textContent = isPlaying ? 'SPELAR' : 'PAUS';
+  }
+}
+
+function clearAllSteps() {
+  for (let i = 0; i < 16; i++) {
+    setParam(`step${i}`, 0, false);
+    currentParams[`step${i}`] = 0;
+    const stepEl = document.getElementById(`step-${i}`) || STEPS_CONTAINER.children[i];
+    if (stepEl) updateStepUI(stepEl, i);
+  }
+  recStep = 0;
+  isRecording = true;
+  if (REC_BTN) {
+    REC_BTN.setAttribute('aria-pressed', 'true');
+    REC_BTN.classList.add('recording');
+  }
+  updateRecTarget();
+  LCD_NAME.textContent = 'RENSAT · ALLA STEG TOMMA';
+  LCD_VAL.textContent = 'TRYCK TANGENT FÖR NOT';
+}
+
+function recordRest() {
+  if (!isRecording) return;
+  const targetStep = isPlaying ? activeStep : recStep;
+  const paramName = `step${targetStep}`;
+  setParam(paramName, 0, false);
+  currentParams[paramName] = 0;
+  const stepEl = document.getElementById(`step-${targetStep}`) || STEPS_CONTAINER.children[targetStep];
+  if (stepEl) updateStepUI(stepEl, targetStep);
+  LCD_NAME.textContent = `INSPELNING · STEG ${targetStep + 1}`;
+  LCD_VAL.textContent = 'VILA / PAUS (TOMT)';
+  if (!isPlaying) {
+    recStep = (recStep + 1) % 16;
+    updateRecTarget();
+  }
+}
+
+let lastRecClick = 0;
+
+function setupRec() {
+  if (!REC_BTN) return;
+  REC_BTN.addEventListener('pointerdown', (e) => {
     e.preventDefault();
     initAudio();
-    triggerPanic(true);
+    const now = Date.now();
+    if (now - lastRecClick < 280) {
+      lastRecClick = 0;
+      clearAllSteps();
+      return;
+    }
+    lastRecClick = now;
+    toggleRecord();
   });
-  window.addEventListener('pointerup', () => {
-    if (currentParams['brownout'] === 1) triggerPanic(false);
+
+  REC_BTN.addEventListener('dblclick', (e) => {
+    e.preventDefault();
+    clearAllSteps();
   });
 }
 
@@ -611,22 +979,22 @@ function setupCampingQuirks() {
 
       if (p === 0) {
         // 220V Stolpe: clean, stable, minimal flutter
-        setParam('flutter', 0.04);
-        setParam('drive', 0.15);
+        setParam('flutter', beerSpilled ? 0.85 : 0.04);
+        setParam('drive', gasHeaterLit ? 0.70 : 0.15);
         updateVoltmeter(13.8);
         LCD_NAME.textContent = 'KRAFT · 220V STOLPE';
         LCD_VAL.textContent = 'NÄTSTRÖM (LADDAR)';
       } else if (p === 1) {
         // 12V Fritidsbatteri: standard camping flutter
-        setParam('flutter', 0.25);
-        setParam('drive', 0.35);
+        setParam('flutter', beerSpilled ? 0.90 : 0.25);
+        setParam('drive', gasHeaterLit ? 0.75 : 0.35);
         updateVoltmeter(12.1);
         LCD_NAME.textContent = 'KRAFT · 12V BATTERI';
         LCD_VAL.textContent = 'TRANSFORMATOR-SURR';
       } else {
         // Gasol: warm drive, slight rumble
-        setParam('flutter', 0.12);
-        setParam('drive', 0.65);
+        setParam('flutter', beerSpilled ? 0.85 : 0.12);
+        setParam('drive', gasHeaterLit ? 0.85 : 0.65);
         updateVoltmeter(12.4);
         LCD_NAME.textContent = 'KRAFT · GASOL';
         LCD_VAL.textContent = 'PRIMUS TÄNT · VARM DRIFT';
@@ -674,12 +1042,10 @@ function setupCampingQuirks() {
       presetButtons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
-      // Apply preset parameters
       for (const [k, v] of Object.entries(cp.params)) {
         setParam(k, v);
       }
 
-      // Switch power
       const targetPowerBtn = document.querySelector(`.power-btn[data-power="${cp.power}"]`);
       if (targetPowerBtn) targetPowerBtn.dispatchEvent(new PointerEvent('pointerdown'));
 
@@ -688,29 +1054,72 @@ function setupCampingQuirks() {
     });
   });
 
-  // 3. Piezo Ignition Button
-  PIEZO_BTN.addEventListener('pointerdown', (e) => {
-    e.preventDefault();
+  // 3. Truma Gasolvärmare & Piezo-tändare
+  const PIEZO_BTN = document.getElementById('piezo');
+  const GAS_WINDOW = document.getElementById('gas-window');
+  const GAS_FLAME = document.getElementById('gas-flame');
+  if (PIEZO_BTN) {
+    PIEZO_BTN.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      initAudio();
+      PIEZO_BTN.classList.add('pressed', 'spark');
+      if (GAS_WINDOW) GAS_WINDOW.classList.add('spark');
+      playSfx('piezo-click');
+
+      setTimeout(() => {
+        PIEZO_BTN.classList.remove('pressed', 'spark');
+        if (GAS_WINDOW) GAS_WINDOW.classList.remove('spark');
+      }, 200);
+
+      if (!gasHeaterLit) {
+        // Tänd Truma gasolbrännare
+        gasHeaterLit = true;
+        playSfx('gas-whoosh');
+        if (GAS_FLAME) GAS_FLAME.classList.add('lit');
+        savedDriveBeforeHeater = currentParams['drive'] || 0.35;
+        setParam('drive', Math.min(1.0, savedDriveBeforeHeater + 0.35), true);
+        LCD_NAME.textContent = 'PIEZO · GASOLVÄRMARE';
+        LCD_VAL.textContent = 'TÄND (TRUMA 3000)';
+      } else {
+        // Släck brännare
+        gasHeaterLit = false;
+        playSfx('gas-puff');
+        if (GAS_FLAME) GAS_FLAME.classList.remove('lit');
+        setParam('drive', savedDriveBeforeHeater, true);
+        LCD_NAME.textContent = 'PIEZO · GASOLVÄRMARE';
+        LCD_VAL.textContent = 'SLÄCKT (TRUMA 3000)';
+      }
+      updateVoltmeterJitter();
+    });
+  }
+
+  // 4. Knottdödaren (UV-zapper) i takluckan & myggsvärm
+  const ZAPPER_BTN = document.getElementById('zapper');
+  const CARAVAN_WINDOW = document.getElementById('caravan-window');
+  const ROOM = document.getElementById('room');
+  const triggerZapper = (targetMosquito = null) => {
     initAudio();
-    PIEZO_BTN.classList.add('spark');
-    setTimeout(() => PIEZO_BTN.classList.remove('spark'), 200);
+    playSfx('zap');
+    if (ZAPPER_BTN) ZAPPER_BTN.classList.add('spark');
+    if (CARAVAN_WINDOW) CARAVAN_WINDOW.classList.add('flash');
+    if (ROOM) ROOM.classList.add('zapper-flash-active');
 
-    // Audio spark: temporarily spike drive & rain for 60ms
-    const prevDrive = currentParams['drive'] || 0.35;
-    setParam('drive', Math.min(1.0, prevDrive + 0.4), false);
-    setTimeout(() => setParam('drive', prevDrive, false), 70);
+    setTimeout(() => {
+      if (ZAPPER_BTN) ZAPPER_BTN.classList.remove('spark');
+      if (CARAVAN_WINDOW) CARAVAN_WINDOW.classList.remove('flash');
+      if (ROOM) ROOM.classList.remove('zapper-flash-active');
+    }, 220);
 
-    LCD_NAME.textContent = 'PIEZO · GNISTA';
-    LCD_VAL.textContent = 'BLÅ GNISTA TÄNDER GASOLEN';
-    updateVoltmeterJitter();
-  });
-
-  // 4. Mosquito Zapper on Caravan Window
-  ZAPPER_BTN.addEventListener('pointerdown', (e) => {
-    e.preventDefault();
-    initAudio();
-    ZAPPER_BTN.classList.add('spark');
-    setTimeout(() => ZAPPER_BTN.classList.remove('spark'), 250);
+    // Döda en mygga
+    let victim = targetMosquito;
+    if (!victim) {
+      const liveMosquitos = Array.from(document.querySelectorAll('.mosquito:not(.dead)'));
+      if (liveMosquitos.length > 0) victim = liveMosquitos[Math.floor(Math.random() * liveMosquitos.length)];
+    }
+    if (victim) {
+      victim.classList.add('dead');
+      setTimeout(() => victim.classList.remove('dead'), 4000);
+    }
 
     // Audio zap: temporary high resonance spike
     const prevRes = currentParams['resonance'] || 0.4;
@@ -718,24 +1127,148 @@ function setupCampingQuirks() {
     setTimeout(() => setParam('resonance', prevRes, false), 90);
 
     LCD_NAME.textContent = 'KNOTT · ZAP!';
-    LCD_VAL.textContent = 'EN MINDRE I FÖRTÄLTET';
+    LCD_VAL.textContent = '12V HÖGSPÄNNING';
+  };
+
+  if (ZAPPER_BTN) {
+    ZAPPER_BTN.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      triggerZapper();
+    });
+  }
+
+  document.querySelectorAll('.mosquito').forEach(mosq => {
+    mosq.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      triggerZapper(mosq);
+    });
   });
 
-  // 5. Spilled Pripps Blå Beer Ring: Mutate sequencer
-  BEER_RING.addEventListener('pointerdown', (e) => {
-    e.preventDefault();
+  // 5. Pripps Blå 2.8% retro ölburk, Kapsyl, Spilld Öl & Wettex-trasa
+  const BEER_CAN = document.getElementById('beer-can');
+  const BEER_ASSEMBLY = document.getElementById('beer-assembly');
+  const BEER_TAB = document.getElementById('beer-tab');
+  const BEER_FOAM_MOUTH = document.getElementById('beer-foam-mouth');
+  const BEER_RING = document.getElementById('beer-ring');
+  const WETTEX_CLOTH = document.getElementById('wettex-cloth');
+
+  // Kapsyl / flärp klick
+  if (BEER_TAB) {
+    BEER_TAB.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      initAudio();
+      playSfx('beer-open');
+      beerCanOpened = true;
+      BEER_TAB.classList.add('opened');
+      if (BEER_FOAM_MOUTH) {
+        BEER_FOAM_MOUTH.classList.add('active');
+        setTimeout(() => BEER_FOAM_MOUTH.classList.remove('active'), 2500);
+      }
+      LCD_NAME.textContent = 'PRIPPS BLÅ 2.8%';
+      LCD_VAL.textContent = 'ÖPPNAD! (PFFFFT-TSCH)';
+    });
+  }
+
+  // Burken klickas eller välts
+  const knockBeerCan = () => {
     initAudio();
-    // Variation: shift steps or toggle accents in C-minor
+    if (!beerCanOpened && BEER_TAB) {
+      BEER_TAB.classList.add('opened');
+      beerCanOpened = true;
+    }
+    beerCanKnocked = true;
+    beerSpilled = true;
+    if (BEER_ASSEMBLY) BEER_ASSEMBLY.classList.add('knocked');
+    if (BEER_RING) {
+      BEER_RING.classList.add('expanded');
+      BEER_RING.classList.remove('dry');
+    }
+    playSfx('beer-clonk');
+
+    // Ölet rinner in i kretsarna: öka flutter kraftigt så det sluddrar!
+    setParam('flutter', 0.85, true);
+
+    // Mutera sekvensen lätt berusat
     for (let i = 0; i < 16; i++) {
-      if (Math.random() < 0.3) {
+      if (Math.random() < 0.25) {
         cycleStep(i);
       }
     }
-    LCD_NAME.textContent = 'SPILLD FOLKÖL';
-    LCD_VAL.textContent = 'VAGNEN GUNGAR · VARIATION';
-  });
 
-  // 6. Weather Badge Toggle
+    LCD_NAME.textContent = 'SPILLD FOLKÖL';
+    LCD_VAL.textContent = 'KORTIS I KRETSARNA!';
+    triggerVoltageSag(48, 127);
+  };
+
+  if (BEER_CAN) {
+    BEER_CAN.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      knockBeerCan();
+    });
+  }
+
+  if (BEER_RING) {
+    BEER_RING.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      knockBeerCan();
+    });
+  }
+
+  // Wettex-trasa torkar upp ölet och torkar kretsarna
+  if (WETTEX_CLOTH) {
+    WETTEX_CLOTH.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      initAudio();
+      playSfx('wettex-swipe');
+      WETTEX_CLOTH.classList.add('wiping');
+
+      setTimeout(() => {
+        if (BEER_RING) {
+          BEER_RING.classList.remove('expanded');
+          BEER_RING.classList.add('dry');
+        }
+      }, 350);
+
+      setTimeout(() => {
+        WETTEX_CLOTH.classList.remove('wiping');
+        if (BEER_ASSEMBLY) BEER_ASSEMBLY.classList.remove('knocked');
+        beerCanKnocked = false;
+        beerSpilled = false;
+
+        // Återställ strömkällans normala flutter
+        const normalFlutter = (currentPowerSource === 0 ? 0.04 : (currentPowerSource === 1 ? 0.25 : 0.12));
+        setParam('flutter', normalFlutter, true);
+
+        LCD_NAME.textContent = 'TORKAT MED WETTEX';
+        LCD_VAL.textContent = 'KRETSARNA TORRA';
+      }, 750);
+    });
+  }
+
+  // 6. Solstickan tändsticksask
+  const SOLSTICKAN_BOX = document.getElementById('solstickan');
+  const MATCHSTICK = document.getElementById('matchstick');
+  if (SOLSTICKAN_BOX) {
+    SOLSTICKAN_BOX.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      if (matchStriking) return;
+      matchStriking = true;
+      initAudio();
+      playSfx('match-scratch');
+      if (MATCHSTICK) MATCHSTICK.classList.add('strike');
+      LCD_NAME.textContent = 'SOLSTICKAN';
+      LCD_VAL.textContent = 'TÄNDSTICKA DRAGEN';
+
+      setTimeout(() => {
+        if (MATCHSTICK) MATCHSTICK.classList.remove('strike');
+        matchStriking = false;
+      }, 2200);
+    });
+  }
+
+  // 7. Weather Badge Toggle
   WEATHER_BADGE.addEventListener('pointerdown', (e) => {
     e.preventDefault();
     initAudio();
@@ -833,6 +1366,13 @@ window.knaus = {
   noteOff: (note) => triggerNoteOff(note),
   getParams: () => ({ ...currentParams }),
   params: currentParams,
+  record: toggleRecord,
+  rest: recordRest,
+  clear: clearAllSteps,
+  get isRecording() { return isRecording; },
+  get recStep() { return recStep; },
+  get activeStep() { return activeStep; },
+  get currentStep() { return activeStep; },
   get analyser() { return analyserNode; },
   get audioCtx() { return audioCtx; },
   get isReady() { return isAudioReady; },
@@ -856,7 +1396,7 @@ async function start() {
   setupKnobs();
   setupSequencer();
   setupKeyboard();
-  setupPanic();
+  setupRec();
   setupCampingQuirks();
   setupMenu();
 
