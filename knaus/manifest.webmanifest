@@ -1,0 +1,18 @@
+{
+  "name": "KNAUS 3000",
+  "short_name": "KNAUS 3000",
+  "description": "Lo-fi husvagnssynth för campingsemestern.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#2d3d36",
+  "theme_color": "#e5eae8",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="sv" data-theme="knaus">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2d3d36">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="KNAUS 3000. Lo-fi husvagnssynth för campingsemestern. 4 röster polyfoni, 16-stegs sequencer och takregn.">
+<title>KNAUS 3000 — Pastor Gregorius</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="modulepreload" href="knaus-engine.js">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="3000-series.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="stage">
+<div id="fit">
+<div class="ds-room knaus-room" id="room" data-theme="knaus">
+ <!-- Background ambient elements: förtält, takfönster med regndroppar, campingbord -->
+ <div class="camping-sky"></div>
+ <div class="caravan-awning"></div>
+ <div class="caravan-window">
+  <div class="rain-drops" id="rain-drops" aria-hidden="true"></div>
+ </div>
+ <div class="camping-table"></div>
+
+ <!-- The KNAUS 3000 Instrument Chassis -->
+ <div class="ds-chassis knaus-chassis">
+  <!-- Classic blue & orange Knaus caravan stripe -->
+  <div class="knaus-stripe-blue"></div>
+  <div class="knaus-stripe-orange"></div>
+
+  <!-- Header: Brand logo and thermometer/status -->
+  <div class="knaus-header">
+   <div class="knaus-brand">
+    <span class="knaus-logo">KNAUS 3000</span>
+    <span class="knaus-tagline">SÜDWIND SPECIAL</span>
+   </div>
+   <!-- LCD Display -->
+   <div class="ds-lcd knaus-lcd" aria-live="polite">
+    <div class="ds-lcd-glow"></div>
+    <div class="ds-lcd-top">
+     <span class="ds-lcd-name" id="lname">KNAUS 3000</span>
+     <span class="ds-lcd-value" id="lval">C-MOLL · 116 BPM</span>
+    </div>
+    <div class="ds-lcd-line" id="lline"></div>
+   </div>
+   <!-- Rain / Weather indicator -->
+   <div class="weather-badge" id="wbadge" title="Campingväder">
+    <span class="weather-label">TAKREGN</span>
+    <span class="weather-text" id="wtext">ÖSREGN</span>
+   </div>
+  </div>
+
+  <!-- Main Controls Body -->
+  <div class="knaus-body">
+   <!-- Section 1: TON (Oscillator & Waveform & ADSR) -->
+   <div class="ds-plate knaus-section" id="sec-tone">
+    <div class="section-title">TON · OSC & HÖLJE</div>
+    <div class="knob-row">
+     <div class="ds-knob-container" data-param="wave" data-label="VÅGFORM" data-unit="">
+      <div class="ds-knob" id="knob-wave" tabindex="0" role="slider" aria-label="Vågform (0=Orgel, 1=Puls, 2=Såg)" aria-valuemin="0" aria-valuemax="2" aria-valuenow="1">
+       <div class="knob-indicator"></div>
+      </div>
+      <span class="knob-label">VÅGFORM</span>
+     </div>
+     <div class="ds-knob-container" data-param="attack" data-label="SVÄLL · ATTACK" data-unit="ms">
+      <div class="ds-knob" id="knob-attack" tabindex="0" role="slider" aria-label="Attack" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.05">
+       <div class="knob-indicator"></div>
+      </div>
+      <span class="knob-label">SVÄLL</span>
+     </div>
+     <div class="ds-knob-container" data-param="decay" data-label="KLIBB · DECAY" data-unit="ms">
+      <div class="ds-knob" id="knob-decay" tabindex="0" role="slider" aria-label="Decay" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.35">
+       <div class="knob-indicator"></div>
+      </div>
+      <span class="knob-label">KLIBB</span>
+     </div>
+     <div class="ds-knob-container" data-param="sustain" data-label="STUDS · SUSTAIN" data-unit="%">
+      <div class="ds-knob" id="knob-sustain" tabindex="0" role="slider" aria-label="Sustain" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.6">
+       <div class="knob-indicator"></div>
+      </div>
+      <span class="knob-label">STUDS</span>
+     </div>
+     <div class="ds-knob-container" data-param="release" data-label="SLÄPP · RELEASE" data-unit="ms">
+      <div class="ds-knob" id="knob-release" tabindex="0" role="slider" aria-label="Release" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.4">
+       <div class="knob-indicator"></div>
+      </div>
+      <span class="knob-label">SLÄPP</span>
+     </div>
+    </div>
+   </div>
+
+   <!-- Section 2: KONDENS & GASOL (Filter, Drive & Ambience) -->
+   <div class="ds-plate knaus-section" id="sec-filter">
+    <div class="section-title">KONDENS & GASOL · FILTER & EFFEKT</div>
+    <div class="knob-row">
+     <div class="ds-knob-container" data-param="cutoff" data-label="KONDENS · CUTOFF" data-unit="Hz">
+      <div class="ds-knob" id="knob-cutoff" tabindex="0" role="slider" aria-label="Cutoff" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.45">
+       <div class="knob-indicator"></div>
+      </div>
+      <span class="knob-label">KONDENS</span>
+     </div>
+     <div class="ds-knob-container" data-param="resonance" data-label="MYGG · RESONANS" data-unit="%">
+      <div class="ds-knob" id="knob-resonance" tabindex="0" role="slider" aria-label="Resonans" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.4">
+       <div class="knob-indicator"></div>
+      </div>
+      <span class="knob-label">MYGG</span>
+     </div>
+     <div class="ds-knob-container" data-param="envmod" data-label="IMMA · FILTERMOD" data-unit="%">
+      <div class="ds-knob" id="knob-envmod" tabindex="0" role="slider" aria-label="Filtermodulation" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.5">
+       <div class="knob-indicator"></div>
+      </div>
+      <span class="knob-label">IMMA</span>
+     </div>
+     <div class="ds-knob-container" data-param="drive" data-label="GASOL · DRIVE" data-unit="%">
+      <div class="ds-knob" id="knob-drive" tabindex="0" role="slider" aria-label="Gasol drive" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.35">
+       <div class="knob-indicator"></div>
+      </div>
+      <span class="knob-label">GASOL</span>
+     </div>
+     <div class="ds-knob-container" data-param="rain" data-label="ÖSREGN · TAKBRUS" data-unit="%">
+      <div class="ds-knob" id="knob-rain" tabindex="0" role="slider" aria-label="Ösregn takbrus" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.35">
+       <div class="knob-indicator"></div>
+      </div>
+      <span class="knob-label">ÖSREGN</span>
+     </div>
+     <div class="ds-knob-container" data-param="flutter" data-label="BATTERI · SVINSTROB" data-unit="%">
+      <div class="ds-knob" id="knob-flutter" tabindex="0" role="slider" aria-label="Batteri svinstrob" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.25">
+       <div class="knob-indicator"></div>
+      </div>
+      <span class="knob-label">BATTERI</span>
+     </div>
+    </div>
+   </div>
+
+   <!-- Section 3: SEKVENS & MASTER (Sequencer controls, panic button, master volume) -->
+   <div class="ds-plate knaus-section" id="sec-master">
+    <div class="section-title">SEKVENS & MASTER</div>
+    <div class="master-controls">
+     <button class="ds-control ds-play" id="play" aria-pressed="false" aria-label="Spela sequencern">
+      <svg viewBox="0 0 24 24" style="width:40%;height:40%"><path id="pi" d="M7 5 L19 12 L7 19 Z" fill="currentColor"/></svg>
+     </button>
+     <div class="bpm-wrap">
+      <label for="bpm" class="small-label">TEMPO</label>
+      <input class="ds-bpm" id="bpm" type="number" inputmode="numeric" min="30" max="300" value="116" aria-label="Tempo, BPM">
+     </div>
+     <div class="ds-knob-container" data-param="swing" data-label="SVÄNG · SWING" data-unit="%">
+      <div class="ds-knob small" id="knob-swing" tabindex="0" role="slider" aria-label="Swing" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.15">
+       <div class="knob-indicator"></div>
+      </div>
+      <span class="knob-label">SVÄNG</span>
+     </div>
+     <!-- Big panic gesture button -->
+     <button class="ds-control panic-btn" id="panic" aria-pressed="false" aria-label="Strömavbrott (panikknapp)">
+      <span class="panic-led"></span>
+      <span class="panic-text">STRÖMAVBROTT</span>
+     </button>
+     <!-- Master Volume -->
+     <div class="ds-knob-container" data-param="volume" data-label="VOLYM" data-unit="%">
+      <div class="ds-knob large" id="knob-volume" tabindex="0" role="slider" aria-label="Volym" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.8">
+       <div class="knob-indicator"></div>
+      </div>
+      <span class="knob-label">VOLYM</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <!-- 16-step Sequencer Band -->
+  <div class="ds-plate ds-plate--band knaus-seq-band">
+   <div class="seq-steps-grid" id="steps" role="group" aria-label="16-stegs sequencer i c-moll"></div>
+  </div>
+
+  <!-- Bottom: 2-octave portable plastic keyboard -->
+  <div class="knaus-keys-wrap">
+   <div class="ds-keys knaus-keys" id="keys" role="group" aria-label="Campingkeyboard: C3 till C5"></div>
+  </div>
+ </div>
+</div>
+</div>
+</main>
+
+<!-- Cog / Settings Utility Menu -->
+<section class="utility" aria-label="Inställningar">
+ <details id="menu">
+  <summary class="ds-gear" aria-label="Inställningar">
+   <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+  </summary>
+  <div class="ds-menu menu-panel">
+   <div class="ds-menu-actions" id="menu-actions">
+    <button id="demo" type="button">Exempelslinga</button>
+    <button id="clear" type="button">Rensa slinga</button>
+    <button id="save" type="button">Spara session</button>
+    <button id="open" type="button">Öppna session</button>
+    <button id="midi" type="button">Anslut MIDI</button>
+    <button id="install-app" type="button">Installera app</button>
+    <button id="fullscreen" type="button">Helskärm</button>
+    <button id="midi-map-toggle" type="button" aria-controls="midi-map-panel" aria-expanded="false">MIDI-mappning</button>
+    <input id="load" type="file" accept="application/json,.json" aria-label="Öppna session" hidden>
+   </div>
+   <div class="ds-menu-section" id="downloads" hidden>
+    <strong>KNAUS 3000 VST3</strong>
+    <div class="download-grid" id="download-grid"></div>
+    <div class="download-kit" id="download-kit" hidden></div>
+    <p class="download-note">Byggkitet innehåller PlugData-patcharna och bygger VST3 på din egen Mac (Intel och Apple Silicon), Windows-dator eller Linux. Läs BUILD-VST3.md i kitet.</p>
+   </div>
+   <div class="ds-menu-section" id="midi-map-panel" hidden>
+    <div class="midi-map-heading"><strong>MIDI-mappning</strong><button id="midi-map-back" type="button">Tillbaka</button></div>
+    <ul id="midi-map-list" class="midi-map-list"></ul>
+   </div>
+   <p class="ds-menu-help" id="menu-help">Spela på tangenterna med musen, touch eller tangentbordet (A W S E D F T G Y H U J K O L P Ö). Mellanslag startar och stoppar sequencern i c-moll. Dubbelklicka på en ratt för att återställa den till standardläge. Tryck på STRÖMAVBROTT för panik.</p>
+   <div class="credits"><span>Pastor Gregorius · Camping-serien</span><a href="THIRD_PARTY_NOTICES.txt">Licenser</a></div>
+  </div>
+ </details>
+</section>
+<script type="module" src="app.js"></script>
+</body>
+</html>
