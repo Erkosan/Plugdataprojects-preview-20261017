@@ -1,0 +1,8 @@
+{
+  "version": "0.2.0",
+  "source_commit": "585e4bc8c402834a999c8aa0d6db309fb3322b61",
+  "asset_hash": "404a2a524d94ce20",
+  "documentation_commit": "d1212fc904ca322dd4b8d58528a0794be680faf2",
+  "engine": "PlugData / hvcc 0.17.2 / Emscripten 3.1.69",
+  "dpf_commit": "4238e1c7f0351bbe488d79f0899c540543ac7583"
+}

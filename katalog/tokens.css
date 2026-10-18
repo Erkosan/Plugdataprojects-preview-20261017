@@ -353,6 +353,41 @@
   --solo: #c9a14a;
   --field: #e9dcbc;
 }
+[data-theme="kottdisk"] {
+  --ground: #261d1b;
+  --chassis: #6b2939;
+  --chassis-edge: #664a5b;
+  --plate: #e5d6b3;
+  --plate-band: #b99251;
+  --velvet: #30181e;
+  --control: #ead4b6;
+  --control-on: #d3927e;
+  --control-border: #664533;
+  --control-border-hover: #382b35;
+  --control-ink: #392c20;
+  --knob-arc: #e9c3d0;
+  --knob-pointer: #1a1318;
+  --engrave: #f3e5ba;
+  --playhead: #fff0f7;
+  --menu-surface: #eee2c5;
+  --menu-border: #60394f;
+  --menu-ink: #392c20;
+  --menu-muted: #70636b;
+  --menu-tint: #ead7e2;
+  --menu-button-hover: #ead7e2;
+  --menu-button-border: #91617a;
+  --menu-button-ink: #382b35;
+  --lcd-top: #3d2338;
+  --lcd-mid: #afbb98;
+  --lcd-bezel: #735069;
+  --lcd-ink: #293f2a;
+  --lcd-value: #edff79;
+  --lcd-glow: #f06c99;
+  --focus: #e5bf72;
+  --run: #28c76f;
+  --run-idle: #28c76f;
+  --solo: #e49fc6;
+}
 :root {
   --space-hairline: 1px;
   --space-3: 3px;
