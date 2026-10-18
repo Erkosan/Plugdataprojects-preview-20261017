@@ -1,0 +1,200 @@
+{
+ "kott": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.5,
+  "type": "float"
+ },
+ "snart": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.45,
+  "type": "float"
+ },
+ "hud": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.4,
+  "type": "float"
+ },
+ "rokelse": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.4,
+  "type": "float"
+ },
+ "klocka": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.5,
+  "type": "float"
+ },
+ "flock": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.5,
+  "type": "float"
+ },
+ "skuld": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.0,
+  "type": "float"
+ },
+ "nad": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.1,
+  "type": "float"
+ },
+ "delning": {
+  "min": 0.0,
+  "max": 2.0,
+  "default": 1.0,
+  "type": "int"
+ },
+ "synd": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.25,
+  "type": "float"
+ },
+ "valv": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.55,
+  "type": "float"
+ },
+ "volume": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.8,
+  "type": "float"
+ },
+ "bpm": {
+  "min": 30.0,
+  "max": 300.0,
+  "default": 72.0,
+  "type": "int"
+ },
+ "start": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.0,
+  "type": "bool"
+ },
+ "botgoring": {
+  "min": 0.0,
+  "max": 1.0,
+  "default": 0.0,
+  "type": "bool"
+ },
+ "len": {
+  "min": 1.0,
+  "max": 16.0,
+  "default": 12.0,
+  "type": "int"
+ },
+ "tune": {
+  "min": -6.0,
+  "max": 5.0,
+  "default": 0.0,
+  "type": "int"
+ },
+ "step0": {
+  "min": 0.0,
+  "max": 6560.0,
+  "default": 515.0,
+  "type": "int"
+ },
+ "step1": {
+  "min": 0.0,
+  "max": 6560.0,
+  "default": 0.0,
+  "type": "int"
+ },
+ "step2": {
+  "min": 0.0,
+  "max": 6560.0,
+  "default": 756.0,
+  "type": "int"
+ },
+ "step3": {
+  "min": 0.0,
+  "max": 6560.0,
+  "default": 33.0,
+  "type": "int"
+ },
+ "step4": {
+  "min": 0.0,
+  "max": 6560.0,
+  "default": 0.0,
+  "type": "int"
+ },
+ "step5": {
+  "min": 0.0,
+  "max": 6560.0,
+  "default": 36.0,
+  "type": "int"
+ },
+ "step6": {
+  "min": 0.0,
+  "max": 6560.0,
+  "default": 109.0,
+  "type": "int"
+ },
+ "step7": {
+  "min": 0.0,
+  "max": 6560.0,
+  "default": 0.0,
+  "type": "int"
+ },
+ "step8": {
+  "min": 0.0,
+  "max": 6560.0,
+  "default": 756.0,
+  "type": "int"
+ },
+ "step9": {
+  "min": 0.0,
+  "max": 6560.0,
+  "default": 4407.0,
+  "type": "int"
+ },
+ "step10": {
+  "min": 0.0,
+  "max": 6560.0,
+  "default": 9.0,
+  "type": "int"
+ },
+ "step11": {
+  "min": 0.0,
+  "max": 6560.0,
+  "default": 64.0,
+  "type": "int"
+ },
+ "step12": {
+  "min": 0.0,
+  "max": 6560.0,
+  "default": 0.0,
+  "type": "int"
+ },
+ "step13": {
+  "min": 0.0,
+  "max": 6560.0,
+  "default": 0.0,
+  "type": "int"
+ },
+ "step14": {
+  "min": 0.0,
+  "max": 6560.0,
+  "default": 0.0,
+  "type": "int"
+ },
+ "step15": {
+  "min": 0.0,
+  "max": 6560.0,
+  "default": 0.0,
+  "type": "int"
+ }
+}

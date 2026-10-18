@@ -21,6 +21,17 @@
    "midi": "1, 2",
    "farg": "#f2b705",
    "dim": "#5e4700"
+  },
+  {
+   "id": "gissla",
+   "namn": "GISSLA",
+   "kort": "GISSLA",
+   "dist": "synths/Gissla/web/dist",
+   "live": "gissla",
+   "ljud": "stereo",
+   "midi": "1, 3",
+   "farg": "#8f4fb3",
+   "dim": "#3a2149"
   }
  ],
  "synth": [

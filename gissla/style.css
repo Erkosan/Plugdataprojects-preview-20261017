@@ -1,0 +1,203 @@
+/* GISSLA 3000 web shell and the cellar vault. Shared controls (chassis, LCD, knobs, steps, menu) come from
+   3000-series.css; this file draws the vault around the machine and scales it as one picture.
+   PASTORNS GODBITAR has its own look: black lacquer and gold leaf, stained glass, an icon, candlelight
+   and psalm-book serif. No sans-serif chassis lettering, no tiles, no wood: the church, and its cellar. */
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--ground);
+  background-image: radial-gradient(ellipse at 50% 15%, rgba(255, 150, 70, .07), transparent 60%);
+  overflow: hidden; overscroll-behavior: none; touch-action: manipulation;
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
+  font-family: var(--font-psalm);
+}
+#stage {
+  position: fixed; inset: 0; box-sizing: border-box; display: grid; place-items: center;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+#fit { position: relative; width: calc(1180px * var(--zoom, 1)); height: calc(740px * var(--zoom, 1)); }
+.gs-valv {
+  position: absolute; left: 0; top: 0; width: 1180px; height: 740px; overflow: hidden;
+  transform: scale(var(--zoom, 1)); transform-origin: 0 0;
+  --synd: .25; --valv: .55;
+  background: #0d0a0b;
+  box-shadow: inset 0 0 160px rgba(0, 0, 0, .8);
+}
+.gs-valv > * { position: absolute; }
+.gs-valv button { -webkit-user-select: none; user-select: none; font: inherit; }
+.gs-valv button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* The vault: stone blocks and three pointed bays of ribs, warmed by the candles */
+.gs-arches { left: 0; top: 0; width: 1180px; height: 440px; }
+.gs-blocks path { stroke: rgba(0, 0, 0, .35); stroke-width: 1.5; fill: none; }
+.gs-ribs path { fill: none; stroke: #3a3134; stroke-width: 18; }
+.gs-valv.scream .gs-arches { animation: gs-blood .9s ease-out; }
+@keyframes gs-blood { 0% { filter: none; } 15% { filter: sepia(1) saturate(6) hue-rotate(-30deg) brightness(.9); } 100% { filter: none; } }
+
+/* The lancet: St Sebastian in stained glass, bound to his column, his eyes on heaven */
+.gs-window { left: 510px; top: 12px; width: 160px; height: 220px; filter: drop-shadow(0 0 18px rgba(120, 90, 200, .35)); transition: filter .4s; }
+.gs-pane { opacity: .92; }
+.gs-lead { fill: none; stroke: #0b0809; stroke-width: 3; stroke-linejoin: round; }
+.gs-arrows path { stroke: #2a1a10; stroke-width: 3; stroke-linecap: round; }
+.gs-saint { stroke: #0b0809; stroke-width: 2.5; stroke-linejoin: round; }
+.gs-frame { fill: none; stroke: #4a3e40; stroke-width: 8; }
+.gs-window.glow { animation: gs-glow 1.6s ease-out; }
+@keyframes gs-glow { 0% { filter: drop-shadow(0 0 40px rgba(255, 210, 120, .9)) brightness(1.5); } 100% { filter: drop-shadow(0 0 18px rgba(120, 90, 200, .35)); } }
+.gs-beam { left: 470px; top: 120px; width: 240px; height: 320px; pointer-events: none;
+  background: linear-gradient(180deg, rgba(170, 140, 255, .12), rgba(255, 120, 120, .05) 60%, transparent);
+  clip-path: polygon(34% 0, 66% 0, 100% 100%, 0 100%); opacity: .8; }
+
+/* The bell rope down from the vault, with its sally */
+.gs-rope { left: 455px; top: 0; width: 4px; height: 196px; background: repeating-linear-gradient(170deg, #a88a5c 0 4px, #7a6240 4px 8px); transform-origin: 50% 0; }
+.gs-rope i { display: none; }
+.gs-sally { left: 445px; top: 150px; width: 24px; height: 52px; margin: 0; padding: 0; border: 0; border-radius: 10px; cursor: pointer;
+  background: repeating-linear-gradient(180deg, #8e1520 0 8px, #e9dcbc 8px 12px, #1e2f7a 12px 20px, #e9dcbc 20px 24px); box-shadow: 2px 3px 0 rgba(0, 0, 0, .5); }
+.gs-valv.toll .gs-rope, .gs-valv.toll .gs-sally { animation: gs-toll 1.1s ease-out; }
+@keyframes gs-toll { 25% { transform: translateY(14px); } 60% { transform: translateY(-4px); } }
+
+/* The icon of Pastor Gregorius, egg tempera on gold */
+.gs-icon { left: 34px; top: 26px; width: 150px; height: 196px; filter: drop-shadow(4px 6px 0 rgba(0, 0, 0, .55)); }
+.gs-icon-frame { fill: #3a2410; stroke: var(--gold-leaf); stroke-width: 3; }
+.gs-icon-gold { fill: var(--gold-leaf); }
+.gs-halo { fill: #e3c26a; }
+.gs-halo-ring { fill: none; stroke: #8a6a24; stroke-width: 2; stroke-dasharray: 3 3; }
+.gs-robe { fill: #1a0f10; stroke: #000; stroke-width: 1.5; }
+.gs-stole { stroke: #8e1520; stroke-width: 7; fill: none; }
+.gs-cross { stroke: var(--gold-leaf); stroke-width: 2.5; }
+.gs-face { fill: #b88f66; stroke: #3a2410; stroke-width: 1.5; }
+.gs-hair, .gs-beard { fill: #2b2420; }
+.gs-eye { fill: #1a0f10; transition: fill .2s; }
+.gs-brow { stroke: #2b2420; stroke-width: 2.4; stroke-linecap: round; }
+.gs-hand { fill: #b88f66; stroke: #3a2410; stroke-width: 1.5; }
+.gs-inscription { font: 700 12px/1 var(--font-psalm); fill: #8e1520; letter-spacing: .08em; }
+.gs-valv.penance .gs-eye { fill: #ff3a1a; filter: drop-shadow(0 0 4px #ff3a1a); }
+
+/* Psalmtavlan: the hymn board, numbers in gold on black slats. The numbers are the slingor. */
+.gs-psalms { left: 40px; top: 240px; width: 138px; height: 168px; box-sizing: border-box; padding: 18px 10px 8px; display: grid; gap: 6px;
+  background: #1c1012; border: 3px solid var(--gold-leaf); box-shadow: 4px 6px 0 rgba(0, 0, 0, .55); clip-path: polygon(0 12px, 50% 0, 100% 12px, 100% 100%, 0 100%); }
+.gs-valv .gs-psalm { margin: 0; padding: 0; border: 0; background: #0b0708; color: var(--gold-leaf); cursor: pointer;
+  font: 700 22px/30px var(--font-psalm); letter-spacing: .14em; text-align: center; font-variant-numeric: lining-nums tabular-nums; }
+.gs-psalm[aria-checked="true"] { background: #2a0e12; color: #ffe08a; text-shadow: 0 0 8px rgba(255, 200, 90, .7); box-shadow: inset 0 0 0 1px var(--gold-leaf); }
+
+/* Candles: two iron stands, three flames each */
+.gs-candles { top: 120px; width: 44px; height: 300px; display: flex; justify-content: space-between; align-items: flex-start; pointer-events: none;
+  background: linear-gradient(90deg, transparent 20px, #1d1617 20px 24px, transparent 24px) 0 60px / 100% 240px no-repeat,
+    linear-gradient(180deg, transparent 48px, #1d1617 48px 54px, transparent 54px) 0 0 / 100% 100% no-repeat; }
+.gs-candles--l { left: 184px; }
+.gs-candles--r { left: 936px; }
+.gs-candles i { position: relative; width: 8px; height: 48px; margin-top: 4px; background: linear-gradient(90deg, #e8dcc0, #fff7e6 40%, #cfc1a0); }
+.gs-candles i:nth-child(2) { height: 58px; margin-top: -6px; }
+.gs-candles i::before { content: ''; position: absolute; left: -3px; top: -20px; width: 16px; height: 22px; border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
+  background: radial-gradient(ellipse at 50% 70%, #fff6c8 0 25%, #ffb347 45%, rgba(255, 90, 20, .0) 70%); box-shadow: 0 0 30px 10px rgba(255, 160, 60, .35);
+  animation: gs-flicker 2.3s infinite steps(6) alternate; transform-origin: 50% 100%; }
+.gs-candles i:nth-child(2)::before { animation-duration: 1.7s; }
+.gs-candles i:nth-child(3)::before { animation-duration: 2.9s; }
+@keyframes gs-flicker { 0% { transform: scale(1, 1); } 30% { transform: scale(.92, 1.08) skewX(3deg); } 60% { transform: scale(1.05, .94) skewX(-2deg); } 100% { transform: scale(.97, 1.04); } }
+.gs-valv.penance .gs-candles i::before { animation-duration: .3s; }
+
+.gs-floor { left: 0; top: 404px; width: 1180px; height: 336px; background: linear-gradient(180deg, #221b1c, #141011); box-shadow: inset 0 3px 0 #0b0809; }
+
+/* The brothers: eight kneeling monks, habits down to the waist. Their backs are the pads. */
+.gs-monks { left: 228px; top: 198px; width: 700px; height: 230px; }
+.gs-monk { position: absolute; top: 0; width: 84px; height: 228px; margin: 0; padding: 0; border: 0; background: transparent; cursor: pointer; touch-action: none; }
+.gs-monk svg { position: absolute; left: 0; top: 0; width: 84px; height: 196px; overflow: visible; transform-origin: 50% 100%; }
+.gs-skin { fill: var(--skin); stroke: #6b3f2e; stroke-width: 1.5; }
+.gs-tonsure { fill: #2b1d16; }
+.gs-crown { fill: #d9a88c; }
+.gs-spine { fill: none; stroke: rgba(107, 63, 46, .45); stroke-width: 1.6; stroke-linecap: round; }
+.gs-habit { fill: #1f1412; stroke: #000; stroke-width: 1.5; }
+.gs-cord { fill: none; stroke: #c9b48a; stroke-width: 3; }
+.gs-welt { fill: none; stroke: #b5121f; stroke-width: 3.2; stroke-linecap: round; opacity: 0; }
+.gs-welts-old .gs-welt { opacity: .22; }
+.gs-plaque { position: absolute; left: 4px; right: 4px; bottom: 0; height: 26px; display: grid; place-items: center; background: #24160f; border-top: 3px solid var(--pad);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, .5); }
+.gs-plaque .ds-engrave { font-size: 8px; letter-spacing: .14em; color: var(--gold-leaf); }
+.gs-monk.is-selected svg { filter: drop-shadow(0 0 7px var(--pad)); }
+.gs-monk:hover .gs-skin { fill: #ecc2a9; }
+.gs-monk.hit svg { animation: gs-flinch .35s ease-out; }
+.gs-monk.hit-hard svg { animation: gs-flinch-hard .5s ease-out; }
+.gs-monk.hit .gs-welts-new .gs-welt, .gs-monk.hit-hard .gs-welts-new .gs-welt { animation: gs-welt 2.2s ease-out forwards; }
+.gs-monk.hit-hard .gs-welts-new .gs-welt:nth-child(2) { animation-delay: .04s; }
+@keyframes gs-welt { 0% { opacity: 1; stroke-width: 4.5; } 40% { opacity: .9; } 100% { opacity: .15; stroke-width: 3; } }
+@keyframes gs-flinch { 0% { transform: none; } 25% { transform: rotate(-3deg) translateY(2px); } 70% { transform: rotate(1.5deg); } 100% { transform: none; } }
+@keyframes gs-flinch-hard { 0% { transform: none; } 20% { transform: rotate(-6deg) translateY(4px) scaleY(.97); } 55% { transform: rotate(3deg); } 80% { transform: rotate(-1deg); } 100% { transform: none; } }
+.gs-valv.penance .gs-monk svg { animation: gs-tremble .09s linear infinite; }
+@keyframes gs-tremble { 50% { transform: translateX(1px) rotate(.6deg); } }
+
+/* The sexton and his censer */
+.gs-sexton { left: 1018px; top: 126px; width: 130px; height: 300px; margin: 0; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.gs-sexton svg { width: 100%; height: 100%; overflow: visible; }
+.gs-cassock { fill: #0e0a0b; stroke: #000; stroke-width: 1.5; }
+.gs-surplice { fill: #e9e1cf; stroke: #8a8070; stroke-width: 1.5; }
+.gs-sexton-head { fill: #c79a7a; stroke: #5a3a2a; stroke-width: 1.5; }
+.gs-sexton-hair { fill: #8a8a86; }
+.gs-arm { fill: none; stroke: #e9e1cf; stroke-width: 10; stroke-linecap: round; }
+.gs-chain { fill: none; stroke: #c9a14a; stroke-width: 1.6; }
+.gs-censer { fill: var(--gold-leaf); stroke: #5a4318; stroke-width: 1.5; }
+.gs-censer-lid { fill: #e3c26a; stroke: #5a4318; stroke-width: 1.5; }
+.gs-thurible { transform-origin: 24px 180px; }
+.gs-sexton.swing .gs-thurible { animation: gs-swing 1.1s ease-in-out; }
+.gs-sexton.jerk .gs-thurible { animation: gs-jerk .25s ease-out; }
+@keyframes gs-swing { 0% { transform: rotate(0); } 25% { transform: rotate(38deg); } 60% { transform: rotate(-30deg); } 85% { transform: rotate(10deg); } 100% { transform: rotate(0); } }
+@keyframes gs-jerk { 40% { transform: rotate(9deg); } 100% { transform: rotate(0); } }
+.gs-smoke { position: absolute; left: -10px; top: 190px; width: 70px; height: 80px; pointer-events: none; opacity: 0;
+  background: radial-gradient(circle at 40% 70%, rgba(210, 205, 220, .65) 0 22%, transparent 24%), radial-gradient(circle at 60% 35%, rgba(190, 185, 205, .5) 0 26%, transparent 28%); }
+.gs-smoke.puff { animation: gs-puff 1.6s ease-out; }
+@keyframes gs-puff { 0% { opacity: .85; transform: translate(0, 0) scale(.5); } 100% { opacity: 0; transform: translate(-30px, -90px) scale(2.4); } }
+
+.gs-valv.scream { animation: gs-shake .4s linear; }
+@keyframes gs-shake { 25% { transform: scale(var(--zoom, 1)) translate(3px, -2px); } 50% { transform: scale(var(--zoom, 1)) translate(-3px, 2px); } 75% { transform: scale(var(--zoom, 1)) translate(2px, 1px); } }
+
+/* The machine: black lacquer and gold on the stone floor */
+.gs-panel { left: 30px; top: 438px; width: 1120px; height: 290px; box-sizing: border-box; padding: 0; z-index: 4; }
+.gs-brand { position: absolute; left: 18px; top: 14px; display: flex; gap: 18px; align-items: baseline; }
+.gs-brand .ds-logo { font-size: 15px; letter-spacing: .3em; }
+.gs-maker { font-size: 8px; opacity: .8; }
+.gs-lcd { position: absolute; left: 18px; top: 40px; width: 400px; height: 64px; }
+.gs-bot { position: absolute; left: 432px; top: 40px; width: 250px; height: 64px; --ds-face: #6e0d15; color: #ffe2a0 !important;
+  border: 2px solid var(--gold-leaf) !important; box-shadow: inset 0 -6px 0 rgba(0, 0, 0, .35), inset 0 0 0 3px #3a0509;
+  font: 700 18px/1 var(--font-psalm); letter-spacing: .26em; clip-path: polygon(0 18px, 50% 0, 100% 18px, 100% 100%, 0 100%); padding-top: 14px; }
+.gs-bot[aria-pressed="true"] { --ds-face-on: #b5121f; background: #b5121f; transform: translateY(2px); box-shadow: inset 0 0 22px rgba(255, 200, 120, .55); }
+.gs-transport { position: absolute; right: 18px; top: 46px; display: flex; gap: 8px; align-items: center; }
+.gs-transport .ds-bpm { font-family: var(--font-psalm); }
+.gs-knobs { position: absolute; left: 16px; top: 114px; width: 1088px; height: 84px; box-sizing: border-box; display: flex; justify-content: space-between; padding: 6px 14px;
+  box-shadow: inset 0 0 0 1px rgba(201, 161, 74, .35); }
+.gs-knob { display: grid; justify-items: center; gap: 4px; width: 74px; }
+.gs-knob .ds-engrave { font-size: 8px; letter-spacing: .12em; }
+.gs-seq { position: absolute; left: 16px; top: 208px; width: 1088px; height: 66px; box-sizing: border-box; display: flex; align-items: center; gap: 12px; padding: 0 14px;
+  background: linear-gradient(180deg, #2a0e12, #1b080b); box-shadow: inset 0 0 0 1px rgba(201, 161, 74, .35); }
+.gs-track { width: 108px; text-align: left; font-size: 11px; font-weight: 700; }
+.gs-steps { display: flex; gap: 4px; }
+/* A step is a strip of skin. Lit, it carries a red rapp; an accent is two. */
+.gs-step { width: 50px; height: 44px; border-top: 3px solid var(--step-ch, var(--control-border)) !important; }
+.gs-step[aria-pressed="true"]::after { content: none; }
+.gs-step[aria-pressed="true"] { background: linear-gradient(160deg, transparent 0 40%, var(--blood) 40% 52%, transparent 52%), var(--skin) !important; }
+.gs-step[data-accent="1"] { background: linear-gradient(160deg, transparent 0 24%, var(--blood) 24% 34%, transparent 34% 56%, var(--blood) 56% 66%, transparent 66%), var(--skin) !important; }
+.gs-step:nth-child(3n + 1) { box-shadow: inset 2px 0 0 rgba(201, 161, 74, .45); }
+.gs-steps.even .gs-step:nth-child(3n + 1) { box-shadow: none; }
+.gs-steps.even .gs-step:nth-child(4n + 1) { box-shadow: inset 2px 0 0 rgba(201, 161, 74, .45); }
+.gs-step.is-current { box-shadow: inset 0 0 0 3px var(--playhead) !important; }
+.gs-step .ds-step-accent { display: none !important; }
+.gs-len { width: 50px; height: 44px; font: 700 10px/1 var(--font-psalm); letter-spacing: .12em; }
+@media (prefers-reduced-motion: reduce) { .gs-valv *, .gs-valv *::before, .gs-valv *::after, .gs-valv { animation: none !important; transition: none !important; } }
+
+/* Gear menu: app things live here, never in the vault. */
+.utility { position: fixed; z-index: 20; right: max(12px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); }
+#menu > summary { list-style: none; cursor: pointer; }
+#menu > summary::-webkit-details-marker { display: none; }
+.menu-panel { position: fixed; z-index: 21; right: max(12px, env(safe-area-inset-right)); bottom: calc(max(12px, env(safe-area-inset-bottom)) + 54px);
+  width: min(430px, calc(100vw - 24px)); max-height: calc(100dvh - 90px); overflow: auto; -webkit-user-select: text; user-select: text; }
+.menu-panel.show-midi-map .ds-menu-actions, .menu-panel.show-midi-map #downloads, .menu-panel.show-midi-map #menu-help { display: none; }
+.ds-menu-actions button:disabled { opacity: .55; cursor: default; }
+.download-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-8); }
+.download-grid a { display: block; padding: 10px 6px; border: 1px solid var(--menu-button-border); background: var(--menu-button); color: var(--menu-button-ink); text-align: center; text-decoration: none; font-size: 12px; font-weight: 650; }
+.download-grid a:hover, .download-kit a:hover { background: var(--menu-button-hover); }
+.download-kit { margin-top: var(--space-8); }
+.download-kit a { display: block; padding: 12px 8px; border: 1px solid var(--menu-button-border); border-top-width: 3px; border-top-color: var(--menu-border); background: var(--menu-button); color: var(--menu-button-ink); text-align: center; text-decoration: none; font-size: 12px; font-weight: 650; }
+.download-note { margin: 8px 0 0; font-size: 11px; line-height: 1.5; color: var(--menu-muted); }
+.midi-map-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.midi-map-heading strong { margin: 0; }
+.midi-map-heading button { min-height: 32px; border: 1px solid var(--menu-button-border); background: var(--menu-button); color: var(--menu-button-ink); font: 12px var(--font-psalm); padding: 0 12px; cursor: pointer; }
+.midi-map-list { list-style: none; margin: 0; padding: 0; font-size: 12px; line-height: 1.9; }
+.midi-map-list code { display: inline-block; min-width: 9.5em; font-family: var(--font-lcd); font-variant-numeric: tabular-nums; }
+.credits { display: flex; justify-content: space-between; margin-top: var(--space-8); padding-top: var(--space-8); border-top: 1px solid var(--menu-button-border); font-size: 10px; color: var(--menu-muted); }
+.credits a { color: var(--menu-muted); }

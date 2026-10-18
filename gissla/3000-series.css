@@ -1,0 +1,316 @@
+/* 3000 Series — component styles. Every colour, size and radius comes from tokens.css. */
+.ds-ground{background:var(--ground);color:var(--control-ink);font-family:var(--font-panel);}
+.ds-ground--art{background:var(--ground) var(--ds-art,none) center/cover fixed;}
+
+/* Chassis, plates, engraving */
+.ds-chassis{position:relative;background:var(--chassis);border:1px solid var(--chassis-edge);border-radius:var(--radius-0);padding:var(--space-14);}
+[data-theme="alskog"] .ds-chassis{border:0;border-radius:var(--radius-chassis);box-shadow:var(--shadow-chassis);}
+.ds-plate{background:var(--plate);border-radius:var(--radius-plate);box-shadow:var(--shadow-plate);padding:var(--space-8);}
+.ds-plate--band{background:var(--plate-band);}
+.ds-engrave{font-family:var(--font-engrave);font-size:10px;line-height:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--engrave);text-align:center;white-space:nowrap;}
+.ds-logo{font-family:var(--font-engrave);font-size:11px;line-height:16px;letter-spacing:.32em;color:var(--engrave);text-transform:uppercase;}
+
+/* Generic control face: square, 1px border, flat fill */
+.ds-control{position:relative;display:grid;place-items:center;box-sizing:border-box;margin:0;padding:0;border:1px solid var(--control-border);border-radius:var(--radius-0);background:var(--ds-face,var(--control));color:var(--control-ink);font:inherit;cursor:pointer;user-select:none;touch-action:none;-webkit-tap-highlight-color:transparent;}
+.ds-control:hover{border-color:var(--control-border-hover);}
+.ds-control:focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
+.ds-control[aria-pressed="true"],.ds-control[aria-checked="true"]{background:var(--ds-face-on,var(--control-on));}
+.ds-control>svg{width:76%;height:76%;display:block;pointer-events:none;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round;}
+.ds-cell{width:var(--cell);height:var(--cell);}
+.ds-label{font-size:12px;font-weight:600;line-height:14px;letter-spacing:.06em;}
+
+/* Knob: 270° arc, pointer rotated by --angle (-135deg … 135deg) */
+.ds-knob{width:var(--knob);height:var(--knob);--angle:0deg;}
+.ds-knob svg{width:100%;height:100%;display:block;pointer-events:none;}
+.ds-knob .ds-knob-arc{fill:none;stroke:var(--knob-arc);stroke-width:3;stroke-linecap:round;}
+.ds-knob .ds-knob-ptr{stroke:var(--knob-pointer);stroke-width:2.5;stroke-linecap:round;transform:rotate(var(--angle));transform-origin:25px 25px;}
+.ds-knob-tall{height:96px;flex-direction:column;}
+.ds-knob-name{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-family:var(--font-engrave);font-size:10px;letter-spacing:.2em;opacity:.72;pointer-events:none;}
+
+/* Fader: whole box is the hit area, a 4px black thumb marks the value */
+.ds-fader{position:relative;border:1px solid var(--control-border);background:var(--ds-face,var(--control));cursor:pointer;touch-action:none;}
+.ds-fader-thumb{position:absolute;background:var(--knob-pointer);pointer-events:none;}
+.ds-fader--v .ds-fader-thumb{left:0;right:0;height:var(--space-4);bottom:calc(var(--value,.5) * (100% - var(--space-4)));}
+.ds-fader--h .ds-fader-thumb{top:0;bottom:0;width:var(--space-4);left:calc(var(--value,.5) * (100% - var(--space-4)));}
+
+/* Sequencer step */
+.ds-step{width:var(--cell);height:var(--cell);background:var(--ds-face,var(--control));}
+.ds-step[aria-pressed="true"]{background:var(--ds-face,var(--control));}
+.ds-step[aria-pressed="true"]::after{content:'';position:absolute;inset:calc(50% - 7.5px);background:linear-gradient(45deg,transparent 43%,var(--control-ink) 44%,var(--control-ink) 56%,transparent 57%),linear-gradient(-45deg,transparent 43%,var(--control-ink) 44%,var(--control-ink) 56%,transparent 57%);}
+.ds-step.is-current{box-shadow:inset 0 0 0 1px var(--playhead);}
+.ds-step.is-selected{border-color:var(--playhead);filter:brightness(1.18);}
+.ds-step.is-outside{opacity:.28;}
+.ds-step-accent{display:none;position:absolute;width:4px;height:4px;bottom:3px;left:3px;background:var(--playhead);transform:rotate(45deg);pointer-events:none;}
+.ds-step[data-accent="1"] .ds-step-accent{display:block;}
+.ds-step-ratchet{position:absolute;left:2px;top:2px;height:3.6px;width:calc(var(--ratchet,0) * 4.2px);background:radial-gradient(circle at 1.8px 1.8px,var(--playhead) 1.8px,transparent 1.9px);background-size:4.2px 3.6px;pointer-events:none;}
+.ds-step[aria-pressed="false"] .ds-step-ratchet,.ds-step[aria-pressed="false"] .ds-step-accent{display:none;}
+
+/* Bank / radio row */
+.ds-banks{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:var(--space-3);}
+.ds-banks--flush{gap:0;}
+.ds-banks .ds-control{height:40px;font-family:var(--font-lcd);font-size:11px;}
+.ds-banks .ds-control[aria-checked="true"]{background:var(--bank-on);color:#1a1a1a;box-shadow:inset 0 0 0 1px var(--playhead);}
+
+/* LCD */
+.ds-lcd{position:relative;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;gap:2px;padding:5px 10px;min-height:60px;background:linear-gradient(180deg,var(--lcd-top),var(--lcd-mid) 58%,var(--lcd-top));border:2px solid var(--lcd-bezel);box-shadow:var(--shadow-lcd);font-family:var(--font-lcd);color:var(--lcd-ink);overflow:hidden;}
+[data-theme="runkinator"] .ds-lcd{border-width:1px;box-shadow:none;}
+.ds-lcd-glow{height:1px;background:var(--lcd-glow);opacity:.8;box-shadow:0 0 6px var(--lcd-glow);}
+.ds-lcd-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;}
+.ds-lcd-name{font-size:15px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ds-lcd-value{font-size:11px;white-space:nowrap;letter-spacing:.1em;color:var(--lcd-value);font-variant-numeric:tabular-nums;text-shadow:0 0 6px var(--lcd-value);}
+.ds-lcd-line{font-size:12px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 5px var(--lcd-glow);}
+[data-theme="runkinator"] .ds-lcd-line,[data-theme="runkinator"] .ds-lcd-value{text-shadow:none;}
+
+/* Lamps */
+.ds-lamp{position:relative;width:var(--cell);height:var(--cell);background:var(--velvet);}
+.ds-lamp::after{content:'';position:absolute;inset:10%;border:1.5px solid #555555;border-radius:var(--radius-disc);background:var(--velvet);}
+.ds-lamp.is-on::after{background:var(--playhead);border-color:#d2d2d2;}
+.ds-heart{width:20px;height:20px;display:block;}
+.ds-heart path{fill:var(--heart-off);stroke:#14050b;stroke-width:1.2;}
+.ds-heart.is-on path{fill:var(--heart);}
+.ds-heart.is-flash path{fill:var(--heart-flash);}
+
+/* Transport */
+.ds-transport{display:flex;align-items:center;gap:var(--space-8);}
+.ds-play{width:52px;height:46px;background:var(--run-idle);color:#ffffff;}
+.ds-play[aria-pressed="true"]{background:var(--run);}
+.ds-rec{width:46px;height:46px;color:#ffffff;}
+.ds-rec::after{content:'';width:11px;height:11px;border-radius:var(--radius-disc);background:#232323;}
+.ds-rec[aria-pressed="true"]{background:var(--rec);}
+.ds-rec[aria-pressed="true"]::after{background:#ffffff;}
+.ds-bpm{width:76px;height:46px;box-sizing:border-box;border:1px solid var(--control-border);border-radius:var(--radius-2);background:var(--field);color:#252924;font:24px/1 var(--font-panel);font-variant-numeric:tabular-nums;text-align:center;padding:0;appearance:textfield;}
+.ds-bpm::-webkit-inner-spin-button{appearance:none;}
+.ds-bpm:focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
+
+/* Gear button + menu */
+.ds-gear{width:var(--touch);height:var(--touch);border-radius:var(--radius-disc);display:grid;place-items:center;border:1px solid rgba(255,255,255,.72);background:rgba(0,0,0,.24);color:#ffffff;cursor:pointer;}
+.ds-gear svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+[data-theme="alskog"] .ds-gear{border:0;background:rgba(42,12,22,.9);}
+.ds-menu{box-sizing:border-box;width:min(430px,100%);padding:var(--space-14);background:var(--menu-surface);color:var(--menu-ink);border:2px solid var(--menu-border);border-radius:var(--radius-0);box-shadow:var(--shadow-menu);font-family:var(--font-panel);}
+[data-theme="alskog"] .ds-menu{border:0;border-radius:var(--radius-14);box-shadow:inset 0 0 0 2px var(--menu-border),0 10px 30px rgba(0,0,0,.4);}
+.ds-menu-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-8);}
+.ds-menu-actions button{min-height:var(--touch);border:1px solid var(--menu-button-border);border-radius:var(--radius-0);background:var(--menu-button);color:var(--menu-button-ink);font:12px var(--font-panel);cursor:pointer;}
+.ds-menu-actions button:hover{background:var(--menu-button-hover);}
+.ds-menu-actions button:focus-visible{outline:2px solid var(--menu-ink);outline-offset:2px;}
+.ds-menu-section{margin-top:var(--space-8);padding:12px;border:1px solid var(--menu-button-border);background:var(--menu-tint);}
+.ds-menu-section strong{display:block;margin-bottom:9px;font-size:12px;letter-spacing:.05em;}
+.ds-menu-help{margin:12px 0 0;font-size:11px;line-height:1.65;color:var(--menu-muted);}
+
+/* TURBOTUTTI: hockey locker room. Shower-tile ground, locker vents, towel-stripe band, scoreboard LCD. */
+[data-theme="turbotutte"] .ds-ground{background-size:var(--knob) var(--knob);background-image:linear-gradient(rgba(29,42,51,.18) 1px,transparent 1px),linear-gradient(90deg,rgba(29,42,51,.18) 1px,transparent 1px);}
+[data-theme="turbotutte"] .ds-chassis{border-width:2px;}
+[data-theme="turbotutte"] .ds-chassis::before{content:'';position:absolute;right:var(--space-30);width:240px;top:10px;height:22px;background:repeating-linear-gradient(90deg,var(--chassis-edge) 0 22px,transparent 22px 30px) 0 0/100% 4px no-repeat,repeating-linear-gradient(90deg,var(--chassis-edge) 0 22px,transparent 22px 30px) 0 9px/100% 4px no-repeat,repeating-linear-gradient(90deg,var(--chassis-edge) 0 22px,transparent 22px 30px) 0 18px/100% 4px no-repeat;opacity:.8;pointer-events:none;}
+[data-theme="turbotutte"] .ds-plate--band{background:repeating-linear-gradient(180deg,var(--towel) 0 10px,var(--tre-kronor-blue) 10px 16px,var(--towel) 16px 20px,var(--control-on) 20px 24px);}
+[data-theme="turbotutte"] .ds-lcd{border-width:3px;border-radius:var(--radius-2);box-shadow:inset 0 0 0 1px #000000;}
+[data-theme="turbotutte"] .ds-lcd-name,[data-theme="turbotutte"] .ds-lcd-line{text-shadow:0 0 6px var(--lcd-glow);}
+[data-theme="turbotutte"] .ds-gear{border:0;background:var(--tre-kronor-blue);}
+[data-theme="turbotutte"] .ds-menu{border-width:2px;border-top-width:8px;}
+
+/* SVETTILAINEN: a dark wooden sauna control panel. Ember LCD in a thick bezel, an ember gear and a menu with a wood-brown top edge.
+   The bastu itself (lave, gubbar, aggregat, isvak) is drawn by the SVETTILAINEN page. */
+[data-theme="svettan"] .ds-chassis{border-width:2px;}
+[data-theme="svettan"] .ds-lcd{border-width:3px;border-radius:var(--radius-2);box-shadow:inset 0 0 0 1px #000000,0 0 18px rgba(255,106,42,.25);}
+[data-theme="svettan"] .ds-lcd-name,[data-theme="svettan"] .ds-lcd-line{text-shadow:0 0 6px var(--lcd-glow);}
+[data-theme="svettan"] .ds-gear{border:0;background:#8a4b26;}
+[data-theme="svettan"] .ds-menu{border-width:2px;border-top-width:8px;}
+[data-theme="svettan"] .ds-knob .ds-knob-arc{stroke:var(--chassis-edge);}
+
+/* PERKELE: a workshop machine in green hammer paint with a hazard-striped edge, and a car-radio VFD.
+   The verkstad itself (verktygstavlan, the Lada, Pertti) is drawn by the PERKELE page. */
+[data-theme="perkele"] .ds-chassis{border-width:2px;box-shadow:inset 0 0 0 4px var(--chassis-edge);}
+[data-theme="perkele"] .ds-chassis::before{content:'';position:absolute;left:0;right:0;top:0;height:8px;background:repeating-linear-gradient(-45deg,var(--hazard) 0 10px,var(--velvet) 10px 20px);pointer-events:none;}
+[data-theme="perkele"] .ds-lcd{border-width:3px;border-radius:var(--radius-2);box-shadow:inset 0 0 0 1px #000000,0 0 14px rgba(63,224,168,.18);}
+[data-theme="perkele"] .ds-lcd-name,[data-theme="perkele"] .ds-lcd-line{text-shadow:0 0 6px var(--lcd-glow);}
+[data-theme="perkele"] .ds-gear{border:0;background:var(--chassis);}
+[data-theme="perkele"] .ds-menu{border-width:2px;border-top-width:8px;}
+[data-theme="perkele"] .ds-knob .ds-knob-arc{stroke:var(--chassis-edge);}
+
+/* GISSLA (PASTORNS GODBITAR): black lacquer framed twice in gold leaf, serif lettering from the psalm book,
+   and a display of votive glass. The vault itself (the monks, the icon, the stained glass) is drawn by the GISSLA page. */
+[data-theme="gissla"] .ds-chassis{border:2px solid var(--chassis-edge);box-shadow:inset 0 0 0 3px var(--chassis),inset 0 0 0 4px var(--chassis-edge),0 10px 0 rgba(0,0,0,.55);}
+[data-theme="gissla"] .ds-logo,[data-theme="gissla"] .ds-engrave{font-family:var(--font-psalm);}
+[data-theme="gissla"] .ds-logo{font-weight:700;}
+[data-theme="gissla"] .ds-lcd{border-width:2px;background:radial-gradient(ellipse at 50% 120%,rgba(255,120,40,.22),transparent 60%),linear-gradient(180deg,var(--lcd-top),var(--lcd-mid) 58%,var(--lcd-top));box-shadow:inset 0 0 0 1px #000000,0 0 18px rgba(255,138,42,.16);}
+[data-theme="gissla"] .ds-lcd-name,[data-theme="gissla"] .ds-lcd-line{font-family:var(--font-psalm);text-shadow:0 0 7px var(--lcd-glow);}
+[data-theme="gissla"] .ds-gear{border:1px solid var(--chassis-edge);background:var(--chassis);color:var(--chassis-edge);}
+[data-theme="gissla"] .ds-menu{border-width:2px;border-top-width:8px;font-family:var(--font-psalm);}
+[data-theme="gissla"] .ds-knob .ds-knob-arc{stroke:var(--knob-arc);}
+
+/* Duschen: the TURBOTUTTI shower crew. Blocky figures in the Balkangucci style (40px head, 6px eyes, stubble), towel round the waist. */
+.ds-shower{position:relative;display:flex;justify-content:space-around;align-items:flex-end;gap:var(--space-8);height:230px;padding:0 var(--space-30) 18px;overflow:hidden;background:var(--ground);background-image:linear-gradient(rgba(29,42,51,.18) 1px,transparent 1px),linear-gradient(90deg,rgba(29,42,51,.18) 1px,transparent 1px);background-size:var(--knob) var(--knob);}
+.ds-shower[hidden]{display:none;}
+.ds-shower::after{content:'';position:absolute;left:0;right:0;bottom:0;height:18px;background:var(--chassis);box-shadow:inset 0 2px 0 var(--chassis-edge);}
+.ds-stall{position:relative;width:110px;height:100%;display:flex;justify-content:center;align-items:flex-end;}
+.ds-stall-head{position:absolute;top:0;left:50%;width:4px;height:22px;margin-left:-2px;background:#7d8b94;}
+.ds-stall-head::after{content:'';position:absolute;top:22px;left:-12px;width:28px;height:8px;background:#9aa7af;border-bottom:3px solid #5d6a72;}
+.ds-water{position:absolute;top:33px;left:50%;width:30px;margin-left:-15px;bottom:18px;background:repeating-linear-gradient(90deg,rgba(120,190,230,.55) 0 2px,transparent 2px 7px);-webkit-mask:repeating-linear-gradient(180deg,#000 0 9px,transparent 9px 16px);mask:repeating-linear-gradient(180deg,#000 0 9px,transparent 9px 16px);animation:ds-rain .35s linear infinite;}
+@keyframes ds-rain{to{-webkit-mask-position:0 16px;mask-position:0 16px;}}
+.ds-steam{position:absolute;bottom:60px;width:26px;height:26px;border-radius:var(--radius-disc);background:rgba(255,255,255,.55);animation:ds-steam 4s ease-out infinite;pointer-events:none;}
+@keyframes ds-steam{0%{transform:translateY(0) scale(.6);opacity:0}20%{opacity:.8}100%{transform:translateY(-150px) scale(2.4);opacity:0}}
+
+.ds-guy{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;transform-origin:bottom center;animation:ds-sway 3.5s ease-in-out infinite;--skin:#e8d5b7;--hair:#222222;}
+@keyframes ds-sway{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.04) translateY(-1px)}}
+.ds-guy-head{position:relative;width:40px;height:40px;background:var(--skin);display:flex;align-items:center;justify-content:center;z-index:3;}
+.ds-guy-head::before{content:'';position:absolute;top:-4px;left:0;right:0;height:6px;background:var(--hair);}
+.ds-guy-eyes{display:flex;justify-content:space-between;width:20px;margin-top:-2px;}
+.ds-guy-eyes i{width:6px;height:6px;background:#111111;}
+.ds-guy-head.closed .ds-guy-eyes i{height:2px;}
+.ds-guy-head::after{content:'';position:absolute;left:0;right:0;bottom:0;height:9px;opacity:.7;background-image:repeating-linear-gradient(90deg,var(--hair) 0 1px,transparent 1px 4px),repeating-linear-gradient(0deg,var(--hair) 0 1px,transparent 1px 3px);}
+.ds-guy-mouth{position:absolute;bottom:9px;left:15px;width:10px;height:3px;background:#5a2a2a;z-index:2;}
+.ds-guy-mouth.open{height:6px;bottom:7px;}
+.ds-guy-body{position:relative;width:48px;height:40px;background:var(--skin);z-index:2;}
+.ds-guy-arm{position:absolute;top:2px;width:10px;height:34px;background:var(--skin);transform-origin:5px 4px;}
+.ds-guy-arm.l{left:-10px}.ds-guy-arm.r{right:-10px}
+.ds-guy-towel{position:relative;width:56px;height:26px;background:var(--towel);z-index:3;background-image:linear-gradient(180deg,transparent 0 5px,var(--tre-kronor-blue) 5px 9px,transparent 9px 11px,var(--control-on) 11px 13px,transparent 13px);}
+.ds-guy-towel::after{content:'';position:absolute;right:6px;top:0;width:8px;height:26px;background:rgba(0,0,0,.08);}
+.ds-guy-legs{display:flex;gap:8px;}
+.ds-guy-legs i{width:10px;height:16px;background:var(--skin);}
+.ds-guy-feet{display:flex;gap:8px;}
+.ds-guy-feet i{width:18px;height:5px;margin-left:-4px;background:var(--tre-kronor-blue);}
+
+/* Props */
+.ds-whip{position:absolute;bottom:-4px;left:2px;width:46px;height:6px;background:var(--towel);border:1px solid #c9c4b6;transform-origin:2px 3px;background-image:repeating-linear-gradient(90deg,transparent 0 6px,var(--tre-kronor-blue) 6px 8px);}
+.ds-pop{position:absolute;top:-30px;left:56px;padding:2px 6px;background:var(--control-on);color:var(--control-ink);font:700 11px var(--font-engrave);letter-spacing:.12em;border:2px solid var(--control-ink);white-space:nowrap;opacity:0;}
+.ds-foam{position:absolute;top:-16px;left:-6px;width:52px;height:22px;z-index:4;background:radial-gradient(circle at 10px 12px,#ffffff 9px,transparent 9.5px),radial-gradient(circle at 26px 8px,#ffffff 11px,transparent 11.5px),radial-gradient(circle at 42px 13px,#ffffff 9px,transparent 9.5px);}
+.ds-bubble{position:absolute;width:8px;height:8px;border-radius:var(--radius-disc);border:2px solid rgba(255,255,255,.9);animation:ds-steam 2.6s ease-out infinite;}
+.ds-bottle{position:absolute;bottom:-14px;left:-1px;width:12px;height:18px;background:var(--control-on);border:2px solid var(--control-ink);}
+.ds-bottle::before{content:'';position:absolute;top:-6px;left:2px;width:4px;height:4px;background:var(--control-ink);}
+.ds-note{position:absolute;top:-10px;left:44px;font:700 16px var(--font-panel);color:var(--tre-kronor-blue);opacity:0;animation:ds-note 2.4s ease-out infinite;}
+@keyframes ds-note{0%{transform:translate(0,0);opacity:0}15%{opacity:1}100%{transform:translate(26px,-60px) rotate(20deg);opacity:0}}
+.ds-helmet{position:absolute;top:-8px;left:-3px;width:46px;height:20px;background:var(--tre-kronor-blue);z-index:5;}
+.ds-helmet::before{content:'';position:absolute;top:6px;left:18px;width:10px;height:6px;background:var(--control-on);clip-path:polygon(0 100%,0 30%,25% 60%,50% 0,75% 60%,100% 30%,100% 100%);}
+.ds-helmet::after{content:'';position:absolute;top:24px;left:4px;width:38px;height:22px;background:repeating-linear-gradient(90deg,#c8cfd4 0 2px,transparent 2px 7px),repeating-linear-gradient(180deg,#c8cfd4 0 2px,transparent 2px 7px);}
+.ds-stick{position:absolute;bottom:-60px;left:2px;width:5px;height:96px;background:#b0753f;transform-origin:2px 2px;transform:rotate(-24deg);}
+.ds-stick::after{content:'';position:absolute;bottom:0;left:0;width:26px;height:7px;background:#1b1b1b;}
+.ds-puck{position:absolute;bottom:22px;right:-62px;z-index:4;width:14px;height:6px;background:#111111;animation:ds-puck .9s ease-in-out infinite;}
+@keyframes ds-puck{0%,100%{transform:translateY(0)}50%{transform:translateY(-52px) rotate(180deg)}}
+
+/* Actions */
+.ds-guy.snap .ds-guy-arm.r{animation:ds-arm-snap 1.6s infinite;}
+.ds-guy.snap .ds-whip{animation:ds-whip 1.6s infinite;}
+.ds-guy.snap .ds-pop{animation:ds-pop 1.6s infinite;}
+@keyframes ds-arm-snap{0%,55%{transform:rotate(-20deg)}62%{transform:rotate(-120deg)}70%,100%{transform:rotate(-20deg)}}
+@keyframes ds-whip{0%,55%{transform:rotate(80deg)}64%{transform:rotate(-30deg) scaleX(1.25)}72%,100%{transform:rotate(80deg)}}
+@keyframes ds-pop{0%,62%{opacity:0;transform:scale(.6)}66%{opacity:1;transform:scale(1.1)}85%{opacity:1;transform:scale(1)}100%{opacity:0}}
+.ds-guy.scrub .ds-guy-arm.l{animation:ds-scrub-l .5s ease-in-out infinite alternate;}
+.ds-guy.scrub .ds-guy-arm.r{animation:ds-scrub-r .5s ease-in-out infinite alternate;}
+@keyframes ds-scrub-l{from{transform:rotate(150deg)}to{transform:rotate(175deg)}}
+@keyframes ds-scrub-r{from{transform:rotate(-175deg)}to{transform:rotate(-150deg)}}
+.ds-guy.scrub .ds-foam{animation:ds-foam .5s ease-in-out infinite alternate;}
+@keyframes ds-foam{to{transform:translateX(3px) scaleY(1.1)}}
+.ds-guy.sing .ds-guy-arm.r{transform:rotate(-165deg);}
+.ds-guy.sing{animation:ds-sing 1.2s ease-in-out infinite;}
+@keyframes ds-sing{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg) translateY(-2px)}}
+.ds-guy.sing .ds-guy-mouth{animation:ds-mouth .3s step-end infinite alternate;}
+@keyframes ds-mouth{from{height:3px;bottom:9px}to{height:7px;bottom:6px}}
+.ds-guy.puck .ds-guy-arm.r{transform:rotate(-40deg);}
+.ds-guy.flex .ds-guy-arm{animation:ds-flex 1.4s ease-in-out infinite;}
+.ds-guy.flex .ds-guy-arm.l{animation-name:ds-flex-l;}
+@keyframes ds-flex{0%,100%{transform:rotate(-100deg)}50%{transform:rotate(-140deg)}}
+@keyframes ds-flex-l{0%,100%{transform:rotate(100deg)}50%{transform:rotate(140deg)}}
+.ds-guy.flex .ds-guy-arm::after{content:'';position:absolute;top:8px;left:-3px;width:16px;height:12px;background:var(--skin);border-radius:var(--radius-disc);}
+.ds-guy.flex .ds-guy-body{animation:ds-pump 1.4s ease-in-out infinite;}
+@keyframes ds-pump{50%{transform:scaleX(1.08)}}
+
+@media (prefers-reduced-motion:reduce){.ds-shower *,.ds-shower *::before,.ds-shower *::after{animation:none!important;}}
+
+/* Omklädningsrummet: TURBOTUTTI built into the locker room. The machine is the locker wall; its notes drive the showers. */
+.ds-room{position:relative;width:1180px;height:740px;overflow:hidden;font-family:var(--font-panel);color:var(--control-ink);--rain:.6s;--beat:.47s;--steam:.5;background:var(--ground);background-image:linear-gradient(rgba(29,42,51,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(29,42,51,.16) 1px,transparent 1px);background-size:var(--knob) var(--knob);}
+.ds-room>*{position:absolute;}
+.ds-room-floor{left:0;right:0;top:648px;bottom:0;background:#c3d1ce;background-image:linear-gradient(rgba(29,42,51,.22) 1px,transparent 1px),linear-gradient(90deg,rgba(29,42,51,.22) 1px,transparent 1px);background-size:var(--cell) var(--cell);box-shadow:inset 0 3px 0 var(--chassis-edge);}
+.ds-room-puddle{left:470px;top:668px;width:240px;height:40px;border-radius:var(--radius-disc);background:rgba(120,190,230,.35);transform:scale(var(--puddle,.4));transform-origin:center;transition:transform .4s;}
+.ds-room-drain{left:574px;top:678px;width:32px;height:16px;border-radius:var(--radius-disc);background:repeating-linear-gradient(90deg,#5d6a72 0 3px,#2a2f33 3px 6px);}
+/* Pipes */
+.ds-pipe{background:#9aa7af;box-shadow:inset 0 -3px 0 #5d6a72,inset 0 2px 0 #c8cfd4;}
+.ds-pipe-h{top:26px;height:12px;}
+.ds-pipe-v{width:10px;top:26px;height:300px;margin-left:-5px;overflow:hidden;box-shadow:inset -3px 0 0 #5d6a72,inset 2px 0 0 #c8cfd4;}
+.ds-pipe-v .ds-slug{position:absolute;left:2px;width:6px;height:34px;top:-40px;border-radius:3px;background:#7fd3ff;box-shadow:0 0 8px #7fd3ff;}
+.ds-pipe-v.go .ds-slug{animation:ds-slug calc(var(--beat) * .5) linear;}
+@keyframes ds-slug{to{transform:translateY(340px)}}
+.ds-pipe.glow{background:#b9e6ff;}
+.ds-valve{left:566px;top:8px;width:48px;height:48px;border-radius:var(--radius-disc);border:6px solid var(--playhead);box-sizing:border-box;background:conic-gradient(transparent 0 40deg,var(--playhead) 40deg 50deg,transparent 50deg 130deg,var(--playhead) 130deg 140deg,transparent 140deg 220deg,var(--playhead) 220deg 230deg,transparent 230deg 310deg,var(--playhead) 310deg 320deg,transparent 320deg);animation:ds-spin calc(var(--beat) * 4) linear infinite;animation-play-state:paused;z-index:3;}
+.ds-room.playing .ds-valve{animation-play-state:running;}
+@keyframes ds-spin{to{transform:rotate(360deg)}}
+.ds-feed{left:585px;top:38px;width:10px;height:52px;}
+/* Stalls */
+.ds-rstall{top:0;width:112px;height:648px;margin-left:-56px;--flow:.2;}
+.ds-rstall .ds-stall-head{top:326px;}
+.ds-rstall .ds-water{top:359px;bottom:0;width:calc(18px + 26px * var(--flow));margin-left:calc(-9px - 13px * var(--flow));opacity:calc(.25 + .75 * var(--flow));animation-duration:var(--rain);background:repeating-linear-gradient(90deg,rgba(110,185,230,.75) 0 2px,transparent 2px 6px);}
+.ds-rstall .ds-steam{bottom:120px;opacity:var(--steam);}
+.ds-splash{position:absolute;bottom:-4px;left:50%;width:70px;height:12px;margin-left:-35px;border-radius:var(--radius-disc);background:rgba(160,215,245,.7);transform:scale(calc(.3 + var(--flow)));opacity:calc(.2 + var(--flow));}
+.ds-rstall .ds-hop{position:absolute;bottom:0;left:50%;transform:translateX(-50%);}
+.ds-hop.hit{animation:ds-hit .22s ease-out;}
+@keyframes ds-hit{40%{transform:translateX(-50%) translateY(-10px) scaleY(1.06)}}
+.ds-room .ds-guy{animation-duration:calc(var(--beat) * 2);}
+.ds-room .ds-guy.snap .ds-guy-arm.r,.ds-room .ds-guy.snap .ds-whip,.ds-room .ds-guy.snap .ds-pop{animation:none;}
+.ds-room .ds-guy.snap .ds-guy-arm.r{transform:rotate(-20deg);}
+.ds-room .ds-guy.snap .ds-whip{transform:rotate(80deg);}
+.ds-room .ds-guy.snap.now .ds-guy-arm.r{animation:ds-arm-snap1 .42s;}
+.ds-room .ds-guy.snap.now .ds-whip{animation:ds-whip1 .42s;}
+.ds-room .ds-guy.snap.now .ds-pop{animation:ds-pop1 .8s;}
+@keyframes ds-arm-snap1{0%{transform:rotate(-20deg)}35%{transform:rotate(-120deg)}100%{transform:rotate(-20deg)}}
+@keyframes ds-whip1{0%{transform:rotate(80deg)}40%{transform:rotate(-30deg) scaleX(1.3)}100%{transform:rotate(80deg)}}
+@keyframes ds-pop1{0%{opacity:0;transform:scale(.6)}15%{opacity:1;transform:scale(1.15)}70%{opacity:1;transform:scale(1)}100%{opacity:0}}
+.ds-room.cheer .ds-guy-arm.l{animation:none!important;transform:rotate(165deg)!important;}
+.ds-room.cheer .ds-guy-arm.r{animation:none!important;transform:rotate(-165deg)!important;}
+.ds-room.cheer .ds-guy-mouth{height:7px;bottom:6px;}
+/* The machine as the locker wall */
+.ds-room .ds-tt{left:345px;top:90px;width:490px;height:452px;box-sizing:border-box;padding:40px 20px 16px;display:flex;flex-direction:column;gap:10px;}
+.ds-tt-name{position:absolute;left:22px;top:14px;}
+.ds-tt-lockers{position:absolute;left:-1px;right:-1px;bottom:-1px;height:12px;background:repeating-linear-gradient(90deg,var(--chassis-edge) 0 2px,transparent 2px 98px);}
+.ds-tt-knobs{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:8px 6px 6px;}
+.ds-tt-knob{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.ds-tt-knob .ds-engrave{font-size:9px;letter-spacing:.16em;}
+.ds-tt-steps{display:flex;justify-content:center;padding:10px 0;}
+.ds-tt-steps .ds-step.slide::before{content:'';position:absolute;right:2px;top:3px;width:7px;height:2px;background:var(--control-ink);transform:rotate(-30deg);}
+.ds-tt-bottom{display:flex;align-items:center;gap:8px;}
+.ds-tt-bottom .ds-lamps{display:flex;margin-left:auto;}
+.ds-beacon{right:-1px;top:-30px;width:34px;height:30px;}
+.ds-beacon::before{content:'';position:absolute;left:4px;right:4px;bottom:0;height:8px;background:var(--chassis-edge);}
+.ds-beacon::after{content:'';position:absolute;left:8px;right:8px;bottom:8px;height:18px;border-radius:9px 9px 0 0;background:#6b1222;}
+.ds-room.cheer .ds-beacon::after{background:var(--playhead);box-shadow:0 0 30px 10px rgba(228,0,43,.6);animation:ds-blink .2s step-end infinite;}
+@keyframes ds-blink{50%{background:#ff6a7f}}
+/* Bench in front of the lockers */
+.ds-bench{left:355px;top:596px;width:470px;height:40px;background:#7d4f28;box-shadow:inset 0 -4px 0 #5a3519;}
+.ds-bench::before,.ds-bench::after{content:'';position:absolute;top:40px;width:10px;height:12px;background:#7d8b94;}
+.ds-bench::before{left:30px}.ds-bench::after{right:30px}
+.ds-bench-helmet{left:762px;top:572px;width:46px;height:24px;background:var(--tre-kronor-blue);border-radius:20px 20px 0 0;}
+.ds-bench-stick{left:842px;top:430px;width:5px;height:220px;background:#b0753f;transform:rotate(8deg);transform-origin:bottom;}
+.ds-bench-stick::after{content:'';position:absolute;bottom:0;left:-22px;width:26px;height:7px;background:#1b1b1b;}
+.ds-tt-doors{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:auto;height:118px;}
+.ds-door{position:relative;background:var(--plate);box-shadow:inset 0 0 0 2px var(--chassis-edge);display:flex;flex-direction:column;align-items:center;padding-top:8px;gap:6px;}
+.ds-door::before{content:'';width:60%;height:14px;background:repeating-linear-gradient(180deg,var(--chassis-edge) 0 2px,transparent 2px 5px);}
+.ds-door-tag{padding:1px 6px;background:var(--towel);color:var(--control-ink);font:700 9px var(--font-engrave);letter-spacing:.14em;}
+.ds-door-num{font:700 26px/1 var(--font-engrave);color:var(--engrave);}
+.ds-door::after{content:'';position:absolute;right:8px;top:54px;width:5px;height:18px;background:var(--chassis-edge);}
+.ds-speaker{width:62px;height:62px;border-radius:var(--radius-disc);background:radial-gradient(circle,#2a2f33 0 9px,#14191d 9px 13px,#3a4249 13px 25px,#14191d 25px 29px,#556069 29px);transform:scale(var(--pump,1));transition:transform 40ms;}
+.ds-door.open{transform:perspective(300px) rotateY(-28deg);transform-origin:left;}
+.ds-jersey{position:absolute;left:-1px;top:-1px;right:-1px;bottom:-1px;z-index:-1;background:#14191d;}
+.ds-keys{left:362px;top:598px;width:392px;height:36px;}
+.ds-key{position:absolute;top:0;box-sizing:border-box;cursor:pointer;touch-action:none;-webkit-tap-highlight-color:transparent;border:0;padding:0;}
+.ds-key.w{width:48px;height:36px;background:#c8915a;box-shadow:inset 0 -4px 0 #9c6a3b,inset -2px 0 0 #9c6a3b;}
+.ds-key.w:hover{background:#d39d66;}
+.ds-key.w.down{background:var(--control-on);box-shadow:inset 0 -2px 0 #b48f00,inset -2px 0 0 #b48f00;transform:translateY(2px);}
+.ds-key.b{top:-14px;width:32px;height:20px;margin-left:-16px;border-radius:var(--radius-disc);background:#111111;box-shadow:0 3px 0 #000000,inset 0 2px 0 #3a3a3a;z-index:2;}
+.ds-key.b.down{background:var(--playhead);box-shadow:0 1px 0 #000000;transform:translateY(2px);}
+.ds-key:focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
+.ds-tt-bottom .ds-control.small{width:44px;height:46px;font:700 8px var(--font-engrave);letter-spacing:.02em;}
+.ds-tt-steps .ds-step.is-write{box-shadow:inset 0 0 0 2px var(--playhead);}
+.ds-chain{left:706px;top:36px;width:28px;height:62px;padding:0;border:0;background:transparent;cursor:grab;z-index:4;touch-action:none;}
+.ds-chain::before{content:'';position:absolute;left:12px;top:0;width:4px;height:var(--chain,36px);background:repeating-linear-gradient(180deg,#7d8b94 0 4px,#c8cfd4 4px 6px);transition:height 90ms;}
+.ds-chain::after{content:'';position:absolute;left:2px;top:var(--chain,36px);width:24px;height:16px;border-radius:0 0 8px 8px;background:#b0753f;box-shadow:inset 0 -3px 0 #7d4f28;transition:top 90ms;}
+.ds-chain.pulled{--chain:48px;cursor:grabbing;}
+.ds-chain:focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
+.ds-room.cold .ds-rstall .ds-water{background:repeating-linear-gradient(90deg,rgba(225,245,255,.95) 0 3px,transparent 3px 6px);}
+.ds-room.cold .ds-steam{opacity:0;transition:opacity .2s;}
+.ds-room.cold .ds-guy{animation:ds-shiver .07s linear infinite;}
+.ds-room.cold .ds-guy-mouth{height:6px;bottom:7px;}
+.ds-room.cold .ds-guy-arm.l{animation:none!important;transform:rotate(-40deg)!important;}
+.ds-room.cold .ds-guy-arm.r{animation:none!important;transform:rotate(40deg)!important;}
+.ds-room.cold .ds-guy-head .ds-guy-eyes i{height:2px;}
+@keyframes ds-shiver{0%{transform:translateX(-1px)}50%{transform:translateX(1px)}100%{transform:translateX(-1px)}}
+.ds-frost{left:0;top:0;right:0;bottom:0;pointer-events:none;opacity:0;transition:opacity .25s;background:radial-gradient(ellipse at 50% 40%,transparent 55%,rgba(210,240,255,.55) 100%);}
+.ds-room.cold .ds-frost{opacity:1;}
+@media (prefers-reduced-motion:reduce){.ds-room *,.ds-room *::before,.ds-room *::after{animation:none!important;}}
+
+@media (prefers-reduced-motion:no-preference){.ds-step,.ds-control{transition:background-color 35ms;}}

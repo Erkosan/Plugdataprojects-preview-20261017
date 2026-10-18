@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="sv" data-theme="gissla">
+<head>
+<script src="../../shim.js?v=20261017-1" data-machine="gissla"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#120c0d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="GISSLA 3000. Trummaskinen i källarvalvet under koret. Bröderna gisslar sig i takt, och klockorna ringer i c-moll.">
+<title>GISSLA 3000 — Pastor Gregorius</title>
+<link rel="icon" href="icon-512.png" sizes="512x512" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="modulepreload" href="gissla-engine.js">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="3000-series.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="stage">
+<div id="fit">
+<div class="gs-valv" id="valv" data-theme="gissla">
+ <svg class="gs-arches" viewBox="0 0 1180 440" aria-hidden="true">
+  <defs>
+   <linearGradient id="gs-stone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1517"/><stop offset="1" stop-color="#2c2527"/></linearGradient>
+   <radialGradient id="gs-candlelight" cx=".5" cy=".55" r=".6"><stop offset="0" stop-color="rgba(255,170,80,.20)"/><stop offset="1" stop-color="rgba(255,170,80,0)"/></radialGradient>
+  </defs>
+  <rect width="1180" height="440" fill="url(#gs-stone)"/>
+  <g class="gs-blocks">
+   <path d="M0 60 H1180 M0 120 H1180 M0 180 H1180 M0 240 H1180 M0 300 H1180 M0 360 H1180"/>
+  </g>
+  <g class="gs-ribs">
+   <path d="M-20 440 V150 Q-20 10 200 0 Q420 10 420 150 V440"/>
+   <path d="M420 440 V150 Q420 -10 590 -20 Q760 -10 760 150 V440"/>
+   <path d="M760 440 V150 Q760 10 980 0 Q1200 10 1200 150 V440"/>
+  </g>
+  <rect width="1180" height="440" fill="url(#gs-candlelight)"/>
+ </svg>
+ <div class="gs-beam" id="beam" aria-hidden="true"></div>
+ <svg class="gs-window" id="window" viewBox="0 0 160 220" aria-hidden="true">
+  <defs><clipPath id="gs-lancet"><path d="M8 216 V86 Q8 18 80 4 Q152 18 152 86 V216 Z"/></clipPath></defs>
+  <g clip-path="url(#gs-lancet)">
+   <rect width="160" height="220" fill="#1e2f7a"/>
+   <path class="gs-pane" fill="#a3121c" d="M8 216 V120 L40 100 L40 216 Z M152 216 V120 L120 100 L120 216 Z"/>
+   <path class="gs-pane" fill="#2d6a3a" d="M8 120 V60 L40 80 L40 100 Z M152 120 V60 L120 80 L120 100 Z"/>
+   <path class="gs-pane" fill="#c9a14a" d="M40 216 H120 V196 H40 Z"/>
+   <path class="gs-pane" fill="#7b1f8a" d="M40 40 L80 10 L120 40 L120 80 L40 80 Z"/>
+   <circle class="gs-pane" fill="#f0d67a" cx="80" cy="56" r="17"/>
+   <path class="gs-pane gs-column" fill="#8c8a86" d="M90 70 H104 V196 H90 Z"/>
+   <path class="gs-pane gs-saint" fill="#e9c4a6" d="M80 46 a9 10 0 1 0 0.1 0 Z M68 70 C70 64 90 64 92 70 L96 120 L86 128 L74 128 L64 120 Z M70 128 L76 176 L68 196 M90 128 L86 176 L94 196"/>
+   <path class="gs-pane" fill="#f4efe2" d="M68 120 H94 L90 138 H72 Z"/>
+   <path class="gs-pane" fill="#e9c4a6" d="M68 72 L52 44 M92 72 L104 52"/>
+   <g class="gs-arrows"><path d="M30 70 L76 96 M36 160 L80 112 M128 150 L88 104 M126 90 L90 86"/></g>
+   <path class="gs-lead" d="M8 120 L40 100 L40 216 M152 120 L120 100 L120 216 M40 80 H120 M40 40 L80 10 L120 40 M40 196 H120 M8 60 L40 80 M152 60 L120 80 M90 70 V196 M104 70 V196 M8 160 H40 M120 160 H152 M40 140 H64 M96 140 H120"/>
+  </g>
+  <path class="gs-frame" d="M8 216 V86 Q8 18 80 4 Q152 18 152 86 V216 Z"/>
+ </svg>
+ <div class="gs-rope" id="rope" aria-hidden="true"><i></i></div>
+ <button class="gs-sally" id="sally" aria-label="Klockrepet: kyrkklockan"></button>
+ <svg class="gs-icon" id="icon" viewBox="0 0 150 196" aria-hidden="true">
+  <rect class="gs-icon-frame" x="2" y="2" width="146" height="192"/>
+  <rect class="gs-icon-gold" x="12" y="12" width="126" height="172"/>
+  <circle class="gs-halo" cx="75" cy="70" r="40"/>
+  <circle class="gs-halo-ring" cx="75" cy="70" r="36"/>
+  <path class="gs-robe" d="M24 184 C26 140 40 118 75 112 C110 118 124 140 126 184 Z"/>
+  <path class="gs-stole" d="M64 116 L58 184 M86 116 L92 184"/>
+  <path class="gs-cross" d="M60 150 H72 M66 144 V160 M78 150 H90 M84 144 V160"/>
+  <ellipse class="gs-face" cx="75" cy="72" rx="20" ry="25"/>
+  <path class="gs-hair" d="M55 66 C54 44 96 44 95 66 C92 54 58 54 55 66 Z"/>
+  <path class="gs-beard" d="M56 78 C58 104 66 118 75 120 C84 118 92 104 94 78 C88 92 62 92 56 78 Z"/>
+  <ellipse class="gs-eye" cx="67" cy="70" rx="3.2" ry="2.2"/><ellipse class="gs-eye" cx="83" cy="70" rx="3.2" ry="2.2"/>
+  <path class="gs-brow" d="M61 64 L72 66 M89 64 L78 66"/>
+  <path class="gs-hand" d="M108 150 V118 M114 150 V120 M104 150 C104 160 118 160 118 150 Z"/>
+  <text class="gs-inscription" x="34" y="30">Ο ΑΓ</text>
+  <text class="gs-inscription" x="98" y="30">ΓΡΗΓ</text>
+ </svg>
+ <div class="gs-psalms" id="psalms" role="radiogroup" aria-label="Psalmtavlan"></div>
+ <div class="gs-candles gs-candles--l" aria-hidden="true"><i></i><i></i><i></i></div>
+ <div class="gs-candles gs-candles--r" aria-hidden="true"><i></i><i></i><i></i></div>
+ <div class="gs-floor" aria-hidden="true"></div>
+ <div class="gs-monks" id="monks" role="group" aria-label="Bröderna"></div>
+ <button class="gs-sexton" id="sexton" aria-label="Kyrkvaktmästaren: rökelsekaret">
+  <svg viewBox="0 0 130 300" aria-hidden="true">
+   <path class="gs-cassock" d="M38 296 L44 120 C46 96 84 96 86 120 L94 296 Z"/>
+   <path class="gs-surplice" d="M42 128 C44 108 86 108 88 128 L96 200 L34 200 Z"/>
+   <circle class="gs-sexton-head" cx="65" cy="86" r="17"/>
+   <path class="gs-sexton-hair" d="M48 84 C48 64 82 64 82 84 C78 72 52 72 48 84 Z"/>
+   <path class="gs-arm" d="M44 132 C30 150 26 170 24 180"/>
+   <g class="gs-thurible" id="thurible">
+    <path class="gs-chain" d="M24 180 L18 236 M24 180 L30 236"/>
+    <path class="gs-censer" d="M8 236 H40 C40 254 32 262 24 262 C16 262 8 254 8 236 Z"/>
+    <path class="gs-censer-lid" d="M10 236 C12 224 36 224 38 236 Z"/>
+   </g>
+  </svg>
+  <span class="gs-smoke" id="smoke"></span>
+ </button>
+
+ <div class="ds-chassis gs-panel">
+  <div class="gs-brand"><span class="ds-logo">GISSLA 3000</span><span class="ds-engrave gs-maker">PASTOR GREGORIUS · PASTORNS GODBITAR</span></div>
+  <div class="ds-lcd gs-lcd" aria-live="polite"><div class="ds-lcd-glow"></div><div class="ds-lcd-top"><span class="ds-lcd-name" id="lname">MISERERE</span><span class="ds-lcd-value" id="lval">72 BPM</span></div><div class="ds-lcd-line" id="lline"></div></div>
+  <button class="ds-control gs-bot" id="bot" aria-pressed="false" aria-label="BOTGÖRING, håll inne (B)"><span>BOTGÖRING</span></button>
+  <div class="gs-transport">
+   <button class="ds-control ds-play" id="play" aria-pressed="false" aria-label="Spela (mellanslag)"><svg viewBox="0 0 24 24" style="width:40%;height:40%"><path id="pi" d="M7 5 L19 12 L7 19 Z" fill="currentColor"/></svg></button>
+   <input class="ds-bpm" id="bpm" type="number" inputmode="numeric" min="30" max="300" value="72" aria-label="Tempo, BPM">
+  </div>
+  <div class="ds-plate gs-knobs" id="knobs"></div>
+  <div class="ds-plate ds-plate--band gs-seq">
+   <span class="ds-engrave gs-track" id="track">KÖTT</span>
+   <div id="steps" class="gs-steps"></div>
+   <button class="ds-control gs-len" id="len" aria-pressed="false" aria-label="LEN: slingans längd">LEN</button>
+  </div>
+ </div>
+</div>
+</div>
+</main>
+<section class="utility" aria-label="Inställningar">
+ <details id="menu">
+  <summary class="ds-gear" aria-label="Inställningar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></summary>
+  <div class="ds-menu menu-panel">
+   <div class="ds-menu-actions" id="menu-actions">
+    <button id="demo" type="button">Spela exempel</button>
+    <button id="clear" type="button">Rensa slingan</button>
+    <button id="save" type="button">Spara session</button>
+    <button id="open" type="button">Öppna session</button>
+    <button id="midi" type="button">Anslut MIDI</button>
+    <button id="install-app" type="button">Installera app</button>
+    <button id="fullscreen" type="button">Helskärm</button>
+    <button id="midi-map-toggle" type="button" aria-controls="midi-map-panel" aria-expanded="false">MIDI-mappning</button>
+    <input id="load" type="file" accept="application/json,.json" aria-label="Öppna session" hidden>
+   </div>
+   <div class="ds-menu-section" id="downloads" hidden>
+    <strong>GISSLA 3000 VST3</strong>
+    <div class="download-grid" id="download-grid"></div>
+    <div class="download-kit" id="download-kit" hidden></div>
+    <p class="download-note">Byggkitet innehåller PlugData-patcharna och bygger VST3 på din egen Mac (Intel och Apple Silicon), Windows-dator eller Linux. Läs BUILD-VST3.md i kitet.</p>
+   </div>
+   <div class="ds-menu-section" id="midi-map-panel" hidden>
+    <div class="midi-map-heading"><strong>MIDI-mappning</strong><button id="midi-map-back" type="button">Tillbaka</button></div>
+    <ul id="midi-map-list" class="midi-map-list"></ul>
+   </div>
+   <p class="ds-menu-help" id="menu-help">Bröderna spelar och väljer spår: A S D F G H J K. Klicka på stegen för slag och accent (RÖKELSE: ryck och sving). LEN och sedan ett steg sätter slingans längd. Psalmtavlan har färdiga slingor (1–4). Håll in BOTGÖRING eller B: gisslet virvlar allt fortare tills någon skriker, och när du släpper faller allt tillbaka på ettan. Kyrkvaktmästaren svänger rökelsekaret och klockrepet ringer i klockan. Mellanslag spelar. Dubbelklicka på en ratt för att återställa den.</p>
+   <div class="credits"><span>Pastor Gregorius</span><a href="THIRD_PARTY_NOTICES.txt">Licenser</a></div>
+  </div>
+ </details>
+</section>
+<script type="module" src="app.js"></script>
+</body>
+</html>

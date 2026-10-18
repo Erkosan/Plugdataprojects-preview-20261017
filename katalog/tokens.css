@@ -94,6 +94,28 @@
   --concrete: #5f625d;
   --lada: #c98a35;
   --hazard: #f2b705;
+  --ch-kott: #a8323e;
+  --ch-kott-dim: #45161c;
+  --ch-piska: #d8bf86;
+  --ch-piska-dim: #4f432c;
+  --ch-hud: #e6a68c;
+  --ch-hud-dim: #57382f;
+  --ch-rokelse: #a79dbb;
+  --ch-rokelse-dim: #3c3847;
+  --ch-sanctus: #f0d67a;
+  --ch-sanctus-dim: #574b22;
+  --ch-klocka: #c48a3c;
+  --ch-klocka-dim: #4a3416;
+  --ch-ande: #9fb8c6;
+  --ch-ande-dim: #36434a;
+  --ch-kor: #8f4fb3;
+  --ch-kor-dim: #3a2149;
+  --ch-gissla: #8f4fb3;
+  --ch-gissla-dim: #3a2149;
+  --gold-leaf: #c9a14a;
+  --blood: #8e1520;
+  --vault-stone: #2a2425;
+  --skin: #e2b49a;
   --shadow-menu: 0 4px 0 #25292426;
   --shadow-patch: 0 3px 8px #38253240;
   --shadow-chassis: 0 12px 0 rgba(27,10,16,0.35), inset 0 0 0 2px #4a1726, inset 0 0 60px rgba(0,0,0,0.45);
@@ -292,6 +314,45 @@
   --solo: #f2b705;
   --field: #efe6c8;
 }
+[data-theme="gissla"] {
+  --ground: #0b090a;
+  --chassis: #120c0d;
+  --chassis-edge: #b08d3c;
+  --plate: #1c1214;
+  --plate-band: #2a0e12;
+  --velvet: #060405;
+  --control: #e9dcbc;
+  --control-on: #c9a14a;
+  --control-border: #2a1d0e;
+  --control-border-hover: #000000;
+  --control-ink: #1a0f10;
+  --knob-arc: #7a161d;
+  --knob-pointer: #1a0f10;
+  --engrave: #d4af5a;
+  --playhead: #ffd66b;
+  --menu-surface: #f2e9d2;
+  --menu-border: #7a1418;
+  --menu-ink: #1a0f10;
+  --menu-muted: #6b5643;
+  --menu-tint: #e8dcbf;
+  --menu-button: #fbf6e8;
+  --menu-button-hover: #efe3c6;
+  --menu-button-border: #9c8662;
+  --menu-button-ink: #1a0f10;
+  --lcd-top: #1c0507;
+  --lcd-mid: #090203;
+  --lcd-bezel: #b08d3c;
+  --lcd-ink: #f6c86e;
+  --lcd-value: #ff5b3c;
+  --lcd-glow: #ff8a2a;
+  --focus: #ffd66b;
+  --run: #4f9a4a;
+  --run-idle: #21401f;
+  --rec: #c4161c;
+  --mute: #c4161c;
+  --solo: #c9a14a;
+  --field: #e9dcbc;
+}
 :root {
   --space-hairline: 1px;
   --space-3: 3px;
@@ -312,6 +373,7 @@
   --font-panel: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-engrave: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-lcd: ui-monospace, "SF Mono", Menlo, monospace;
+  --font-psalm: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
 }
 .logo { font-family: var(--font-engrave); font-size: 11px; line-height: 16px; font-weight: 400; letter-spacing: 0.32em; }
 .engrave { font-family: var(--font-engrave); font-size: 10px; line-height: 12px; font-weight: 400; letter-spacing: 0.22em; }
