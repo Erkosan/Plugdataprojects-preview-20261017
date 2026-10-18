@@ -10,7 +10,14 @@ const BPM_INPUT = document.getElementById('bpm');
 const PANIC_BTN = document.getElementById('panic');
 const STEPS_CONTAINER = document.getElementById('steps');
 const KEYS_CONTAINER = document.getElementById('keys');
+const WEATHER_BADGE = document.getElementById('wbadge');
 const WEATHER_TEXT = document.getElementById('wtext');
+const RAIN_DROPS = document.getElementById('rain-drops');
+const METER_NEEDLE = document.getElementById('meter-needle');
+const METER_VAL_TEXT = document.getElementById('meter-val-text');
+const PIEZO_BTN = document.getElementById('piezo');
+const ZAPPER_BTN = document.getElementById('zapper');
+const BEER_RING = document.getElementById('beer-ring');
 
 // State
 let audioCtx = null;
@@ -21,6 +28,8 @@ let currentParams = {};
 let activeStep = 0;
 let isPlaying = false;
 let isAudioReady = false;
+let currentPowerSource = 1; // 0 = 220V, 1 = 12V, 2 = Gasol
+let activePresetIndex = 1; // 1 = Ragunda
 
 // C-minor scale notes in MIDI numbers
 const C_MINOR_SCALE = [48, 50, 51, 53, 55, 56, 58, 60, 62, 63, 65, 67, 68, 70, 72];
@@ -34,7 +43,7 @@ function midiToName(m) {
 function updateFit() {
   const w = window.innerWidth, h = window.innerHeight;
   const zoom = Math.min(w / 1180, h / 740, 1.5);
-  ROOT.style.setProperty('--zoom', Math.max(0.3, zoom).toFixed(3));
+  ROOT.style.setProperty('--zoom', Math.max(0.28, zoom).toFixed(3));
 }
 window.addEventListener('resize', updateFit);
 updateFit();
@@ -84,14 +93,24 @@ async function initAudio() {
 }
 
 // User gesture starts audio
-window.addEventListener('pointerdown', () => { if (!audioCtx) initAudio(); }, { once: true });
-window.addEventListener('keydown', () => { if (!audioCtx) initAudio(); }, { once: true });
+for (const type of ['pointerdown', 'touchend', 'click', 'keydown']) {
+  window.addEventListener(type, () => { if (!audioCtx) initAudio(); }, { capture: true, passive: true });
+}
+
+// Prevent browser gestures from dragging the page on phone
+document.addEventListener('touchmove', (e) => {
+  if (e.target.closest('#stage')) {
+    e.preventDefault();
+  }
+}, { passive: false });
 
 function handleEngineEvent(name, values) {
   if (name === 'ev_step') {
     const step = Math.round(values[0]);
     activeStep = step;
     highlightStep(step);
+    // Subtle voltmeter needle twitch with sequencer beat
+    updateVoltmeterJitter();
   } else if (name === 'ev_note') {
     const pitch = Math.round(values[0]);
     highlightKey(pitch);
@@ -112,9 +131,33 @@ function highlightStep(stepIdx) {
 function highlightKey(midiNote) {
   const keyEl = KEYS_CONTAINER.querySelector(`[data-note="${midiNote}"]`);
   if (keyEl) {
-    keyEl.classList.add('active');
-    setTimeout(() => keyEl.classList.remove('active'), 150);
+    keyEl.classList.add('active', 'down');
+    setTimeout(() => keyEl.classList.remove('active', 'down'), 120);
   }
+}
+
+// Voltmeter handling
+function updateVoltmeter(voltage) {
+  if (currentParams['brownout'] === 1) {
+    METER_NEEDLE.style.setProperty('--needle-deg', '-45deg');
+    METER_VAL_TEXT.textContent = '0.0V';
+    return;
+  }
+  // 10V is -35deg, 12V is 0deg, 14V is +35deg
+  const deg = ((voltage - 12) / 2) * 35;
+  METER_NEEDLE.style.setProperty('--needle-deg', `${deg.toFixed(1)}deg`);
+  METER_VAL_TEXT.textContent = `${voltage.toFixed(1)}V`;
+}
+
+function updateVoltmeterJitter() {
+  if (currentParams['brownout'] === 1) return;
+  let baseV = 12.1;
+  if (currentPowerSource === 0) baseV = 13.8;
+  else if (currentPowerSource === 2) baseV = 12.4;
+
+  const flutter = currentParams['flutter'] || 0;
+  const jitter = (Math.random() - 0.5) * flutter * 0.8;
+  updateVoltmeter(baseV + jitter);
 }
 
 // Parameter handling
@@ -134,9 +177,23 @@ function setParam(name, val, updateUI = true) {
 
   // Weather badge update
   if (name === 'rain') {
-    if (clamped > 0.6) WEATHER_TEXT.textContent = 'ÖSREGN';
-    else if (clamped > 0.2) WEATHER_TEXT.textContent = 'REGN';
-    else WEATHER_TEXT.textContent = 'UPPEHÅLL';
+    updateWeatherUI(clamped);
+  }
+}
+
+function updateWeatherUI(clamped) {
+  if (clamped > 0.6) {
+    WEATHER_TEXT.textContent = 'ÖSREGN';
+    RAIN_DROPS.style.opacity = '0.85';
+    RAIN_DROPS.style.animationDuration = '1.2s';
+  } else if (clamped > 0.15) {
+    WEATHER_TEXT.textContent = 'REGN';
+    RAIN_DROPS.style.opacity = '0.55';
+    RAIN_DROPS.style.animationDuration = '1.8s';
+  } else {
+    WEATHER_TEXT.textContent = 'UPPEHÅLL';
+    RAIN_DROPS.style.opacity = '0.1';
+    RAIN_DROPS.style.animationDuration = '3s';
   }
 }
 
@@ -165,36 +222,52 @@ function updateKnobDisplay(name, val) {
   }
 }
 
-// Knobs interaction
+// Knobs touch & mouse interaction
 function setupKnobs() {
   document.querySelectorAll('.ds-knob-container').forEach(container => {
     const param = container.getAttribute('data-param');
     const knob = container.querySelector('.ds-knob');
     if (!knob) return;
 
-    let startY = 0, startVal = 0;
+    let startY = 0;
+    let startVal = 0;
+    let pointerId = null;
 
     const onPointerMove = (e) => {
+      if (e.pointerId !== pointerId) return;
       const dy = startY - e.clientY;
       const def = paramsDef[param];
       if (!def) return;
       const range = def.max - def.min;
-      const step = range / 150;
-      const newVal = startVal + dy * step;
-      setParam(param, newVal);
+      const step = range / 160; // 160px for full sweep, standard in 3000-series
+      setParam(param, startVal + dy * step);
     };
 
-    const onPointerUp = () => {
+    const onPointerUp = (e) => {
+      if (e.pointerId !== pointerId) return;
+      pointerId = null;
+      try { knob.releasePointerCapture(e.pointerId); } catch {}
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('pointercancel', onPointerUp);
     };
 
     knob.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       initAudio();
+      try { knob.setPointerCapture(e.pointerId); } catch {}
+      pointerId = e.pointerId;
       startY = e.clientY;
       startVal = currentParams[param] !== undefined ? currentParams[param] : (paramsDef[param] ? paramsDef[param].default : 0);
       window.addEventListener('pointermove', onPointerMove);
       window.addEventListener('pointerup', onPointerUp);
+      window.addEventListener('pointercancel', onPointerUp);
+
+      const val = startVal;
+      const label = container.getAttribute('data-label') || param.toUpperCase();
+      LCD_NAME.textContent = label;
+      LCD_VAL.textContent = val.toFixed(2);
     });
 
     knob.addEventListener('wheel', (e) => {
@@ -206,18 +279,20 @@ function setupKnobs() {
       const step = (e.deltaY < 0 ? 1 : -1) * (range / 30);
       const curr = currentParams[param] !== undefined ? currentParams[param] : def.default;
       setParam(param, curr + step);
-    });
+    }, { passive: false });
 
     knob.addEventListener('dblclick', () => {
       const def = paramsDef[param];
       if (def) setParam(param, def.default);
     });
 
-    knob.addEventListener('pointerenter', () => {
-      const val = currentParams[param] !== undefined ? currentParams[param] : (paramsDef[param] ? paramsDef[param].default : 0);
-      const label = container.getAttribute('data-label') || param.toUpperCase();
-      LCD_NAME.textContent = label;
-      LCD_VAL.textContent = val.toFixed(2);
+    knob.addEventListener('pointerenter', (e) => {
+      if (e.pointerType === 'mouse') {
+        const val = currentParams[param] !== undefined ? currentParams[param] : (paramsDef[param] ? paramsDef[param].default : 0);
+        const label = container.getAttribute('data-label') || param.toUpperCase();
+        LCD_NAME.textContent = label;
+        LCD_VAL.textContent = val.toFixed(2);
+      }
     });
   });
 }
@@ -243,7 +318,8 @@ function setupSequencer() {
 
     updateStepUI(stepEl, i);
 
-    stepEl.addEventListener('click', () => {
+    stepEl.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
       initAudio();
       cycleStep(i);
     });
@@ -252,7 +328,8 @@ function setupSequencer() {
   }
 
   // Play / Stop
-  PLAY_BTN.addEventListener('click', () => {
+  PLAY_BTN.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
     initAudio();
     isPlaying = !isPlaying;
     setParam('start', isPlaying ? 1 : 0);
@@ -275,20 +352,16 @@ function setupSequencer() {
 function cycleStep(stepIdx) {
   const paramName = `step${stepIdx}`;
   let val = currentParams[paramName] || 0;
-  // Decode:
   let gate = Math.floor(val / 64) % 2;
   let accent = Math.floor(val / 128) % 2;
   let pitch = (val % 64) + 12;
 
   if (gate === 0) {
-    // Turn ON: default note in C minor scale
     pitch = C_MINOR_SCALE[stepIdx % C_MINOR_SCALE.length];
     val = (pitch - 12) + 64;
   } else if (accent === 0) {
-    // Turn on ACCENT
     val = val + 128;
   } else {
-    // Turn OFF (rest)
     val = 0;
   }
 
@@ -314,94 +387,175 @@ function updateStepUI(stepEl, stepIdx) {
   }
 }
 
-// Keyboard setup: 2 octaves (MIDI 48 C3 to 72 C5)
+// 2-Octave Plastic Camping Keyboard (C3 to C5, MIDI 48 to 72)
 function setupKeyboard() {
   KEYS_CONTAINER.innerHTML = '';
   const whiteNotes = [48, 50, 52, 53, 55, 57, 59, 60, 62, 64, 65, 67, 69, 71, 72];
-  const blackNotes = {
-    49: 48, // C#3 after C3
-    51: 50, // D#3 after D3
-    54: 53, // F#3 after F3
-    56: 55, // G#3 after G3
-    58: 57, // A#3 after A3
-    61: 60, // C#4
-    63: 62, // D#4
-    66: 65, // F#4
-    68: 67, // G#4
-    70: 69  // A#4
-  };
+  const blackNotes = [
+    { midi: 49, afterIdx: 0 }, // C#3
+    { midi: 51, afterIdx: 1 }, // D#3
+    { midi: 54, afterIdx: 3 }, // F#3
+    { midi: 56, afterIdx: 4 }, // G#3
+    { midi: 58, afterIdx: 5 }, // A#3
+    { midi: 61, afterIdx: 7 }, // C#4
+    { midi: 63, afterIdx: 8 }, // D#4
+    { midi: 66, afterIdx: 10 }, // F#4
+    { midi: 68, afterIdx: 11 }, // G#4
+    { midi: 70, afterIdx: 12 }  // A#4
+  ];
 
-  const whiteKeys = [];
+  const totalWhite = whiteNotes.length;
+  const whiteWidthPct = 100 / totalWhite;
 
+  // 1. Create white keys
   whiteNotes.forEach((midi, idx) => {
     const key = document.createElement('div');
-    key.className = 'ds-key white';
+    const isRoot = (midi % 12 === 0);
+    key.className = `kn-key ds-key w white ${isRoot ? 'scale-c' : ''}`;
     key.setAttribute('data-note', midi);
     key.setAttribute('tabindex', '0');
     key.setAttribute('aria-label', midiToName(midi));
-    KEYS_CONTAINER.appendChild(key);
-    whiteKeys.push({ midi, el: key });
+    key.style.left = `${(idx * whiteWidthPct).toFixed(4)}%`;
+    key.style.width = `${whiteWidthPct.toFixed(4)}%`;
 
-    key.addEventListener('pointerdown', (e) => {
+    const noteSpan = document.createElement('span');
+    noteSpan.className = 'kn-key-note';
+    noteSpan.textContent = midiToName(midi);
+    key.appendChild(noteSpan);
+
+    KEYS_CONTAINER.appendChild(key);
+  });
+
+  // 2. Create black keys
+  const blackWidthPct = whiteWidthPct * 0.62;
+  blackNotes.forEach(({ midi, afterIdx }) => {
+    const bKey = document.createElement('div');
+    bKey.className = 'kn-key ds-key b black';
+    bKey.setAttribute('data-note', midi);
+    bKey.setAttribute('tabindex', '0');
+    bKey.setAttribute('aria-label', midiToName(midi));
+
+    // Centered on the seam between white keys
+    const leftPct = ((afterIdx + 1) * whiteWidthPct) - (blackWidthPct / 2);
+    bKey.style.left = `${leftPct.toFixed(4)}%`;
+    bKey.style.width = `${blackWidthPct.toFixed(4)}%`;
+
+    const noteSpan = document.createElement('span');
+    noteSpan.className = 'kn-key-note';
+    noteSpan.textContent = midiToName(midi);
+    bKey.appendChild(noteSpan);
+
+    KEYS_CONTAINER.appendChild(bKey);
+  });
+
+  const fingerNotes = new Map();
+
+  function keyAtPoint(x, y) {
+    const el = document.elementFromPoint(x, y);
+    if (!el) return null;
+    const keyEl = el.closest('.kn-key');
+    return keyEl ? parseInt(keyEl.dataset.note, 10) : null;
+  }
+
+  function noteFromEvent(e) {
+    const targetKey = e.target && e.target.closest ? e.target.closest('.kn-key') : null;
+    if (targetKey && targetKey.dataset.note) {
+      return parseInt(targetKey.dataset.note, 10);
+    }
+    if (e.clientX !== undefined && e.clientY !== undefined) {
+      return keyAtPoint(e.clientX, e.clientY);
+    }
+    return null;
+  }
+
+  const bindKey = (el, midi) => {
+    el.addEventListener('pointerdown', (e) => {
       e.preventDefault();
       initAudio();
+      fingerNotes.set(e.pointerId || 0, midi);
       triggerNoteOn(midi, 100);
     });
-    key.addEventListener('pointerup', () => triggerNoteOff(midi));
-    key.addEventListener('pointerleave', () => triggerNoteOff(midi));
-  });
-
-  // Black keys overlay
-  Object.entries(blackNotes).forEach(([blackMidi, afterWhiteMidi]) => {
-    const bMidi = parseInt(blackMidi, 10);
-    const whiteIdx = whiteNotes.indexOf(parseInt(afterWhiteMidi, 10));
-    if (whiteIdx === -1) return;
-
-    const bKey = document.createElement('div');
-    bKey.className = 'ds-key black';
-    bKey.setAttribute('data-note', bMidi);
-    bKey.setAttribute('tabindex', '0');
-    bKey.setAttribute('aria-label', midiToName(bMidi));
-    // Position between white keys
-    const leftPct = ((whiteIdx + 0.68) / whiteNotes.length) * 100;
-    bKey.style.left = `${leftPct}%`;
-    KEYS_CONTAINER.appendChild(bKey);
-
-    bKey.addEventListener('pointerdown', (e) => {
-      e.preventDefault();
-      initAudio();
-      triggerNoteOn(bMidi, 100);
+    el.addEventListener('pointerup', (e) => {
+      triggerNoteOff(midi);
+      fingerNotes.delete(e.pointerId || 0);
     });
-    bKey.addEventListener('pointerup', () => triggerNoteOff(bMidi));
-    bKey.addEventListener('pointerleave', () => triggerNoteOff(bMidi));
+    el.addEventListener('pointerleave', (e) => {
+      if (fingerNotes.has(e.pointerId || 0)) {
+        triggerNoteOff(midi);
+        fingerNotes.delete(e.pointerId || 0);
+      }
+    });
+  };
+
+  whiteNotes.forEach((midi, idx) => {
+    const key = KEYS_CONTAINER.children[idx];
+    if (key) bindKey(key, midi);
   });
+
+  const allKeyEls = KEYS_CONTAINER.querySelectorAll('.kn-key.b');
+  allKeyEls.forEach((bKey, bIdx) => {
+    if (blackNotes[bIdx]) bindKey(bKey, blackNotes[bIdx].midi);
+  });
+
+  KEYS_CONTAINER.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    initAudio();
+    try { KEYS_CONTAINER.setPointerCapture(e.pointerId); } catch {}
+    const note = noteFromEvent(e);
+    if (note !== null && !fingerNotes.has(e.pointerId)) {
+      fingerNotes.set(e.pointerId, note);
+      triggerNoteOn(note, 100);
+    }
+  });
+
+  KEYS_CONTAINER.addEventListener('pointermove', (e) => {
+    if (!fingerNotes.has(e.pointerId)) return;
+    const oldNote = fingerNotes.get(e.pointerId);
+    const newNote = keyAtPoint(e.clientX, e.clientY);
+    if (newNote !== null && newNote !== oldNote) {
+      triggerNoteOff(oldNote);
+      triggerNoteOn(newNote, 100);
+      fingerNotes.set(e.pointerId, newNote);
+    }
+  });
+
+  const endFinger = (e) => {
+    if (!fingerNotes.has(e.pointerId)) return;
+    const note = fingerNotes.get(e.pointerId);
+    triggerNoteOff(note);
+    fingerNotes.delete(e.pointerId);
+    try { KEYS_CONTAINER.releasePointerCapture(e.pointerId); } catch {}
+  };
+
+  KEYS_CONTAINER.addEventListener('pointerup', endFinger);
+  KEYS_CONTAINER.addEventListener('pointercancel', endFinger);
 
   // Computer keyboard bindings
   const KEY_MAP = {
-    'KeyA': 48, 'KeyW': 49, 'KeyS': 50, 'KeyE': 51, 'KeyD': 52, 'KeyF': 53,
-    'KeyT': 54, 'KeyG': 55, 'KeyY': 56, 'KeyH': 57, 'KeyU': 58, 'KeyJ': 59,
-    'KeyK': 60, 'KeyO': 61, 'KeyL': 62, 'KeyP': 63, 'Semicolon': 64
+    KeyA: 48, KeyW: 49, KeyS: 50, KeyE: 51, KeyD: 52, KeyF: 53,
+    KeyT: 54, KeyG: 55, KeyY: 56, KeyH: 57, KeyU: 58, KeyJ: 59,
+    KeyK: 60, KeyO: 61, KeyL: 62, KeyP: 63, Semicolon: 64, Quote: 65
   };
 
+  const activeKeys = new Set();
   window.addEventListener('keydown', (e) => {
-    if (e.repeat || e.target.tagName === 'INPUT') return;
-    if (e.code === 'Space') {
-      e.preventDefault();
-      PLAY_BTN.click();
-      return;
-    }
+    if (e.target.tagName === 'INPUT' || e.repeat) return;
     const midi = KEY_MAP[e.code];
-    if (midi) {
+    if (midi && !activeKeys.has(midi)) {
+      activeKeys.add(midi);
       initAudio();
       triggerNoteOn(midi, 100);
-      highlightKey(midi);
+    } else if (e.code === 'Space') {
+      e.preventDefault();
+      PLAY_BTN.dispatchEvent(new PointerEvent('pointerdown'));
     }
   });
 
   window.addEventListener('keyup', (e) => {
     if (e.target.tagName === 'INPUT') return;
     const midi = KEY_MAP[e.code];
-    if (midi) {
+    if (midi && activeKeys.has(midi)) {
+      activeKeys.delete(midi);
       triggerNoteOff(midi);
     }
   });
@@ -409,29 +563,36 @@ function setupKeyboard() {
 
 function triggerNoteOn(pitch, vel) {
   if (workletNode) {
-    workletNode.port.postMessage({ type: 'midi', bytes: [0x92, pitch, vel] }); // Channel 3 (0x92)
+    workletNode.port.postMessage({ type: 'midi', bytes: [0x92, pitch, vel] });
   }
+  const keyEl = KEYS_CONTAINER.querySelector(`[data-note="${pitch}"]`);
+  if (keyEl) keyEl.classList.add('down', 'active');
   LCD_NAME.textContent = 'TON';
   LCD_VAL.textContent = `${midiToName(pitch)} (${pitch})`;
+  updateVoltmeterJitter();
 }
 
 function triggerNoteOff(pitch) {
   if (workletNode) {
     workletNode.port.postMessage({ type: 'midi', bytes: [0x82, pitch, 0] });
   }
+  const keyEl = KEYS_CONTAINER.querySelector(`[data-note="${pitch}"]`);
+  if (keyEl) keyEl.classList.remove('down', 'active');
 }
 
-// Panic button
+// Panic button (STRÖMAVBROTT)
 function setupPanic() {
   const triggerPanic = (active) => {
     setParam('brownout', active ? 1 : 0);
     PANIC_BTN.setAttribute('aria-pressed', active ? 'true' : 'false');
     if (active) {
       LCD_NAME.textContent = 'STRÖMAVBROTT';
-      LCD_VAL.textContent = 'SPÄNNINGSFALL!';
+      LCD_VAL.textContent = 'KALLT I VAGNEN!';
+      updateVoltmeter(0.0);
     } else {
       LCD_NAME.textContent = 'KNAUS 3000';
       LCD_VAL.textContent = 'DRIFT ÅTERSTÄLLD';
+      updateVoltmeter(currentPowerSource === 0 ? 13.8 : (currentPowerSource === 1 ? 12.1 : 12.4));
     }
   };
 
@@ -442,6 +603,161 @@ function setupPanic() {
   });
   window.addEventListener('pointerup', () => {
     if (currentParams['brownout'] === 1) triggerPanic(false);
+  });
+}
+
+// Camping Quirks & Features
+function setupCampingQuirks() {
+  // 1. Strömkälla (220V Stolpe / 12V Batteri / Gasol)
+  const powerButtons = document.querySelectorAll('.power-btn');
+  powerButtons.forEach(btn => {
+    btn.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      initAudio();
+      const p = parseInt(btn.dataset.power, 10);
+      currentPowerSource = p;
+      powerButtons.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-checked', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-checked', 'true');
+
+      if (p === 0) {
+        // 220V Stolpe: clean, stable, minimal flutter
+        setParam('flutter', 0.04);
+        setParam('drive', 0.15);
+        updateVoltmeter(13.8);
+        LCD_NAME.textContent = 'KRAFT · 220V STOLPE';
+        LCD_VAL.textContent = 'NÄTSTRÖM (LADDAR)';
+      } else if (p === 1) {
+        // 12V Fritidsbatteri: standard camping flutter
+        setParam('flutter', 0.25);
+        setParam('drive', 0.35);
+        updateVoltmeter(12.1);
+        LCD_NAME.textContent = 'KRAFT · 12V BATTERI';
+        LCD_VAL.textContent = 'TRANSFORMATOR-SURR';
+      } else {
+        // Gasol: warm drive, slight rumble
+        setParam('flutter', 0.12);
+        setParam('drive', 0.65);
+        updateVoltmeter(12.4);
+        LCD_NAME.textContent = 'KRAFT · GASOL';
+        LCD_VAL.textContent = 'PRIMUS TÄNT · VARM DRIFT';
+      }
+    });
+  });
+
+  // 2. Campingplatser Presets
+  const CAMPINGPLATSER = [
+    {
+      name: 'BÖDA SAND',
+      title: 'BÖDA SAND · SOL OCH 220V',
+      params: { wave: 0, attack: 0.08, decay: 0.45, sustain: 0.7, release: 0.5, cutoff: 0.65, resonance: 0.25, envmod: 0.35, drive: 0.15, rain: 0.05, flutter: 0.04 },
+      power: 0
+    },
+    {
+      name: 'RAGUNDA',
+      title: 'RAGUNDA · ÖSREGN OCH 12V TAPP',
+      params: { wave: 1, attack: 0.02, decay: 0.35, sustain: 0.55, release: 0.35, cutoff: 0.42, resonance: 0.45, envmod: 0.6, drive: 0.38, rain: 0.85, flutter: 0.3 },
+      power: 1
+    },
+    {
+      name: 'VARBERG',
+      title: 'VARBERG · VÄSTKUSTBLÅST OCH GASOL',
+      params: { wave: 2, attack: 0.01, decay: 0.25, sustain: 0.4, release: 0.25, cutoff: 0.55, resonance: 0.62, envmod: 0.7, drive: 0.65, rain: 0.3, flutter: 0.18 },
+      power: 2
+    },
+    {
+      name: 'KÖPINGSVIK',
+      title: 'KÖPINGSVIK · FULL CAMPINGPANIK',
+      params: { wave: 1, attack: 0.05, decay: 0.5, sustain: 0.8, release: 0.65, cutoff: 0.78, resonance: 0.7, envmod: 0.85, drive: 0.8, rain: 0.6, flutter: 0.65 },
+      power: 1
+    }
+  ];
+
+  const presetButtons = document.querySelectorAll('.preset-btn');
+  presetButtons.forEach(btn => {
+    btn.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      initAudio();
+      const idx = parseInt(btn.dataset.preset, 10);
+      const cp = CAMPINGPLATSER[idx];
+      if (!cp) return;
+      activePresetIndex = idx;
+      presetButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Apply preset parameters
+      for (const [k, v] of Object.entries(cp.params)) {
+        setParam(k, v);
+      }
+
+      // Switch power
+      const targetPowerBtn = document.querySelector(`.power-btn[data-power="${cp.power}"]`);
+      if (targetPowerBtn) targetPowerBtn.dispatchEvent(new PointerEvent('pointerdown'));
+
+      LCD_NAME.textContent = 'CAMPING · ' + cp.name;
+      LCD_VAL.textContent = 'PLATS LADDAD';
+    });
+  });
+
+  // 3. Piezo Ignition Button
+  PIEZO_BTN.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    initAudio();
+    PIEZO_BTN.classList.add('spark');
+    setTimeout(() => PIEZO_BTN.classList.remove('spark'), 200);
+
+    // Audio spark: temporarily spike drive & rain for 60ms
+    const prevDrive = currentParams['drive'] || 0.35;
+    setParam('drive', Math.min(1.0, prevDrive + 0.4), false);
+    setTimeout(() => setParam('drive', prevDrive, false), 70);
+
+    LCD_NAME.textContent = 'PIEZO · GNISTA';
+    LCD_VAL.textContent = 'BLÅ GNISTA TÄNDER GASOLEN';
+    updateVoltmeterJitter();
+  });
+
+  // 4. Mosquito Zapper on Caravan Window
+  ZAPPER_BTN.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    initAudio();
+    ZAPPER_BTN.classList.add('spark');
+    setTimeout(() => ZAPPER_BTN.classList.remove('spark'), 250);
+
+    // Audio zap: temporary high resonance spike
+    const prevRes = currentParams['resonance'] || 0.4;
+    setParam('resonance', 0.95, false);
+    setTimeout(() => setParam('resonance', prevRes, false), 90);
+
+    LCD_NAME.textContent = 'KNOTT · ZAP!';
+    LCD_VAL.textContent = 'EN MINDRE I FÖRTÄLTET';
+  });
+
+  // 5. Spilled Pripps Blå Beer Ring: Mutate sequencer
+  BEER_RING.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    initAudio();
+    // Variation: shift steps or toggle accents in C-minor
+    for (let i = 0; i < 16; i++) {
+      if (Math.random() < 0.3) {
+        cycleStep(i);
+      }
+    }
+    LCD_NAME.textContent = 'SPILLD FOLKÖL';
+    LCD_VAL.textContent = 'VAGNEN GUNGAR · VARIATION';
+  });
+
+  // 6. Weather Badge Toggle
+  WEATHER_BADGE.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    initAudio();
+    const currRain = currentParams['rain'] || 0;
+    let nextRain = 0.35;
+    if (currRain > 0.6) nextRain = 0.0;
+    else if (currRain > 0.15) nextRain = 0.85;
+    setParam('rain', nextRain);
   });
 }
 
@@ -554,12 +870,15 @@ async function start() {
   setupSequencer();
   setupKeyboard();
   setupPanic();
+  setupCampingQuirks();
   setupMenu();
 
   // Initial UI knob positions
   for (const [k, v] of Object.entries(currentParams)) {
     updateKnobDisplay(k, v);
   }
+  updateWeatherUI(currentParams['rain'] || 0.35);
+  updateVoltmeter(12.1);
 
   // Register service worker
   if ('serviceWorker' in navigator) {

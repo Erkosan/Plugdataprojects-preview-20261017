@@ -1,5 +1,5 @@
 // Network first, cache as fallback: the room works offline after one visit.
-const CACHE = 'knaus-web-58a13929f1bb';
+const CACHE = 'knaus-web-15dc31c95a97';
 const SHELL = ['./', 'index.html', 'style.css', 'tokens.css', '3000-series.css', 'app.js', 'worklet.js', 'knaus-engine.js', 'params.json',
   'manifest.webmanifest', 'icon.svg'];
 self.addEventListener('install', (event) => { event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting())); });

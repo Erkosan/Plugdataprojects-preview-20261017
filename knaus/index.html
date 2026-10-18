@@ -26,20 +26,36 @@
  <div class="caravan-awning"></div>
  <div class="caravan-window">
   <div class="rain-drops" id="rain-drops" aria-hidden="true"></div>
+  <button class="mosquito-zapper" id="zapper" title="Knottdödare i takfönstret (klicka för zap)" aria-label="Knottdödare i takfönstret">
+   <span class="zapper-grid"></span>
+   <span class="zapper-label">KNOTT</span>
+   <span class="zapper-spark" id="zapper-spark"></span>
+  </button>
  </div>
- <div class="camping-table"></div>
+ <div class="camping-table">
+  <button class="beer-ring" id="beer-ring" title="Spilld folköl (klicka för sekvensvariation)" aria-label="Spilld folköl på campingbordet">
+   <span class="beer-foam"></span>
+   <span class="beer-label">PRIPPS</span>
+  </button>
+ </div>
 
  <!-- The KNAUS 3000 Instrument Chassis -->
  <div class="ds-chassis knaus-chassis">
-  <!-- Classic blue & orange Knaus caravan stripe -->
+  <!-- Corner brass screws -->
+  <div class="chassis-screw tl"></div>
+  <div class="chassis-screw tr"></div>
+  <div class="chassis-screw bl"></div>
+  <div class="chassis-screw br"></div>
+
+  <!-- Classic blue & orange Knaus caravan stripes -->
   <div class="knaus-stripe-blue"></div>
   <div class="knaus-stripe-orange"></div>
 
-  <!-- Header: Brand logo and thermometer/status -->
+  <!-- Header: Brand logo, LCD, Voltmeter, Weather badge -->
   <div class="knaus-header">
    <div class="knaus-brand">
     <span class="knaus-logo">KNAUS 3000</span>
-    <span class="knaus-tagline">SÜDWIND SPECIAL</span>
+    <span class="knaus-tagline">SÜDWIND SPECIAL · 12V CAMPING</span>
    </div>
    <!-- LCD Display -->
    <div class="ds-lcd knaus-lcd" aria-live="polite">
@@ -50,11 +66,49 @@
     </div>
     <div class="ds-lcd-line" id="lline"></div>
    </div>
+   <!-- Analog 12V Voltmeter -->
+   <div class="knaus-voltmeter" id="voltmeter" title="12V Fritidsbatteri">
+    <div class="meter-top">
+     <span class="meter-label">12V BATTERI</span>
+     <span class="meter-value" id="meter-val-text">12.1V</span>
+    </div>
+    <div class="meter-dial">
+     <div class="meter-scale"></div>
+     <div class="meter-needle" id="meter-needle"></div>
+     <div class="meter-pivot"></div>
+    </div>
+   </div>
    <!-- Rain / Weather indicator -->
-   <div class="weather-badge" id="wbadge" title="Campingväder">
+   <button class="weather-badge" id="wbadge" title="Campingväder (klicka för att växla väder)" aria-label="Campingväder">
     <span class="weather-label">TAKREGN</span>
     <span class="weather-text" id="wtext">ÖSREGN</span>
+   </button>
+  </div>
+
+  <!-- Camping Schnell-val Bar: Kraft, Campingplatser, Piezo -->
+  <div class="knaus-bar">
+   <div class="power-group" role="radiogroup" aria-label="Strömkälla">
+    <span class="bar-label">KRAFT</span>
+    <div class="power-buttons">
+     <button class="power-btn" data-power="0" role="radio" aria-checked="false" title="220V nätstolpe (ren stabil ström)">220V STOLPE</button>
+     <button class="power-btn active" data-power="1" role="radio" aria-checked="true" title="12V fritidsbatteri (klassisk darrande camping)">12V BATTERI</button>
+     <button class="power-btn" data-power="2" role="radio" aria-checked="false" title="Gasol (varm drive och svagt pys)">GASOL</button>
+    </div>
    </div>
+   <div class="presets-group" role="radiogroup" aria-label="Campingplatser">
+    <span class="bar-label">CAMPING</span>
+    <div class="preset-buttons" id="presets">
+     <button class="preset-btn" data-preset="0">BÖDA SAND</button>
+     <button class="preset-btn active" data-preset="1">RAGUNDA</button>
+     <button class="preset-btn" data-preset="2">VARBERG</button>
+     <button class="preset-btn" data-preset="3">KÖPINGSVIK</button>
+    </div>
+   </div>
+   <button class="piezo-btn" id="piezo" title="Piezo-tändare (klicka för gnista)" aria-label="Piezo-tändare">
+    <span class="piezo-spark" id="piezo-spark"></span>
+    <span class="piezo-cap"></span>
+    <span class="piezo-text">PIEZO · GNISTA</span>
+   </button>
   </div>
 
   <!-- Main Controls Body -->
@@ -177,9 +231,13 @@
    <div class="seq-steps-grid" id="steps" role="group" aria-label="16-stegs sequencer i c-moll"></div>
   </div>
 
-  <!-- Bottom: 2-octave portable plastic keyboard -->
+  <!-- Bottom: 2-octave portable plastic camping keyboard -->
   <div class="knaus-keys-wrap">
-   <div class="ds-keys knaus-keys" id="keys" role="group" aria-label="Campingkeyboard: C3 till C5"></div>
+   <div class="knaus-keys-strip">
+    <span class="strip-label">FÖRTÄLTSKLAVIATUR · C3 – C5 (C-MOLL)</span>
+    <span class="strip-sub">MULTITOUCH & GLISSANDO</span>
+   </div>
+   <div class="kn-keys" id="keys" role="group" aria-label="Campingkeyboard: C3 till C5"></div>
   </div>
  </div>
 </div>
@@ -214,7 +272,7 @@
     <div class="midi-map-heading"><strong>MIDI-mappning</strong><button id="midi-map-back" type="button">Tillbaka</button></div>
     <ul id="midi-map-list" class="midi-map-list"></ul>
    </div>
-   <p class="ds-menu-help" id="menu-help">Spela på tangenterna med musen, touch eller tangentbordet (A W S E D F T G Y H U J K O L P Ö). Mellanslag startar och stoppar sequencern i c-moll. Dubbelklicka på en ratt för att återställa den till standardläge. Tryck på STRÖMAVBROTT för panik.</p>
+   <p class="ds-menu-help" id="menu-help">Spela på tangenterna med musen, touch eller tangentbordet (A W S E D F T G Y H U J K O L P Ö). Dra upp och ner på rattarna för att ändra värden. Mellanslag startar och stoppar sequencern i c-moll. Byt strömkälla (220V, 12V, Gasol) för olika klangkaraktärer. Klicka på Piezo-knappen för gnista, och tryck på STRÖMAVBROTT för panik.</p>
    <div class="credits"><span>Pastor Gregorius · Camping-serien</span><a href="THIRD_PARTY_NOTICES.txt">Licenser</a></div>
   </div>
  </details>
